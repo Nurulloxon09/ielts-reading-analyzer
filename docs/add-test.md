@@ -1,9 +1,6 @@
----
-name: add-test
-description: Turn an IELTS Reading passage, its questions and its official answer key (pasted text, screenshots or a PDF) into a test file in content/tests/. Use when the admin says "add this test", "add a passage" or runs /add-test.
----
-
 # Add a reading test
+
+Use this when the admin says "add this test" or "add a passage" and gives you a passage, questions and answer key (text, screenshots or a PDF).
 
 The admin gives you a passage, its questions and the official answer key. You write ONE file: `content/tests/<id>.json`. The format is defined in `lib/test-schema.ts`; `content/tests/language-of-bees.json` is a full example.
 

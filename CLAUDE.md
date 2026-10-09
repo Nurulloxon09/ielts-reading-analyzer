@@ -3,7 +3,7 @@
 IELTS Reading Mistake Analyzer: a tool that explains why a student got Reading questions wrong. One user (the developer's sister). Read `PRD.md`, `tech-spec.md` and `roadmap.md` before big changes.
 
 ## How it works
-- **Admin (the developer)** adds tests as JSON files in `content/tests/`. To add one, follow `.claude/skills/add-test/SKILL.md` (`/add-test`).
+- **Admin (the developer)** adds tests as JSON files in `content/tests/`. To add one, follow `docs/add-test.md` exactly.
 - **Student** picks a test on `/`, solves it on `/test/[id]` (passage left, questions right, like the computer IELTS), submits.
 - **After submit:** `POST /api/tests/[id]/grade` checks answers on the server, then `POST /api/analyze` explains each mistake. The answer key never goes to the browser.
 
