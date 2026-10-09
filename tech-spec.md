@@ -12,6 +12,7 @@
 ```
 GEMINI_API_KEY=
 GEMINI_MODEL=   # current Gemini Flash model name from AI Studio
+GEMINI_FALLBACK_MODELS=   # optional, comma-separated; used in order when a model's free daily limit runs out
 ```
 
 ## Data flow
@@ -63,5 +64,5 @@ components/
 ```
 
 ## Risks
-- **Free-tier rate limits:** run calls in sequence and retry with backoff.
+- **Free-tier rate limits:** run calls in sequence and retry with backoff. Each model has its own daily quota (resets at midnight Pacific time), so `lib/gemini.ts` falls back to the next model in `GEMINI_FALLBACK_MODELS` when one runs out.
 - **Data lives in one browser:** add a JSON export button early.
