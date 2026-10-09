@@ -1,0 +1,24 @@
+# secrets
+.env
+.env.local
+.env*.local
+
+# dependencies and builds
+node_modules/
+.next/
+out/
+dist/
+
+# misc
+.DS_Store
+*.log
+
+# next.js / typescript
+next-env.d.ts
+*.tsbuildinfo
+/build
+/coverage
+
+# misc
+*.pem
+.vercel
