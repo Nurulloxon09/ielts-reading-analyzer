@@ -12,3 +12,13 @@ dist/
 # misc
 .DS_Store
 *.log
+
+# next.js / typescript
+next-env.d.ts
+*.tsbuildinfo
+/build
+/coverage
+
+# misc
+*.pem
+.vercel

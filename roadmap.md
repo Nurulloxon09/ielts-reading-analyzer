@@ -3,9 +3,9 @@
 About 2 hours a day.
 
 ## Week 1 — V1 (Oct 10–16, 2026)
-- [ ] **Day 1:** Next.js setup, key in `.env.local`, one test Gemini call
-- [ ] **Day 2:** Input form (passage, questions, answer table)
-- [ ] **Day 3:** `/api/analyze` with JSON schema and prompt
+- [x] **Day 1:** Next.js setup, key in `.env.local`, one test Gemini call
+- [x] **Day 2:** Input form (passage, questions, answer table)
+- [x] **Day 3:** `/api/analyze` with JSON schema and prompt
 - [ ] **Day 4:** Analysis view: highlighted evidence and the 5 sections
 - [ ] **Day 5:** "Explain this sentence" + save mistakes to IndexedDB
 - [ ] **Day 6:** Photo/PDF input via `/api/extract`
