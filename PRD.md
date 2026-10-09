@@ -10,7 +10,7 @@ Make mistake analysis fast enough to do after every passage. Score target: Readi
 One user for now: my sister, on a laptop, in the browser. Other students maybe later.
 
 ## V1 features
-1. **Input:** passage, questions, her answers, official answer key. Pasted as text, or uploaded as a photo/PDF page.
+1. **Tests:** the admin (me) adds fixed passages with their questions and official answer key. She only picks a test and solves it in a real IELTS-style layout (passage left, questions right, timer). Analysis starts only after she submits.
 2. **Five-layer analysis per wrong answer:**
    - **Evidence locator:** the exact sentence holding the answer, highlighted in the passage.
    - **Synonym map:** question keywords side by side with their paraphrase in the passage.

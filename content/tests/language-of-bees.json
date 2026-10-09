@@ -1,0 +1,115 @@
+{
+  "id": "language-of-bees",
+  "title": "The Language of Bees",
+  "source": "Sample test (original practice passage)",
+  "passageNumber": 1,
+  "minutes": 20,
+  "passage": {
+    "title": "The Language of Bees",
+    "subtitle": "How one scientist discovered that honeybees can tell each other where to find food",
+    "paragraphs": [
+      {
+        "label": "A",
+        "text": "For centuries, beekeepers noticed that when one honeybee found a rich patch of flowers, many others from the same hive soon arrived at the same place. Some believed the bees simply followed one another, or that they found the flowers by smell alone. The real explanation was far more surprising, and it took an Austrian scientist, Karl von Frisch, several decades of careful observation to uncover it."
+      },
+      {
+        "label": "B",
+        "text": "Von Frisch began his experiments in the 1910s. He placed dishes of sugar water near his hives and marked the visiting bees with small dots of paint so that he could recognise individuals. Back inside the hive, which he had fitted with a glass wall, he watched what the marked bees did after they returned. Rather than simply unloading their food, the foragers performed a series of rapid movements on the vertical surface of the honeycomb, and other bees crowded around them, following each step closely."
+      },
+      {
+        "label": "C",
+        "text": "Von Frisch identified two main types of movement. When the food was close to the hive, usually within about 50 metres, the returning bee ran in small circles, first in one direction and then the other. This 'round dance' told the other bees only that food was nearby; it did not indicate any particular direction. When the food was further away, the bee performed what became known as the 'waggle dance'. It ran forward in a straight line while shaking its body from side to side, then circled back to the starting point and repeated the movement."
+      },
+      {
+        "label": "D",
+        "text": "The straight part of the waggle dance contains remarkably precise information. Its angle, measured against the vertical, shows the angle between the food source and the sun. A bee that dances straight upwards is telling the others to fly directly towards the sun, while a run pointing straight down means the food lies in the opposite direction. The length of the waggle run indicates distance: the longer the bee waggles, the further the others must fly. Because the sun moves across the sky during the day, dancing bees gradually adjust the angle of their dance, even when they have spent a long time inside the dark hive."
+      },
+      {
+        "label": "E",
+        "text": "Not every scientist accepted these findings. In the 1960s, some researchers argued that recruited bees actually located food by following scent, and that the dance was of little practical use. The debate was not fully settled until later studies tracked individual bees with radar and showed that recruits flew almost directly to the area indicated by the dance before using smell to find the exact flowers. Von Frisch himself was awarded the Nobel Prize in Physiology or Medicine in 1973, sharing it with two other researchers of animal behaviour."
+      }
+    ]
+  },
+  "groups": [
+    {
+      "type": "tfng",
+      "instructions": "Do the following statements agree with the information given in Reading Passage 1?\nIn boxes 1–4 on your answer sheet, choose\nTRUE if the statement agrees with the information\nFALSE if the statement contradicts the information\nNOT GIVEN if there is no information on this",
+      "questions": [
+        { "n": 1, "text": "Before von Frisch's work, some people thought bees found flowers only by using their sense of smell." },
+        { "n": 2, "text": "Von Frisch was the first scientist to study bees inside a hive with a glass wall." },
+        { "n": 3, "text": "The round dance shows other bees which direction to fly in." },
+        { "n": 4, "text": "Von Frisch's ideas were immediately accepted by other scientists." }
+      ]
+    },
+    {
+      "type": "matching",
+      "instructions": "Reading Passage 1 has five paragraphs, A–E.\nWhich paragraph contains the following information?\nChoose the correct letter, A–E.",
+      "options": [
+        { "key": "A" },
+        { "key": "B" },
+        { "key": "C" },
+        { "key": "D" },
+        { "key": "E" }
+      ],
+      "questions": [
+        { "n": 5, "text": "a description of how von Frisch recognised individual bees" },
+        { "n": 6, "text": "a reference to an award" },
+        { "n": 7, "text": "an explanation of how a dance shows direction" }
+      ]
+    },
+    {
+      "type": "gap",
+      "instructions": "Complete the notes below.\nChoose ONE WORD ONLY from the passage for each answer.",
+      "title": "How the waggle dance works",
+      "lines": [
+        "## The straight run",
+        "- its angle is measured against the {{8}}",
+        "- this angle is the same as the angle between the food and the {{9}}",
+        "- the {{10}} of the waggle run tells bees how far to fly",
+        "## Later research",
+        "- recruits fly to the area shown by the dance, then use {{11}} to find the exact flowers"
+      ]
+    },
+    {
+      "type": "mcq",
+      "instructions": "Choose the correct letter, A, B, C or D.",
+      "questions": [
+        {
+          "n": 12,
+          "text": "What did von Frisch use to attract bees in his experiments?",
+          "options": [
+            { "key": "A", "text": "flowers with a strong smell" },
+            { "key": "B", "text": "dishes of sugar water" },
+            { "key": "C", "text": "honey taken from other hives" },
+            { "key": "D", "text": "pieces of brightly coloured paper" }
+          ]
+        },
+        {
+          "n": 13,
+          "text": "A bee performing the round dance tells other bees that food is",
+          "options": [
+            { "key": "A", "text": "in the direction of the sun." },
+            { "key": "B", "text": "more than 50 metres away." },
+            { "key": "C", "text": "close to the hive." },
+            { "key": "D", "text": "difficult to find." }
+          ]
+        }
+      ]
+    }
+  ],
+  "answers": {
+    "1": "TRUE",
+    "2": "NOT GIVEN",
+    "3": "FALSE",
+    "4": "FALSE",
+    "5": "B",
+    "6": "E",
+    "7": "D",
+    "8": "vertical",
+    "9": "sun",
+    "10": "length",
+    "11": "smell",
+    "12": "B",
+    "13": "C"
+  }
+}
