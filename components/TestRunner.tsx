@@ -54,6 +54,12 @@ function Runner({ test }: { test: PublicTest }) {
 
   const numbers = useMemo(() => allNumbers(test).sort((a, b) => a - b), [test]);
   const labels = useMemo(() => questionLabels(test), [test]);
+  // A section can have several paragraphs; only the first carries the label ("C"), so the
+  // following unlabeled paragraphs belong to the same section.
+  const paragraphLabels = useMemo(() => {
+    let current: string | undefined;
+    return test.passage.paragraphs.map((p) => (current = p.label ?? current));
+  }, [test]);
   const phase = result ? "results" : "test";
 
   useEffect(() => {
@@ -240,7 +246,7 @@ function Runner({ test }: { test: PublicTest }) {
               results={result.results}
               analyses={result.analyses}
               labels={labels}
-              paragraphLabels={test.passage.paragraphs.map((p) => p.label)}
+              paragraphLabels={paragraphLabels}
               timeSpentMs={result.timeSpentMs}
               selected={selected}
               onSelect={setSelected}

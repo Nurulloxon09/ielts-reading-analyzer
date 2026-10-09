@@ -24,7 +24,14 @@ function getGemini() {
 // Free-tier limits: wait and retry on "too many requests" or "overloaded".
 const RETRY_DELAYS_MS = [2_000, 6_000];
 
+// The free tier has a per-minute and a per-day request limit. Waiting a few seconds
+// only helps with the per-minute one.
+function isDailyLimit(err: unknown): err is ApiError {
+  return err instanceof ApiError && err.status === 429 && /PerDay/i.test(err.message);
+}
+
 function isRetryable(err: unknown): boolean {
+  if (isDailyLimit(err)) return false;
   return err instanceof ApiError && (err.status === 429 || err.status >= 500);
 }
 
@@ -59,8 +66,14 @@ export async function generateJson(options: {
 
 // Short, key-free message for the browser.
 export function describeGeminiError(err: unknown): string {
+  if (isDailyLimit(err)) {
+    const hours = /retry in (\d+)h/i.exec(err.message)?.[1];
+    return hours
+      ? `Today's free Gemini limit is used up. It resets in about ${Number(hours) + 1} hours.`
+      : "Today's free Gemini limit is used up. Try again tomorrow.";
+  }
   if (err instanceof ApiError && err.status === 429) {
-    return "Gemini's free limit is used up for now. Wait a minute, or try again tomorrow if the daily limit is reached.";
+    return "Gemini is getting too many requests. Wait a minute and try again.";
   }
   if (err instanceof ApiError && err.status >= 500) {
     return "Gemini is busy right now. Try again in a minute.";
