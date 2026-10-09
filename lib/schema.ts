@@ -76,3 +76,31 @@ export type AnalyzeResponse =
 export const GradeRequestSchema = z.object({
   answers: z.record(z.string().regex(/^\d+$/), z.string().max(200)),
 });
+
+// "Explain this sentence": she selects text in the passage after submitting.
+export const ExplanationSchema = z.object({
+  meaningEn: z.string().describe("What the selected text means, in simple words"),
+  meaningUz: z.string(),
+  parts: z.array(z.object({ text: z.string(), role: z.string(), noteEn: z.string() })),
+  grammarEn: z.string().describe("The main grammar point, or an empty string"),
+  grammarUz: z.string(),
+  vocab: z.array(z.object({ word: z.string(), meaningEn: z.string(), meaningUz: z.string() })),
+});
+
+export type Explanation = z.infer<typeof ExplanationSchema>;
+
+export const explanationJsonSchema = z.toJSONSchema(ExplanationSchema);
+delete explanationJsonSchema.$schema;
+
+export const ExplainRequestSchema = z.object({
+  testId: z.string().min(1).max(100),
+  text: z.string().trim().min(2).max(600),
+});
+
+export type ExplainPromptInput = {
+  passage: string;
+  sentence: string; // the full sentence(s) around the selection
+  selection: string; // exactly what she selected
+};
+
+export type ExplainResponse = { ok: true; explanation: Explanation; text: string } | { ok: false; error: string };

@@ -51,3 +51,13 @@ export function findEvidence(paragraphs: { text: string }[], quote: string): Evi
   }
   return null;
 }
+
+// Widens [start, end) to whole sentence(s), so a selected phrase is explained in context.
+export function sentenceAround(text: string, start: number, end: number): string {
+  let from = start;
+  while (from > 0 && !/[.!?]["'’”)]?\s$/.test(text.slice(Math.max(0, from - 3), from))) from--;
+  let to = end;
+  while (to < text.length && !/[.!?]/.test(text[to - 1] ?? "")) to++;
+  while (to < text.length && /["'’”)]/.test(text[to])) to++;
+  return text.slice(from, to).trim();
+}

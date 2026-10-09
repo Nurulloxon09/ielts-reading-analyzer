@@ -56,6 +56,9 @@ export default function AnalyzeMistakes({
             : `${mistakes.length} ${mistakes.length === 1 ? "mistake" : "mistakes"} to learn from`}{" "}
           · finished in {formatDuration(timeSpentMs)}
         </p>
+        <p className="mt-2 text-sm text-slate-500">
+          Tip: select any sentence in the passage to see it explained.
+        </p>
 
         {mistakes.length > 0 && (
           <div className="mt-4 flex flex-wrap items-center gap-4">

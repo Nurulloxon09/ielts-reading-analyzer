@@ -3,10 +3,12 @@
 import Link from "next/link";
 import { useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
 import AnalyzeMistakes, { formatDuration } from "@/components/AnalyzeMistakes";
+import ExplainSentence from "@/components/ExplainSentence";
 import Passage, { type Highlight } from "@/components/Passage";
 import Questions from "@/components/Questions";
 import type { GradedAnswer } from "@/lib/answers";
 import type { AnalyzeResponse } from "@/lib/schema";
+import { saveMistake, saveSession } from "@/lib/db";
 import { storage, type SavedResult } from "@/lib/storage";
 import { allNumbers, type PublicTest } from "@/lib/test-schema";
 import { questionLabels } from "@/lib/test-text";
@@ -16,12 +18,12 @@ const noopSubscribe = () => () => {};
 // The test needs the browser (saved answers, the clock), so it renders after hydration.
 export default function TestRunner({ test }: { test: PublicTest }) {
   const isClient = useSyncExternalStore(noopSubscribe, () => true, () => false);
-  if (!isClient) {
-    return (
-      <div className="flex h-dvh items-center justify-center bg-slate-100 text-slate-500">Loading test…</div>
-    );
-  }
+  if (!isClient) return <TestLoading />;
   return <Runner test={test} />;
+}
+
+export function TestLoading() {
+  return <div className="flex h-dvh items-center justify-center bg-slate-100 text-slate-500">Loading test…</div>;
 }
 
 function firstMistake(result: SavedResult | null): number | null {
@@ -46,6 +48,9 @@ function Runner({ test }: { test: PublicTest }) {
   const [explainError, setExplainError] = useState<string | null>(null);
   const rightPane = useRef<HTMLDivElement>(null);
   const unmounted = useRef(false);
+  const sessionRef = useRef<Promise<number | null> | null>(
+    saved.result?.sessionId !== undefined ? Promise.resolve(saved.result.sessionId) : null,
+  );
 
   const numbers = useMemo(() => allNumbers(test).sort((a, b) => a - b), [test]);
   const labels = useMemo(() => questionLabels(test), [test]);
@@ -112,6 +117,21 @@ function Runner({ test }: { test: PublicTest }) {
     setResult(next);
     setSelected(firstMistake(next));
     rightPane.current?.scrollTo({ top: 0 });
+
+    void ensureSession(next);
+  }
+
+  // One IndexedDB session per attempt. The pending save is shared, so explaining a mistake
+  // right after submitting never creates a second session. Results saved before the mistake
+  // log existed get their session on first use.
+  function ensureSession(current: SavedResult): Promise<number | null> {
+    sessionRef.current ??= saveSession({ testId: test.id, title: test.title, ...current }).then((sessionId) => {
+      if (sessionId !== null) {
+        setResult((prev) => (prev && prev.finishedAt === current.finishedAt ? { ...prev, sessionId } : prev));
+      }
+      return sessionId;
+    });
+    return sessionRef.current;
   }
 
   // One Gemini call at a time (free-tier limits).
@@ -141,11 +161,17 @@ function Runner({ test }: { test: PublicTest }) {
       }
       const done = data;
       setResult((prev) => (prev ? { ...prev, analyses: { ...prev.analyses, [n]: done } } : prev));
+
+      const sessionId = await ensureSession(result);
+      if (sessionId !== null) {
+        void saveMistake({ sessionId, testId: test.id, graded, analysis: done.analysis, evidence: done.evidence });
+      }
     }
     setExplaining(null);
   }
 
   function retake() {
+    sessionRef.current = null;
     storage.clearResult(test.id);
     storage.clearAttempt(test.id);
     setAnswers({});
@@ -204,7 +230,9 @@ function Runner({ test }: { test: PublicTest }) {
 
       <main className="grid min-h-0 flex-1 overflow-y-auto md:grid-cols-2 md:overflow-hidden">
         <div className="border-slate-200 bg-white md:overflow-y-auto md:border-r">
-          <Passage test={test} highlight={highlight} />
+          <ExplainSentence testId={test.id} enabled={phase === "results"}>
+            <Passage test={test} highlight={highlight} />
+          </ExplainSentence>
         </div>
         <div ref={rightPane} className="bg-slate-50 md:overflow-y-auto">
           {result ? (

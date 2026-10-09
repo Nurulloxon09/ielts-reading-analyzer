@@ -1,5 +1,5 @@
 // All Gemini prompts live in this file.
-import { TRAP_TYPES, type AnalyzePromptInput } from "@/lib/schema";
+import { TRAP_TYPES, type AnalyzePromptInput, type ExplainPromptInput } from "@/lib/schema";
 
 export const ANALYSIS_SYSTEM_PROMPT = `You are an IELTS Reading tutor. Your student is Uzbek, about B1 level in English (Reading band 6.0).
 She got one question wrong. Explain why the correct answer is correct and why her answer is wrong.
@@ -49,4 +49,34 @@ export function buildQuoteRetryNote(badQuote: string): string {
 Your last evidence.quote was not found in the passage:
 "${badQuote}"
 Copy the sentence again, exactly as it is written in the passage.`;
+}
+
+export const EXPLAIN_SYSTEM_PROMPT = `You are an IELTS Reading tutor. Your student is Uzbek, about B1 level in English (Reading band 6.0).
+She selected part of a reading passage because it was hard to understand. Help her understand it.
+
+Rules:
+1. meaningEn: say what the selected text means in very simple English, 1 to 3 short sentences. Use the passage only for context.
+2. parts: split the sentence into its main chunks (for example: main clause, relative clause, reason, condition, contrast). Each "text" must be copied exactly from the sentence. Give each chunk a short "role" and a one-sentence "noteEn".
+3. grammarEn: the one grammar point that makes this sentence hard (for example: passive voice, "although", reduced relative clause, inversion). Empty string if nothing is hard.
+4. vocab: up to 5 words or phrases from the selection that a B1 student may not know, with their meaning in this context.
+5. English: B1 level. Short sentences. Simple words.
+6. Every field ending in "Uz": Uzbek in Latin script (with o', g', sh, ch), with the same meaning as the English. If grammarEn is empty, grammarUz is empty too.`;
+
+export function buildExplainPrompt({ passage, sentence, selection }: ExplainPromptInput): string {
+  return `PASSAGE (for context):
+"""
+${passage}
+"""
+
+SENTENCE:
+"""
+${sentence}
+"""
+
+SHE SELECTED:
+"""
+${selection}
+"""
+
+Explain the selected text. Split the whole SENTENCE into parts.`;
 }

@@ -114,7 +114,7 @@ export default function AnalysisCard({ result, paragraphLabel }: Props) {
   );
 }
 
-function Section({ title, children }: { title: string; children: React.ReactNode }) {
+export function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <section className="flex flex-col gap-2">
       <h4 className="text-sm font-bold uppercase tracking-wide text-slate-500">{title}</h4>
@@ -123,7 +123,7 @@ function Section({ title, children }: { title: string; children: React.ReactNode
   );
 }
 
-function Bilingual({ en, uz }: { en: string; uz: string }) {
+export function Bilingual({ en, uz }: { en: string; uz: string }) {
   return (
     <div className="flex flex-col gap-1">
       <p className="text-[15px] leading-relaxed text-slate-900">{en}</p>

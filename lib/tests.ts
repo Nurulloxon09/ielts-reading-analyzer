@@ -1,6 +1,6 @@
 // Server-only: loads reading tests from content/tests/*.json.
 // Files are read synchronously so Next can prerender the pages at build time.
-import { readdirSync, readFileSync } from "node:fs";
+import { existsSync, readdirSync, readFileSync } from "node:fs";
 import path from "node:path";
 import { TestSchema, type PublicTest, type Test } from "@/lib/test-schema";
 
@@ -43,11 +43,7 @@ export function listTests(): Test[] {
 
 export function getTest(id: string): Test | null {
   if (!/^[a-z0-9-]+$/.test(id)) return null;
-  try {
-    readFileSync(path.join(TESTS_DIR, `${id}.json`));
-  } catch {
-    return null;
-  }
+  if (!existsSync(path.join(TESTS_DIR, `${id}.json`))) return null;
   return loadFile(`${id}.json`);
 }
 

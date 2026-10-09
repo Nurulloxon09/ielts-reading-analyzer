@@ -20,10 +20,8 @@ GEMINI_MODEL=   # current Gemini Flash model name from AI Studio
 3. **Grade:** `POST /api/tests/[id]/grade` compares her answers with the key (case-, space- and punctuation-insensitive).
 4. **Analyze:** `POST /api/analyze` ({testId, number, given}) runs one Gemini call per wrong answer, in sequence. The server loads the passage, questions and correct answer itself.
 5. **Check:** the server confirms the evidence quote exists verbatim in the passage. If it doesn't, it retries once, then shows "couldn't locate".
-6. **Show and save:** results and explanations are kept in localStorage (IndexedDB mistake log comes in Day 5).
-
-Planned:
-- `POST /api/explain`: one sentence + passage context → breakdown.
+6. **Show and save:** the current result and its explanations are kept in localStorage. Every submitted attempt, explained mistake and new word is also saved to IndexedDB (`lib/db.ts`) for the mistake log.
+7. **Explain this sentence:** after submitting, she selects text in the passage. `POST /api/explain` ({testId, text}) checks the text is in the passage, widens it to the full sentence and returns a breakdown. Explanations are cached in IndexedDB, so the same sentence never costs a second Gemini call.
 
 ## Analysis output (JSON schema, enforced with Gemini structured output)
 ```
@@ -39,16 +37,17 @@ Planned:
 }
 ```
 
-## Data model (IndexedDB)
-- `sessions`: id, date, title, passage, questions
-- `mistakes`: id, sessionId, questionNumber, trapType, analysis, createdAt
-- `vocab`: word, meaningEn, meaningUz, mistakeId, reviewCount
+## Data model (IndexedDB, `lib/db.ts`)
+- `sessions`: id, testId, title, finishedAt, correct, total, timeSpentMs (one per submitted attempt)
+- `mistakes`: id, sessionId, testId, questionNumber, given, correct, trapType, analysis, evidence, createdAt (saved when a mistake is explained)
+- `vocab`: word (lowercase key), display, meaningEn, meaningUz, mistakeId (missing for words from "Explain this sentence"), testId, reviewCount, addedAt
+- `explanations`: key (testId + selected text), explanation, createdAt (cache for `/api/explain`)
 
 ## Prompt rules
 - The answer key is given and correct. Explain it; never re-judge it.
 - The evidence quote must be copied exactly from the passage.
 - English at B1 level, short sentences. Uzbek in Latin script under each explanation.
-- Low temperature.
+- Temperature: default. Google advises against lowering it for Gemini 3 models; consistency comes from the JSON schema and the evidence check.
 
 ## Folders
 ```
@@ -57,8 +56,9 @@ app/page.tsx                    test list
 app/test/[id]/page.tsx          solve + results
 app/api/tests/[id]/grade        grading
 app/api/analyze                 one mistake → Gemini
+app/api/explain                 selected sentence → Gemini
 lib/test-schema.ts  lib/tests.ts  lib/test-text.ts  lib/answers.ts
-lib/gemini.ts  lib/prompts.ts  lib/schema.ts  lib/evidence.ts  lib/storage.ts
+lib/gemini.ts  lib/prompts.ts  lib/schema.ts  lib/evidence.ts  lib/storage.ts  lib/db.ts
 components/
 ```
 

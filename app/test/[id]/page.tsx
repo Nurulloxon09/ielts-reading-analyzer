@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import TestRunner from "@/components/TestRunner";
+import { Suspense } from "react";
+import TestRunner, { TestLoading } from "@/components/TestRunner";
 import { getTest, listTests, toPublicTest } from "@/lib/tests";
 
 export function generateStaticParams() {
@@ -13,7 +14,16 @@ export async function generateMetadata({ params }: PageProps<"/test/[id]">): Pro
   return { title: test ? `${test.title} · IELTS Reading` : "Test not found" };
 }
 
-export default async function TestPage({ params }: PageProps<"/test/[id]">) {
+// params are read inside <Suspense> so the page shell can show instantly.
+export default function TestPage({ params }: PageProps<"/test/[id]">) {
+  return (
+    <Suspense fallback={<TestLoading />}>
+      <LoadedTest params={params} />
+    </Suspense>
+  );
+}
+
+async function LoadedTest({ params }: Pick<PageProps<"/test/[id]">, "params">) {
   const { id } = await params;
   const test = getTest(id);
   if (!test) notFound();
