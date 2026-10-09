@@ -10,8 +10,9 @@ if (typeof window !== "undefined") {
 export function getGeminiConfig() {
   const apiKey = process.env.GEMINI_API_KEY;
   const model = process.env.GEMINI_MODEL;
-  if (!apiKey) throw new Error("GEMINI_API_KEY is not set in .env.local.");
-  if (!model) throw new Error("GEMINI_MODEL is not set in .env.local.");
+  const where = process.env.VERCEL ? "in Vercel (Settings → Environment Variables), then redeploy" : "in .env.local";
+  if (!apiKey) throw new Error(`The Gemini API key is missing. Add GEMINI_API_KEY ${where}.`);
+  if (!model) throw new Error(`The Gemini model is missing. Add GEMINI_MODEL ${where}.`);
   const fallbacks = (process.env.GEMINI_FALLBACK_MODELS ?? "")
     .split(",")
     .map((m) => m.trim())
@@ -119,6 +120,9 @@ export function describeGeminiError(err: unknown): string {
   if (err instanceof QuotaUsedUpError) {
     const hours = Math.max(1, Math.ceil(err.resetsInMs / 3_600_000));
     return `Today's free Gemini limit is used up. It resets in about ${hours} ${hours === 1 ? "hour" : "hours"}.`;
+  }
+  if (err instanceof ApiError && /API_KEY_INVALID|API key not valid/i.test(err.message)) {
+    return "The Gemini API key is not valid. Check GEMINI_API_KEY (only the key, no quotes or spaces).";
   }
   if (err instanceof ApiError && err.status === 429) {
     return "Gemini is getting too many requests. Wait a minute and try again.";
