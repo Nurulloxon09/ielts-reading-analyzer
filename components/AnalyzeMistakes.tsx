@@ -1,131 +1,174 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import type { CheckedAnswer } from "@/lib/answers";
-import type { AnalyzeResponse } from "@/lib/schema";
-
-type Done = Extract<AnalyzeResponse, { ok: true }>;
+import AnalysisCard from "@/components/AnalysisCard";
+import type { GradedAnswer } from "@/lib/answers";
+import type { AnalysisResult } from "@/lib/storage";
 
 type Props = {
-  passage: string;
-  questions: string;
-  mistakes: CheckedAnswer[];
+  results: GradedAnswer[];
+  analyses: Record<number, AnalysisResult>;
+  labels: Map<number, string>;
+  paragraphLabels: (string | undefined)[];
+  timeSpentMs: number;
+  selected: number | null;
+  onSelect: (n: number | null) => void;
+  explaining: number | null;
+  error: string | null;
+  onExplain: (numbers: number[]) => void;
 };
 
-// Calls /api/analyze once per mistake, one after another (free-tier rate limits).
-// Day 3: shows a plain result list. The real analysis view comes on Day 4.
-export default function AnalyzeMistakes({ passage, questions, mistakes }: Props) {
-  const [results, setResults] = useState<Record<number, Done>>({});
-  const [current, setCurrent] = useState<number | null>(null);
-  const [error, setError] = useState<string | null>(null);
-  const cancelled = useRef(false);
+export function formatDuration(ms: number) {
+  const total = Math.max(0, Math.round(ms / 1000));
+  const m = Math.floor(total / 60);
+  const s = total % 60;
+  return `${m}:${String(s).padStart(2, "0")}`;
+}
 
-  useEffect(() => {
-    cancelled.current = false;
-    return () => {
-      cancelled.current = true;
-    };
-  }, []);
-
-  const doneCount = mistakes.filter((m) => results[m.number]).length;
-  const running = current !== null;
-
-  async function run() {
-    setError(null);
-    for (const mistake of mistakes) {
-      if (results[mistake.number]) continue;
-      if (cancelled.current) return;
-      setCurrent(mistake.number);
-      let data: AnalyzeResponse;
-      try {
-        const res = await fetch("/api/analyze", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ passage, questions, mistake }),
-        });
-        data = await res.json();
-      } catch {
-        data = { ok: false, error: "Could not reach the server." };
-      }
-      if (cancelled.current) return;
-      if (!data.ok) {
-        setError(`Question ${mistake.number}: ${data.error}`);
-        setCurrent(null);
-        return;
-      }
-      const done = data;
-      setResults((prev) => ({ ...prev, [mistake.number]: done }));
-    }
-    setCurrent(null);
-  }
+// Results pane: score, then every question; wrong ones open into their analysis.
+export default function AnalyzeMistakes({
+  results,
+  analyses,
+  labels,
+  paragraphLabels,
+  timeSpentMs,
+  selected,
+  onSelect,
+  explaining,
+  error,
+  onExplain,
+}: Props) {
+  const mistakes = results.filter((r) => !r.isCorrect);
+  const correctCount = results.length - mistakes.length;
+  const pending = mistakes.filter((m) => !analyses[m.number]).map((m) => m.number);
+  const explainedCount = mistakes.length - pending.length;
 
   return (
-    <section className="flex flex-col gap-4">
-      {doneCount < mistakes.length && (
-        <button
-          type="button"
-          onClick={run}
-          disabled={running}
-          className="self-start rounded-md bg-zinc-900 px-5 py-2.5 font-medium text-white hover:bg-zinc-700 disabled:opacity-50 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-300"
-        >
-          {running
-            ? `Explaining question ${current}…`
-            : doneCount === 0
-              ? "Explain my mistakes"
-              : "Continue"}
-        </button>
-      )}
-
-      {(running || doneCount > 0) && (
-        <div className="flex items-center gap-3 text-sm">
-          <progress value={doneCount} max={mistakes.length} className="h-2 w-48" />
-          <span>
-            {doneCount} / {mistakes.length} explained
-          </span>
-        </div>
-      )}
-
-      {error && (
-        <p
-          role="alert"
-          className="rounded-md border border-red-300 bg-red-50 px-4 py-3 text-sm text-red-800 dark:border-red-800 dark:bg-red-950 dark:text-red-200"
-        >
-          {error}
+    <div className="mx-auto flex max-w-[46rem] flex-col gap-6 px-6 py-6 md:px-8">
+      <section className="rounded-xl border border-slate-200 bg-white px-6 py-5">
+        <p className="text-sm font-semibold uppercase tracking-wide text-slate-500">Your result</p>
+        <p className="mt-1 text-4xl font-bold text-slate-900">
+          {correctCount}
+          <span className="text-2xl font-semibold text-slate-400"> / {results.length}</span>
         </p>
-      )}
+        <p className="mt-1 text-[15px] text-slate-600">
+          {mistakes.length === 0
+            ? "No mistakes. Well done!"
+            : `${mistakes.length} ${mistakes.length === 1 ? "mistake" : "mistakes"} to learn from`}{" "}
+          · finished in {formatDuration(timeSpentMs)}
+        </p>
 
-      {mistakes
-        .filter((m) => results[m.number])
-        .map((m) => {
-          const { analysis, evidence } = results[m.number];
+        {mistakes.length > 0 && (
+          <div className="mt-4 flex flex-wrap items-center gap-4">
+            {pending.length > 0 && (
+              <button
+                type="button"
+                onClick={() => onExplain(pending)}
+                disabled={explaining !== null}
+                className="rounded-md bg-sky-600 px-5 py-2.5 text-[15px] font-semibold text-white shadow-sm hover:bg-sky-700 disabled:opacity-60"
+              >
+                {explaining !== null
+                  ? `Explaining question ${explaining}…`
+                  : explainedCount === 0
+                    ? "Explain my mistakes"
+                    : "Explain the rest"}
+              </button>
+            )}
+            <div className="flex items-center gap-3 text-sm text-slate-600">
+              <span className="h-2 w-40 overflow-hidden rounded-full bg-slate-200" aria-hidden>
+                <span
+                  className="block h-full rounded-full bg-sky-600 transition-[width]"
+                  style={{ width: `${(explainedCount / mistakes.length) * 100}%` }}
+                />
+              </span>
+              {explainedCount} / {mistakes.length} explained
+            </div>
+          </div>
+        )}
+
+        {error && (
+          <p role="alert" className="mt-4 rounded-md border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-800">
+            {error}
+          </p>
+        )}
+      </section>
+
+      <ol className="flex flex-col gap-3">
+        {results.map((r) => {
+          const open = selected === r.number;
+          const result = analyses[r.number];
+          const paragraph = result?.evidence ? paragraphLabels[result.evidence.paragraph] ?? null : null;
           return (
-            <article
-              key={m.number}
-              className="flex flex-col gap-2 rounded-md border border-zinc-200 p-4 text-sm dark:border-zinc-800"
+            <li
+              key={r.number}
+              id={`r-${r.number}`}
+              className={`scroll-mt-4 rounded-xl border bg-white ${
+                open ? "border-sky-400 shadow-sm ring-2 ring-sky-100" : "border-slate-200"
+              }`}
             >
-              <h3 className="font-medium">
-                Q{m.number} · {analysis.questionType} · trap: {analysis.trap.type}
-              </h3>
-              {evidence ? (
-                <blockquote className="border-l-4 border-amber-400 pl-3">{evidence.quote}</blockquote>
-              ) : (
-                <p className="text-zinc-600 dark:text-zinc-400">
-                  Couldn&apos;t locate the evidence in the passage.
-                </p>
+              <button
+                type="button"
+                onClick={() => onSelect(open ? null : r.number)}
+                disabled={r.isCorrect}
+                aria-expanded={r.isCorrect ? undefined : open}
+                className="flex w-full items-start gap-3 px-5 py-4 text-left disabled:cursor-default"
+              >
+                <span
+                  aria-label={r.isCorrect ? "Correct" : "Wrong"}
+                  className={`mt-0.5 flex size-7 shrink-0 items-center justify-center rounded-full text-sm font-bold text-white ${
+                    r.isCorrect ? "bg-emerald-600" : "bg-rose-600"
+                  }`}
+                >
+                  {r.number}
+                </span>
+                <span className="flex min-w-0 flex-1 flex-col gap-1">
+                  <span className="text-[15px] leading-snug text-slate-900">{labels.get(r.number)}</span>
+                  <span className="text-sm">
+                    {r.isCorrect ? (
+                      <span className="font-semibold text-emerald-700">{r.given}</span>
+                    ) : (
+                      <>
+                        <span className="text-slate-500">You: </span>
+                        <span className="font-semibold text-rose-700 line-through decoration-rose-300">
+                          {r.given || "no answer"}
+                        </span>
+                        <span className="text-slate-500"> · Correct: </span>
+                        <span className="font-semibold text-emerald-700">{r.correct.join(" / ")}</span>
+                      </>
+                    )}
+                  </span>
+                </span>
+                {!r.isCorrect && (
+                  <span className="mt-1 shrink-0 text-sm font-medium text-sky-700">
+                    {result ? (open ? "Hide" : "Show why") : explaining === r.number ? "Explaining…" : open ? "Hide" : "Open"}
+                  </span>
+                )}
+              </button>
+
+              {open && !r.isCorrect && (
+                <div className="border-t border-slate-200 px-5 py-5">
+                  {result ? (
+                    <AnalysisCard result={result} paragraphLabel={paragraph} />
+                  ) : explaining === r.number ? (
+                    <p className="text-[15px] text-slate-600">Explaining this question…</p>
+                  ) : (
+                    <div className="flex flex-wrap items-center gap-3">
+                      <p className="text-[15px] text-slate-600">Not explained yet.</p>
+                      <button
+                        type="button"
+                        onClick={() => onExplain([r.number])}
+                        disabled={explaining !== null}
+                        className="rounded-md border border-sky-600 px-3 py-1.5 text-sm font-semibold text-sky-700 hover:bg-sky-50 disabled:opacity-60"
+                      >
+                        Explain this one
+                      </button>
+                    </div>
+                  )}
+                </div>
               )}
-              <p>{analysis.trap.explanationEn}</p>
-              <p className="text-zinc-600 dark:text-zinc-400">{analysis.trap.explanationUz}</p>
-              <details>
-                <summary className="cursor-pointer text-zinc-600 dark:text-zinc-400">
-                  Full analysis (raw)
-                </summary>
-                <pre className="mt-2 overflow-x-auto whitespace-pre-wrap rounded bg-zinc-100 p-3 text-xs dark:bg-zinc-900">
-                  {JSON.stringify(analysis, null, 2)}
-                </pre>
-              </details>
-            </article>
+            </li>
           );
         })}
-    </section>
+      </ol>
+    </div>
   );
 }

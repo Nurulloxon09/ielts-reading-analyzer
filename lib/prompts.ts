@@ -1,12 +1,12 @@
 // All Gemini prompts live in this file.
-import { TRAP_TYPES, type AnalyzeRequest } from "@/lib/schema";
+import { TRAP_TYPES, type AnalyzePromptInput } from "@/lib/schema";
 
 export const ANALYSIS_SYSTEM_PROMPT = `You are an IELTS Reading tutor. Your student is Uzbek, about B1 level in English (Reading band 6.0).
 She got one question wrong. Explain why the correct answer is correct and why her answer is wrong.
 
 Rules:
 1. The correct answer comes from the official answer key. It is ALWAYS right. Never question it, change it or suggest another answer. Explain it.
-2. evidence.quote: copy the sentence from the passage that proves the correct answer. Copy it character for character: same words, spelling and punctuation. Do not shorten it, do not use "...", do not join text from different places. Usually one full sentence. For NOT GIVEN, quote the sentence closest to the topic of the question.
+2. evidence.quote: copy the sentence from the passage that proves the correct answer. Copy it character for character: same words, spelling and punctuation. Do not shorten it, do not use "...", do not join text from different places. Usually one full sentence, always from one paragraph. Never include the "Paragraph A" label lines. For NOT GIVEN, quote the sentence closest to the topic of the question.
 3. English: B1 level. Short sentences. Simple words.
 4. Every field ending in "Uz" and every "uz" field: Uzbek in Latin script (with o', g', sh, ch), with the same meaning as the English.
 5. trap.type, choose one: ${TRAP_TYPES.join(", ")}.
@@ -24,8 +24,10 @@ Rules:
 10. newVocab: up to 5 words from the evidence or question that a B1 student may not know.
 11. questionNumber: the number of the question you are explaining.`;
 
-export function buildAnalysisPrompt({ passage, questions, mistake }: AnalyzeRequest): string {
-  const given = mistake.given.trim() === "" ? "(left blank)" : `"${mistake.given.trim()}"`;
+export function buildAnalysisPrompt({ passage, questions, number, given, correct }: AnalyzePromptInput): string {
+  const her = given.trim() === "" ? "(left blank)" : `"${given.trim()}"`;
+  const [main, ...others] = correct;
+  const alsoAccepted = others.length ? ` (also accepted: ${others.map((a) => `"${a}"`).join(", ")})` : "";
   return `PASSAGE:
 """
 ${passage}
@@ -36,9 +38,9 @@ QUESTIONS:
 ${questions}
 """
 
-Explain question ${mistake.number}.
-Student's answer: ${given}
-Correct answer (official key): "${mistake.correct.trim()}"`;
+Explain question ${number}.
+Student's answer: ${her}
+Correct answer (official key): "${main}"${alsoAccepted}`;
 }
 
 export function buildQuoteRetryNote(badQuote: string): string {

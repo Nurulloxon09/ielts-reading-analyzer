@@ -15,14 +15,14 @@ GEMINI_MODEL=   # current Gemini Flash model name from AI Studio
 ```
 
 ## Data flow
-1. **Input:** she pastes the passage and questions, then fills an answer table: question no. · her answer · correct answer.
-2. **Compare:** the client marks wrong answers (case- and space-insensitive).
-3. **Analyze:** `POST /api/analyze` runs one Gemini call per wrong answer, in sequence, with a progress bar.
-4. **Check:** the server confirms the evidence quote exists verbatim in the passage. If it doesn't, it retries once, then shows "couldn't locate".
-5. **Show and save:** the client renders the passage with highlights and an analysis panel, then saves to IndexedDB.
+1. **Tests:** the admin adds `content/tests/<id>.json` (passage, question groups, answer key) via Claude Code (`/add-test`). Format: `lib/test-schema.ts`.
+2. **Solve:** `/test/[id]` shows the passage and questions like the computer IELTS, with a timer. The browser never gets the answer key. Answers in progress are kept in localStorage.
+3. **Grade:** `POST /api/tests/[id]/grade` compares her answers with the key (case-, space- and punctuation-insensitive).
+4. **Analyze:** `POST /api/analyze` ({testId, number, given}) runs one Gemini call per wrong answer, in sequence. The server loads the passage, questions and correct answer itself.
+5. **Check:** the server confirms the evidence quote exists verbatim in the passage. If it doesn't, it retries once, then shows "couldn't locate".
+6. **Show and save:** results and explanations are kept in localStorage (IndexedDB mistake log comes in Day 5).
 
-Other routes:
-- `POST /api/extract`: photo/PDF in → passage and questions as text. She checks and edits before analysis.
+Planned:
 - `POST /api/explain`: one sentence + passage context → breakdown.
 
 ## Analysis output (JSON schema, enforced with Gemini structured output)
@@ -52,10 +52,13 @@ Other routes:
 
 ## Folders
 ```
-app/page.tsx              input
-app/session/[id]/page.tsx analysis view
-app/api/analyze|explain|extract/route.ts
-lib/gemini.ts  lib/prompts.ts  lib/schema.ts  lib/db.ts
+content/tests/*.json            reading tests (admin)
+app/page.tsx                    test list
+app/test/[id]/page.tsx          solve + results
+app/api/tests/[id]/grade        grading
+app/api/analyze                 one mistake → Gemini
+lib/test-schema.ts  lib/tests.ts  lib/test-text.ts  lib/answers.ts
+lib/gemini.ts  lib/prompts.ts  lib/schema.ts  lib/evidence.ts  lib/storage.ts
 components/
 ```
 

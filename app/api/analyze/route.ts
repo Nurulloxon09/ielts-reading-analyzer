@@ -1,4 +1,6 @@
 // Analyzes ONE wrong answer. The client calls this once per mistake, in sequence.
+// Only the test id, question number and her answer come from the browser;
+// the passage, questions and official answer are read from the test file.
 import { findEvidence } from "@/lib/evidence";
 import { describeGeminiError, generateJson } from "@/lib/gemini";
 import { ANALYSIS_SYSTEM_PROMPT, buildAnalysisPrompt, buildQuoteRetryNote } from "@/lib/prompts";
@@ -9,6 +11,8 @@ import {
   type Analysis,
   type AnalyzeResponse,
 } from "@/lib/schema";
+import { passageAsText, questionsAsText } from "@/lib/test-text";
+import { acceptedAnswers, getTest, toPublicTest } from "@/lib/tests";
 
 // First try + one retry if the quote is not in the passage or the JSON is invalid.
 const MAX_ATTEMPTS = 2;
@@ -27,10 +31,25 @@ export async function POST(request: Request) {
 
   const parsed = AnalyzeRequestSchema.safeParse(body);
   if (!parsed.success) {
-    return reply({ ok: false, error: "Missing or invalid passage, questions or answer." }, 400);
+    return reply({ ok: false, error: "Missing or invalid test, question or answer." }, 400);
   }
-  const input = parsed.data;
-  const basePrompt = buildAnalysisPrompt(input);
+  const { testId, number, given } = parsed.data;
+
+  const test = getTest(testId);
+  if (!test) return reply({ ok: false, error: "This test does not exist." }, 404);
+  const correct = acceptedAnswers(test, number);
+  if (correct.length === 0) {
+    return reply({ ok: false, error: `Question ${number} is not in this test.` }, 400);
+  }
+
+  const publicTest = toPublicTest(test);
+  const basePrompt = buildAnalysisPrompt({
+    passage: passageAsText(publicTest),
+    questions: questionsAsText(publicTest),
+    number,
+    given,
+    correct,
+  });
 
   let prompt = basePrompt;
   let lastAnalysis: Analysis | null = null;
@@ -60,9 +79,9 @@ export async function POST(request: Request) {
       continue;
     }
 
-    // The question number and answer key come from her input, never from the model.
-    const analysis = { ...result.data, questionNumber: input.mistake.number };
-    const evidence = findEvidence(input.passage, analysis.evidence.quote);
+    // The question number comes from the request, never from the model.
+    const analysis = { ...result.data, questionNumber: number };
+    const evidence = findEvidence(test.passage.paragraphs, analysis.evidence.quote);
     if (evidence) {
       return reply({ ok: true, analysis: { ...analysis, evidence: { quote: evidence.quote } }, evidence });
     }

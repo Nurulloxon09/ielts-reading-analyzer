@@ -47,17 +47,21 @@ export type Analysis = z.infer<typeof AnalysisSchema>;
 export const analysisJsonSchema = z.toJSONSchema(AnalysisSchema);
 delete analysisJsonSchema.$schema;
 
+// The browser only says which test, which question and what she answered.
+// The passage, questions and correct answer are loaded on the server.
 export const AnalyzeRequestSchema = z.object({
-  passage: z.string().trim().min(1).max(30_000),
-  questions: z.string().trim().min(1).max(15_000),
-  mistake: z.object({
-    number: z.number().int().positive(),
-    given: z.string().max(200),
-    correct: z.string().trim().min(1).max(200),
-  }),
+  testId: z.string().min(1).max(100),
+  number: z.number().int().positive(),
+  given: z.string().max(200),
 });
 
-export type AnalyzeRequest = z.infer<typeof AnalyzeRequestSchema>;
+export type AnalyzePromptInput = {
+  passage: string;
+  questions: string;
+  number: number;
+  given: string;
+  correct: string[]; // accepted answers from the key; the first is the main one
+};
 
 // What /api/analyze returns. The evidence location is found in code, never
 // taken from the model: null means the quote could not be found in the passage.
@@ -65,6 +69,10 @@ export type AnalyzeResponse =
   | {
       ok: true;
       analysis: Analysis;
-      evidence: { quote: string; start: number; end: number } | null;
+      evidence: { quote: string; paragraph: number; start: number; end: number } | null;
     }
   | { ok: false; error: string };
+
+export const GradeRequestSchema = z.object({
+  answers: z.record(z.string().regex(/^\d+$/), z.string().max(200)),
+});

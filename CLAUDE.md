@@ -2,6 +2,11 @@
 
 IELTS Reading Mistake Analyzer: a tool that explains why a student got Reading questions wrong. One user (the developer's sister). Read `PRD.md`, `tech-spec.md` and `roadmap.md` before big changes.
 
+## How it works
+- **Admin (the developer)** adds tests as JSON files in `content/tests/`. To add one, follow `.claude/skills/add-test/SKILL.md` (`/add-test`).
+- **Student** picks a test on `/`, solves it on `/test/[id]` (passage left, questions right, like the computer IELTS), submits.
+- **After submit:** `POST /api/tests/[id]/grade` checks answers on the server, then `POST /api/analyze` explains each mistake. The answer key never goes to the browser.
+
 ## Stack
 Next.js (App Router) + TypeScript + Tailwind · Gemini via `@google/genai` (server only) · Dexie/IndexedDB · zod
 
@@ -12,7 +17,8 @@ Next.js (App Router) + TypeScript + Tailwind · Gemini via `@google/genai` (serv
 
 ## Rules
 - **Secrets:** never hardcode, log or commit the API key. Read `process.env.GEMINI_API_KEY` in server code only. `.env.local` stays gitignored.
-- **Answer key:** the key from the user is always correct. Never let the model choose or change the right answer.
+- **Answer key:** the key in the test file is always correct. Never let the model choose or change the right answer, and never send the key to the browser (`toPublicTest`).
+- **Passages:** copy test passages exactly from the source; never rewrite them.
 - **Evidence quotes:** must exist verbatim in the passage. Verify in code before showing.
 - **Structured output:** all Gemini calls use JSON with the schema in `lib/schema.ts`, validated with zod.
 - **Prompts:** live only in `lib/prompts.ts`.

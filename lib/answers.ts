@@ -1,34 +1,32 @@
-// Answer comparison. The correct answer always comes from her answer key.
+// Answer checking. The correct answers always come from the test's answer key.
+import { allNumbers, type Test } from "@/lib/test-schema";
 
-export type AnswerRow = {
-  id: string;
-  number: string;
-  given: string;
-  correct: string;
-};
-
-export type CheckedAnswer = {
+export type GradedAnswer = {
   number: number;
   given: string;
-  correct: string;
+  correct: string[]; // all accepted answers; the first is the main one
   isCorrect: boolean;
 };
 
-// Case- and space-insensitive: "  Not  Given " matches "not given".
+// Case-, space- and punctuation-insensitive: "  Not  Given. " matches "not given".
 export function normalizeAnswer(answer: string): string {
-  return answer.trim().replace(/\s+/g, " ").toLowerCase();
+  return answer
+    .trim()
+    .replace(/^["'“‘(]+|["'”’).,;:!?]+$/g, "")
+    .replace(/\s+/g, " ")
+    .toLowerCase();
 }
 
-// Rows without a correct answer are skipped. A blank answer counts as wrong.
-export function checkAnswers(rows: AnswerRow[]): CheckedAnswer[] {
-  return rows
-    .filter((row) => row.correct.trim() !== "")
-    .map((row) => ({
-      number: Number(row.number),
-      given: row.given.trim(),
-      correct: row.correct.trim(),
-      isCorrect:
-        row.given.trim() !== "" &&
-        normalizeAnswer(row.given) === normalizeAnswer(row.correct),
-    }));
+// A blank answer counts as wrong.
+export function gradeTest(test: Test, given: Record<string, string>): GradedAnswer[] {
+  return allNumbers(test)
+    .sort((a, b) => a - b)
+    .map((number) => {
+      const raw = test.answers[String(number)];
+      const correct = Array.isArray(raw) ? raw : [raw];
+      const answer = (given[String(number)] ?? "").trim();
+      const isCorrect =
+        answer !== "" && correct.some((c) => normalizeAnswer(c) === normalizeAnswer(answer));
+      return { number, given: answer, correct, isCorrect };
+    });
 }
