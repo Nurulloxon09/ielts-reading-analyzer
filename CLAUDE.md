@@ -15,6 +15,7 @@ Next.js (App Router) + TypeScript + Tailwind · Gemini via `@google/genai` (serv
 - `npm run dev`
 - `npm run build`
 - `npm run lint`
+- `npx vercel deploy --prod` (deploy to https://ielts-reading-analyzer-gray.vercel.app; needs `npx vercel login` once)
 
 ## Rules
 - **Secrets:** never hardcode, log or commit the API key. Read `process.env.GEMINI_API_KEY` in server code only. `.env.local` stays gitignored.

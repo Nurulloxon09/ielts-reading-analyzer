@@ -6,3 +6,6 @@
 node_modules
 .next
 *.log
+# Local build caches (Vercel regenerates them)
+next-env.d.ts
+tsconfig.tsbuildinfo

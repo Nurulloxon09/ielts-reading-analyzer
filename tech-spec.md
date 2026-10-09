@@ -3,7 +3,7 @@
 ## Stack (all free)
 - **App:** Next.js (App Router) + TypeScript + Tailwind
 - **AI:** Gemini API via `@google/genai`, called only from server routes so the key never reaches the browser
-- **Hosting:** run locally on her laptop, or Vercel free tier
+- **Hosting:** Vercel free tier (Hobby), public link: https://ielts-reading-analyzer-gray.vercel.app. Deployed from this folder with the Vercel CLI (no Git integration). The Gemini key and model settings are Vercel environment variables; a new or changed variable needs a redeploy.
 - **Storage:** IndexedDB in the browser (Dexie), plus JSON export/import as backup
 - **Validation:** zod for all AI output
 
