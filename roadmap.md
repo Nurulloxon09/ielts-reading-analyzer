@@ -15,7 +15,8 @@ About 2 hours a day.
 ## Weeks 2–3 — V2 (Oct 17–30)
 - [ ] Mistake log with trap-type tags and filters
 - [ ] Stats screen: top 3 weaknesses
-- [ ] Vocab list + review quiz
+- [x] Vocab list (`/vocab`): search, sort, filter by test
+- [ ] Vocab review quiz
 - [ ] JSON export/import
 - [ ] Optional: deploy to Vercel free tier
 

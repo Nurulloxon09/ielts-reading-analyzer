@@ -15,6 +15,9 @@ export default function Home() {
       </p>
       <div className="mt-5 flex min-h-5 flex-wrap items-center gap-x-5 gap-y-2">
         <SavedCounts />
+        <Link href="/vocab" className="text-sm font-semibold text-sky-700 hover:underline">
+          Vocabulary →
+        </Link>
       </div>
 
       {tests.length === 0 ? (
