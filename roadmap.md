@@ -7,7 +7,8 @@ About 2 hours a day.
 - [x] **Day 2:** Input form (passage, questions, answer table)
 - [x] **Day 3:** `/api/analyze` with JSON schema and prompt
 - [x] **Day 4:** Real-test layout (admin-loaded passages), results, analysis view with highlighted evidence and the 5 sections
-- [ ] **Day 5:** "Explain this sentence" + save mistakes to IndexedDB
+- [x] **Day 5:** Save finished tests, mistakes and new words to IndexedDB
+- [ ] **Day 5:** "Explain this sentence"
 - [ ] **Day 6:** Add 5–10 real passages with Claude Code (`docs/add-test.md`) (replaces photo/PDF input: the admin adds tests, not her)
 - [ ] **Day 7:** Test with her on 3 real passages, fix what's confusing
 

@@ -20,7 +20,7 @@ GEMINI_MODEL=   # current Gemini Flash model name from AI Studio
 3. **Grade:** `POST /api/tests/[id]/grade` compares her answers with the key (case-, space- and punctuation-insensitive).
 4. **Analyze:** `POST /api/analyze` ({testId, number, given}) runs one Gemini call per wrong answer, in sequence. The server loads the passage, questions and correct answer itself.
 5. **Check:** the server confirms the evidence quote exists verbatim in the passage. If it doesn't, it retries once, then shows "couldn't locate".
-6. **Show and save:** results and explanations are kept in localStorage (IndexedDB mistake log comes in Day 5).
+6. **Show and save:** the current result and its explanations are kept in localStorage per test. Every finished test, explained mistake and new word also goes to IndexedDB (`lib/db.ts`).
 
 Planned:
 - `POST /api/explain`: one sentence + passage context → breakdown.
@@ -39,10 +39,12 @@ Planned:
 }
 ```
 
-## Data model (IndexedDB)
-- `sessions`: id, date, title, passage, questions
-- `mistakes`: id, sessionId, questionNumber, trapType, analysis, createdAt
-- `vocab`: word, meaningEn, meaningUz, mistakeId, reviewCount
+## Data model (IndexedDB, Dexie, `lib/db.ts`)
+- `sessions`: id, testId, title, finishedAt, correct, total, timeSpentMs
+- `mistakes`: id, sessionId, testId, questionNumber, given, correct[], trapType, analysis, evidence, createdAt
+- `vocab` (key: lowercase `word`): display, meaningEn, meaningUz, partOfSpeech?, synonyms?, antonyms?, example?, mistakeId?, testId, reviewCount, addedAt
+
+A schema change adds a new `this.version(n)` that keeps existing data. Wrap every call in `safely()`.
 
 ## Prompt rules
 - The answer key is given and correct. Explain it; never re-judge it.
@@ -58,7 +60,7 @@ app/test/[id]/page.tsx          solve + results
 app/api/tests/[id]/grade        grading
 app/api/analyze                 one mistake → Gemini
 lib/test-schema.ts  lib/tests.ts  lib/test-text.ts  lib/answers.ts
-lib/gemini.ts  lib/prompts.ts  lib/schema.ts  lib/evidence.ts  lib/storage.ts
+lib/gemini.ts  lib/prompts.ts  lib/schema.ts  lib/evidence.ts  lib/storage.ts  lib/db.ts
 components/
 ```
 

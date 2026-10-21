@@ -6,6 +6,7 @@ import AnalyzeMistakes, { formatDuration } from "@/components/AnalyzeMistakes";
 import Passage, { type Highlight } from "@/components/Passage";
 import Questions from "@/components/Questions";
 import type { GradedAnswer } from "@/lib/answers";
+import { db, safely, saveMistake } from "@/lib/db";
 import type { AnalyzeResponse } from "@/lib/schema";
 import { storage, type SavedResult } from "@/lib/storage";
 import { allNumbers, type PublicTest } from "@/lib/test-schema";
@@ -26,6 +27,22 @@ export default function TestRunner({ test }: { test: PublicTest }) {
 
 function firstMistake(result: SavedResult | null): number | null {
   return result?.results.find((r) => !r.isCorrect)?.number ?? null;
+}
+
+// Adds a finished test to her history. Undefined if IndexedDB is blocked.
+function saveSession(test: PublicTest, result: SavedResult): Promise<number | undefined> {
+  return safely(
+    () =>
+      db.sessions.add({
+        testId: test.id,
+        title: test.title,
+        finishedAt: result.finishedAt,
+        correct: result.results.filter((r) => r.isCorrect).length,
+        total: result.results.length,
+        timeSpentMs: result.timeSpentMs,
+      }),
+    undefined,
+  );
 }
 
 function Runner({ test }: { test: PublicTest }) {
@@ -100,15 +117,18 @@ function Runner({ test }: { test: PublicTest }) {
     } catch {
       data = { ok: false, error: "Could not reach the server. Your answers are saved; try again." };
     }
-    setSubmitting(false);
-    setConfirming(false);
     if (!data.ok) {
+      setSubmitting(false);
+      setConfirming(false);
       setSubmitError(data.error);
       return;
     }
     const finishedAt = Date.now();
     const next: SavedResult = { results: data.results, analyses: {}, timeSpentMs: finishedAt - startedAt, finishedAt };
+    next.sessionId = await saveSession(test, next);
     storage.clearAttempt(test.id);
+    setSubmitting(false);
+    setConfirming(false);
     setResult(next);
     setSelected(firstMistake(next));
     rightPane.current?.scrollTo({ top: 0 });
@@ -118,6 +138,7 @@ function Runner({ test }: { test: PublicTest }) {
   async function explain(toExplain: number[]) {
     if (!result) return;
     setExplainError(null);
+    let sessionId = result.sessionId;
     for (const n of toExplain) {
       const graded = result.results.find((r) => r.number === n);
       if (!graded || graded.isCorrect || result.analyses[n]) continue;
@@ -140,7 +161,23 @@ function Runner({ test }: { test: PublicTest }) {
         return;
       }
       const done = data;
-      setResult((prev) => (prev ? { ...prev, analyses: { ...prev.analyses, [n]: done } } : prev));
+      // Results saved before mistakes went to IndexedDB have no session yet.
+      sessionId ??= await saveSession(test, result);
+      const id = sessionId;
+      setResult((prev) => (prev ? { ...prev, sessionId: id, analyses: { ...prev.analyses, [n]: done } } : prev));
+      if (id !== undefined) {
+        await saveMistake({
+          sessionId: id,
+          testId: test.id,
+          questionNumber: n,
+          given: graded.given,
+          correct: graded.correct,
+          trapType: done.analysis.trap.type,
+          analysis: done.analysis,
+          evidence: done.evidence,
+          createdAt: Date.now(),
+        });
+      }
     }
     setExplaining(null);
   }

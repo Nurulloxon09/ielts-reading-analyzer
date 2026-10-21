@@ -11,6 +11,7 @@ export type SavedResult = {
   analyses: Record<number, AnalysisResult>;
   timeSpentMs: number;
   finishedAt: number;
+  sessionId?: number; // this attempt in IndexedDB (lib/db.ts)
 };
 
 const attemptKey = (testId: string) => `ielts:v1:attempt:${testId}`;
