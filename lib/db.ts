@@ -39,6 +39,11 @@ export type VocabItem = {
   testId: string;
   reviewCount: number;
   addedAt: number;
+  // Only on words she added herself with "Add to vocabulary".
+  partOfSpeech?: string;
+  synonyms?: string[];
+  antonyms?: string[];
+  example?: string;
 };
 
 type CachedExplanation = { key: string; explanation: Explanation; createdAt: number };
@@ -168,6 +173,11 @@ export function saveExplanation(testId: string, text: string, explanation: Expla
       await addWords(d, explanation.vocab, testId);
     }),
   );
+}
+
+// Every saved word, newest first.
+export function listVocab(): Promise<VocabItem[] | null> {
+  return safely((d) => d.vocab.orderBy("addedAt").reverse().toArray());
 }
 
 export function getCounts(): Promise<{ mistakes: number; words: number } | null> {

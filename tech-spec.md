@@ -41,7 +41,7 @@ GEMINI_FALLBACK_MODELS=   # optional, comma-separated; used in order when a mode
 ## Data model (IndexedDB, `lib/db.ts`)
 - `sessions`: id, testId, title, finishedAt, correct, total, timeSpentMs (one per submitted attempt)
 - `mistakes`: id, sessionId, testId, questionNumber, given, correct, trapType, analysis, evidence, createdAt (saved when a mistake is explained)
-- `vocab`: word (lowercase key), display, meaningEn, meaningUz, mistakeId (missing for words from "Explain this sentence"), testId, reviewCount, addedAt
+- `vocab`: word (lowercase key), display, meaningEn, meaningUz, mistakeId (missing for words from "Explain this sentence"), testId, reviewCount, addedAt; optional partOfSpeech, synonyms, antonyms, example
 - `explanations`: key (testId + selected text), explanation, createdAt (cache for `/api/explain`)
 
 ## Prompt rules
@@ -55,6 +55,7 @@ GEMINI_FALLBACK_MODELS=   # optional, comma-separated; used in order when a mode
 content/tests/*.json            reading tests (admin)
 app/page.tsx                    test list
 app/test/[id]/page.tsx          solve + results
+app/vocab/page.tsx              vocabulary bank (IndexedDB only)
 app/api/tests/[id]/grade        grading
 app/api/analyze                 one mistake → Gemini
 app/api/explain                 selected sentence → Gemini

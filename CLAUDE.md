@@ -7,6 +7,7 @@ IELTS Reading Mistake Analyzer: a tool that explains why a student got Reading q
 - **Student** picks a test on `/`, solves it on `/test/[id]` (passage left, questions right, like the computer IELTS), submits.
 - **After submit:** `POST /api/tests/[id]/grade` checks answers on the server, then `POST /api/analyze` explains each mistake. The answer key never goes to the browser.
 - **Also after submit:** selecting text in the passage calls `POST /api/explain`. Attempts, explained mistakes, new words and cached explanations are saved in IndexedDB (`lib/db.ts`).
+- **Vocabulary:** `/vocab` lists every saved word (search, sort, filter by test). Browser only, no Gemini.
 
 ## Stack
 Next.js (App Router) + TypeScript + Tailwind · Gemini via `@google/genai` (server only) · Dexie/IndexedDB · zod
