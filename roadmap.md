@@ -14,7 +14,7 @@ About 2 hours a day.
 ## Weeks 2–3 — V2 (Oct 17–30)
 - [ ] Mistake log with trap-type tags and filters
 - [ ] Stats screen: top 3 weaknesses
-- [ ] Vocab list + review quiz (list done: `/vocab`)
+- [x] Vocab list + review quiz (`/vocab`, `/vocab/practice`)
 - [ ] JSON export/import
 - [x] Deploy to Vercel free tier: https://ielts-reading-analyzer-gray.vercel.app
 

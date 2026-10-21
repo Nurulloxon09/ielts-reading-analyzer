@@ -3,7 +3,7 @@
 // blocked, the app still works, it just doesn't remember.
 import Dexie, { type EntityTable } from "dexie";
 import type { GradedAnswer } from "@/lib/answers";
-import type { Analysis, AnalyzeResponse, Explanation, VocabDefinition } from "@/lib/schema";
+import type { Analysis, AnalyzeResponse, Explanation, VocabCheck, VocabDefinition } from "@/lib/schema";
 
 type Evidence = Extract<AnalyzeResponse, { ok: true }>["evidence"];
 
@@ -37,7 +37,8 @@ export type VocabItem = {
   meaningUz: string;
   mistakeId?: number; // missing for words from "Explain this sentence"
   testId: string;
-  reviewCount: number;
+  reviewCount: number; // times practised in "Use in a sentence"
+  lastReviewedAt?: number;
   addedAt: number;
   // Only on words she added herself with "Add to vocabulary".
   partOfSpeech?: string;
@@ -48,11 +49,22 @@ export type VocabItem = {
 
 type CachedExplanation = { key: string; explanation: Explanation; createdAt: number };
 
+// One checked sentence in "Use in a sentence". Also the cache: same word + same sentence = no new Gemini call.
+export type VocabAttempt = {
+  id: number;
+  key: string; // word + sentence
+  word: string;
+  sentence: string;
+  check: VocabCheck;
+  createdAt: number;
+};
+
 class AnalyzerDb extends Dexie {
   sessions!: EntityTable<Session, "id">;
   mistakes!: EntityTable<Mistake, "id">;
   vocab!: EntityTable<VocabItem, "word">;
   explanations!: EntityTable<CachedExplanation, "key">;
+  vocabAttempts!: EntityTable<VocabAttempt, "id">;
 
   constructor() {
     super("ielts-reading-analyzer");
@@ -61,6 +73,11 @@ class AnalyzerDb extends Dexie {
       mistakes: "++id, sessionId, testId, trapType, createdAt, [sessionId+questionNumber]",
       vocab: "&word, mistakeId, testId, addedAt",
       explanations: "&key",
+    });
+    // v2: "Use in a sentence" attempts. Only the new table is listed; every v1 table
+    // and its data is kept as it is, so no upgrade function is needed.
+    this.version(2).stores({
+      vocabAttempts: "++id, &key, word, createdAt",
     });
   }
 }
@@ -216,6 +233,39 @@ export function saveDefinedWord(input: {
       };
       await d.vocab.add(item);
       return item;
+    }),
+  );
+}
+
+// "Use in a sentence": the least practised word first, then the one practised longest ago.
+// Words in `seen` (already shown in this visit) are left out; null when none is left.
+export function nextPracticeWord(seen: ReadonlySet<string>): Promise<VocabItem | null> {
+  return safely(async (d) => {
+    const pool = (await d.vocab.toArray()).filter((w) => !seen.has(w.word));
+    pool.sort(
+      (a, b) =>
+        a.reviewCount - b.reviewCount || (a.lastReviewedAt ?? 0) - (b.lastReviewedAt ?? 0) || a.addedAt - b.addedAt,
+    );
+    return pool[0] ?? null;
+  });
+}
+
+const attemptKey = (word: string, sentence: string) => `${vocabKey(word)}\n${sentence.trim().replace(/\s+/g, " ")}`;
+
+export function getVocabAttempt(word: string, sentence: string): Promise<VocabCheck | null> {
+  return safely(async (d) => (await d.vocabAttempts.where("key").equals(attemptKey(word, sentence)).first())?.check ?? null);
+}
+
+// Saves a newly checked sentence and counts one more review for the word.
+export function savePractice(word: string, sentence: string, check: VocabCheck): Promise<void | null> {
+  return safely((d) =>
+    d.transaction("rw", d.vocab, d.vocabAttempts, async () => {
+      const key = attemptKey(word, sentence);
+      if (!(await d.vocabAttempts.where("key").equals(key).first())) {
+        await d.vocabAttempts.add({ key, word: vocabKey(word), sentence: sentence.trim(), check, createdAt: Date.now() });
+      }
+      const item = await d.vocab.get(vocabKey(word));
+      if (item) await d.vocab.update(item.word, { reviewCount: item.reviewCount + 1, lastReviewedAt: Date.now() });
     }),
   );
 }

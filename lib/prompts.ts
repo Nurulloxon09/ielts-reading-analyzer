@@ -1,5 +1,11 @@
 // All Gemini prompts live in this file.
-import { TRAP_TYPES, type AnalyzePromptInput, type ExplainPromptInput, type VocabPromptInput } from "@/lib/schema";
+import {
+  TRAP_TYPES,
+  type AnalyzePromptInput,
+  type ExplainPromptInput,
+  type VocabCheckPromptInput,
+  type VocabPromptInput,
+} from "@/lib/schema";
 
 export const ANALYSIS_SYSTEM_PROMPT = `You are an IELTS Reading tutor. Your student is Uzbek, about B1 level in English (Reading band 6.0).
 She got one question wrong. Explain why the correct answer is correct and why her answer is wrong.
@@ -100,4 +106,24 @@ ${sentence}
 """
 
 WORD SHE TYPED: "${word}"${form}`;
+}
+
+export const VOCAB_CHECK_SYSTEM_PROMPT = `You are an English tutor. Your student is Uzbek, about B1 level, preparing for IELTS.
+She is practising a new word. She wrote her own sentence with it. Check how she used the word.
+
+Rules:
+1. correctUse: true if she used the target word (any form, e.g. plural or past tense) correctly, with the given meaning, in a sentence that makes sense. false if the word is missing, has the wrong meaning, the wrong form, or a wrong word partner (collocation).
+2. Judge the target word first. A small mistake somewhere else does not make correctUse false, but mention it.
+3. feedbackEn: 1 or 2 short sentences in simple B1 English. Say what is good, or what is wrong and why. Be kind and direct.
+4. feedbackUz: the same feedback in Uzbek, Latin script (with o', g', sh, ch).
+5. improvedSentence: her sentence, corrected and natural. Keep her idea and keep the target word. If it is already good, return it with only tiny changes, or unchanged.`;
+
+export function buildVocabCheckPrompt({ word, partOfSpeech, meaningEn, sentence }: VocabCheckPromptInput): string {
+  return `TARGET WORD: "${word}"${partOfSpeech ? ` (${partOfSpeech})` : ""}
+MEANING: ${meaningEn}
+
+HER SENTENCE:
+"""
+${sentence}
+"""`;
 }

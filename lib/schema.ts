@@ -140,3 +140,28 @@ export type VocabPromptInput = {
 export type VocabDefineResponse =
   | { ok: true; definition: VocabDefinition; exampleFromPassage: string }
   | { ok: false; error: string };
+
+// "Use in a sentence": she writes her own sentence with a saved word; Gemini checks it.
+export const VocabCheckSchema = z.object({
+  correctUse: z.boolean().describe("true if the target word is used correctly, with this meaning"),
+  feedbackEn: z.string().describe("1 or 2 short B1 sentences about how she used the word"),
+  feedbackUz: z.string(),
+  improvedSentence: z.string().describe("Her sentence, corrected and natural, keeping her idea"),
+});
+
+export type VocabCheck = z.infer<typeof VocabCheckSchema>;
+
+export const vocabCheckJsonSchema = z.toJSONSchema(VocabCheckSchema);
+delete vocabCheckJsonSchema.$schema;
+
+// The word comes from her browser (the vocab list lives in IndexedDB).
+export const VocabCheckRequestSchema = z.object({
+  word: z.string().trim().min(1).max(60),
+  partOfSpeech: z.string().trim().max(30).optional(),
+  meaningEn: z.string().trim().min(1).max(300),
+  sentence: z.string().trim().min(3).max(300),
+});
+
+export type VocabCheckPromptInput = z.infer<typeof VocabCheckRequestSchema>;
+
+export type VocabCheckResponse = { ok: true; check: VocabCheck } | { ok: false; error: string };

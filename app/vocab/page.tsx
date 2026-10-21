@@ -14,7 +14,15 @@ export default function VocabPage() {
       <Link href="/" className="text-sm font-semibold text-sky-700 hover:underline">
         ← All tests
       </Link>
-      <h1 className="mt-3 text-3xl font-bold text-slate-900">Vocabulary</h1>
+      <div className="mt-3 flex flex-wrap items-center justify-between gap-3">
+        <h1 className="text-3xl font-bold text-slate-900">Vocabulary</h1>
+        <Link
+          href="/vocab/practice"
+          className="rounded-md bg-sky-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-sky-700"
+        >
+          Practise: use in a sentence
+        </Link>
+      </div>
       <p className="mt-2 text-[15px] text-slate-600">
         Every word you saved: from explained mistakes, explained sentences and &ldquo;Add to vocabulary&rdquo;.
       </p>
