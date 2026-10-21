@@ -68,7 +68,20 @@ export class QuotaUsedUpError extends Error {
 
 const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
-type JsonRequest = { system: string; prompt: string; jsonSchema: unknown };
+type JsonRequest = {
+  system: string;
+  prompt: string;
+  jsonSchema: unknown;
+  // "lite": try the configured Flash-Lite models first (bigger free daily limit),
+  // then the others. The model list itself still comes only from the env.
+  prefer?: "lite";
+};
+
+function modelOrder(models: string[], prefer?: "lite"): string[] {
+  if (prefer !== "lite") return models;
+  const isLite = (m: string) => /lite/i.test(m);
+  return [...models.filter(isLite), ...models.filter((m) => !isLite(m))];
+}
 
 async function generateWithRetry(ai: GoogleGenAI, model: string, options: JsonRequest): Promise<string> {
   for (let attempt = 0; ; attempt++) {
@@ -94,7 +107,8 @@ async function generateWithRetry(ai: GoogleGenAI, model: string, options: JsonRe
 // Tries each configured model in order until one answers.
 // Temperature is left at the default: Google advises against lowering it for Gemini 3 models.
 export async function generateJson(options: JsonRequest): Promise<string> {
-  const { ai, models } = getGemini();
+  const { ai, models: configured } = getGemini();
+  const models = modelOrder(configured, options.prefer);
   let lastError: unknown = null;
 
   for (const model of models) {

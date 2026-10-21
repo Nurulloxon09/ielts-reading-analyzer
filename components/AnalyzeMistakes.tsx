@@ -1,10 +1,12 @@
 "use client";
 
+import AddToVocab from "@/components/AddToVocab";
 import AnalysisCard from "@/components/AnalysisCard";
 import type { GradedAnswer } from "@/lib/answers";
 import type { AnalysisResult } from "@/lib/storage";
 
 type Props = {
+  testId: string;
   results: GradedAnswer[];
   analyses: Record<number, AnalysisResult>;
   labels: Map<number, string>;
@@ -26,6 +28,7 @@ export function formatDuration(ms: number) {
 
 // Results pane: score, then every question; wrong ones open into their analysis.
 export default function AnalyzeMistakes({
+  testId,
   results,
   analyses,
   labels,
@@ -56,9 +59,10 @@ export default function AnalyzeMistakes({
             : `${mistakes.length} ${mistakes.length === 1 ? "mistake" : "mistakes"} to learn from`}{" "}
           · finished in {formatDuration(timeSpentMs)}
         </p>
-        <p className="mt-2 text-sm text-slate-500">
-          Tip: select any sentence in the passage to see it explained.
-        </p>
+        <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-2">
+          <p className="text-sm text-slate-500">Tip: select any sentence in the passage to see it explained.</p>
+          <AddToVocab testId={testId} />
+        </div>
 
         {mistakes.length > 0 && (
           <div className="mt-4 flex flex-wrap items-center gap-4">

@@ -243,6 +243,7 @@ function Runner({ test }: { test: PublicTest }) {
         <div ref={rightPane} className="bg-slate-50 md:overflow-y-auto">
           {result ? (
             <AnalyzeMistakes
+              testId={test.id}
               results={result.results}
               analyses={result.analyses}
               labels={labels}

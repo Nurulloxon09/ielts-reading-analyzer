@@ -1,5 +1,5 @@
 // All Gemini prompts live in this file.
-import { TRAP_TYPES, type AnalyzePromptInput, type ExplainPromptInput } from "@/lib/schema";
+import { TRAP_TYPES, type AnalyzePromptInput, type ExplainPromptInput, type VocabPromptInput } from "@/lib/schema";
 
 export const ANALYSIS_SYSTEM_PROMPT = `You are an IELTS Reading tutor. Your student is Uzbek, about B1 level in English (Reading band 6.0).
 She got one question wrong. Explain why the correct answer is correct and why her answer is wrong.
@@ -79,4 +79,25 @@ ${selection}
 """
 
 Explain the selected text. Split the whole SENTENCE into parts.`;
+}
+
+export const VOCAB_SYSTEM_PROMPT = `You are an IELTS Reading tutor. Your student is Uzbek, about B1 level in English (Reading band 6.0).
+She found a word in a reading passage and wants to learn it. Explain the word as it is used in that sentence.
+
+Rules:
+1. display: the dictionary form of the word as it is used here: singular noun, base form of a verb (for example "flourish" for "flourishing"). Keep a phrase as a phrase. Lowercase, unless it is a name.
+2. partOfSpeech: noun, verb, adjective, adverb or phrase, as used in the sentence.
+3. meaningEn: the meaning in THIS sentence, in one short sentence of simple B1 English. Do not use the word itself to explain it.
+4. meaningUz: the same meaning in Uzbek, Latin script (with o', g', sh, ch).
+5. synonyms: 3 to 5 words or short phrases that could replace it in this sentence, the kind of paraphrases IELTS uses. Common words first.
+6. antonyms: 0 to 3 opposites. Leave the list empty if no real opposite exists.`;
+
+export function buildVocabPrompt({ word, found, sentence }: VocabPromptInput): string {
+  const form = found.toLowerCase() === word.toLowerCase() ? "" : `\nIn the sentence it is written: "${found}"`;
+  return `SENTENCE FROM THE PASSAGE:
+"""
+${sentence}
+"""
+
+WORD SHE TYPED: "${word}"${form}`;
 }

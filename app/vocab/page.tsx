@@ -15,7 +15,9 @@ export default function VocabPage() {
         ← All tests
       </Link>
       <h1 className="mt-3 text-3xl font-bold text-slate-900">Vocabulary</h1>
-      <p className="mt-2 text-[15px] text-slate-600">Every new word from your explained mistakes and sentences.</p>
+      <p className="mt-2 text-[15px] text-slate-600">
+        Every word you saved: from explained mistakes, explained sentences and &ldquo;Add to vocabulary&rdquo;.
+      </p>
       <VocabBank tests={tests} />
     </main>
   );

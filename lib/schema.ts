@@ -104,3 +104,39 @@ export type ExplainPromptInput = {
 };
 
 export type ExplainResponse = { ok: true; explanation: Explanation; text: string } | { ok: false; error: string };
+
+// "Add to vocabulary": she types a word from the passage after submitting.
+// The example sentence is found in the passage by the server, not written by the model.
+export const VocabDefinitionSchema = z.object({
+  display: z.string().describe("Dictionary form of the word, lowercase unless it is a name"),
+  partOfSpeech: z.string().describe("noun, verb, adjective, adverb or phrase"),
+  meaningEn: z.string().describe("Its meaning in this sentence, one short B1 sentence"),
+  meaningUz: z.string(),
+  synonyms: z.array(z.string()).min(1).max(5).describe("3 to 5 words with the same meaning in this sentence"),
+  antonyms: z.array(z.string()).max(3).describe("0 to 3 opposites; empty if none fit"),
+});
+
+export type VocabDefinition = z.infer<typeof VocabDefinitionSchema>;
+
+export const vocabDefinitionJsonSchema = z.toJSONSchema(VocabDefinitionSchema);
+delete vocabDefinitionJsonSchema.$schema;
+
+export const VocabDefineRequestSchema = z.object({
+  testId: z.string().min(1).max(100),
+  word: z
+    .string()
+    .trim()
+    .min(2)
+    .max(40)
+    .refine((w) => w.split(/\s+/).length <= 4),
+});
+
+export type VocabPromptInput = {
+  word: string; // what she typed
+  found: string; // how it is written in the passage
+  sentence: string; // the passage sentence it is in
+};
+
+export type VocabDefineResponse =
+  | { ok: true; definition: VocabDefinition; exampleFromPassage: string }
+  | { ok: false; error: string };

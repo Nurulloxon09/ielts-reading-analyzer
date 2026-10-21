@@ -61,3 +61,24 @@ export function sentenceAround(text: string, start: number, end: number): string
   while (to < text.length && /["'’”)]/.test(text[to])) to++;
   return text.slice(from, to).trim();
 }
+
+// Finds a word or short phrase she typed, ignoring case. A whole-word match wins;
+// otherwise the word may continue (she types "flourish", the passage has "flourishing").
+export function findWord(paragraphs: { text: string }[], word: string): EvidenceMatch | null {
+  const words = word.trim().split(/\s+/).filter(Boolean).map(wordPattern);
+  if (words.length === 0) return null;
+  const body = `(?<![\p{L}\p{N}])${words.join("\s+")}`;
+
+  for (const pattern of [`${body}(?![\p{L}\p{N}])`, `${body}[\p{L}]*`]) {
+    const re = new RegExp(pattern, "iu");
+    for (let i = 0; i < paragraphs.length; i++) {
+      const match = re.exec(paragraphs[i].text);
+      if (match) {
+        const start = match.index;
+        const end = start + match[0].length;
+        return { quote: match[0], paragraph: i, start, end };
+      }
+    }
+  }
+  return null;
+}

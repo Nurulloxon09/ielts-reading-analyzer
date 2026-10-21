@@ -53,7 +53,7 @@ export default function VocabBank({ tests }: Props) {
             normalize(s).includes(q),
           )),
     );
-    return sort === "az" ? [...list].sort((a, b) => a.word.localeCompare(b.word)) : list;
+    return sort === "az" ? [...list].sort((a, b) => a.display.localeCompare(b.display)) : list;
   }, [words, query, sort, testId]);
 
   if (words === null) return <p className="mt-8 text-slate-500">Loading your words…</p>;
@@ -133,17 +133,7 @@ export default function VocabBank({ tests }: Props) {
 function WordCard({ word: w, testTitle }: { word: VocabItem; testTitle?: string }) {
   return (
     <li className="rounded-xl border border-slate-200 bg-white px-5 py-4 shadow-sm">
-      <p className="text-[17px] font-semibold text-slate-900">
-        {w.display}
-        {w.partOfSpeech && <span className="ml-2 text-sm font-normal italic text-slate-500">{w.partOfSpeech}</span>}
-      </p>
-      <p className="mt-1 text-[15px] text-slate-800">{w.meaningEn}</p>
-      <p className="mt-0.5 text-sm text-slate-500">{w.meaningUz}</p>
-
-      {w.example && <p className="mt-2 text-sm italic text-slate-600">&ldquo;{w.example}&rdquo;</p>}
-      <WordChips label="Synonyms" words={w.synonyms} className="bg-emerald-50 text-emerald-800" />
-      <WordChips label="Opposites" words={w.antonyms} className="bg-rose-50 text-rose-800" />
-
+      <WordDetails word={w} />
       <p className="mt-3 text-xs text-slate-500">
         From{" "}
         {testTitle ? (
@@ -156,6 +146,24 @@ function WordCard({ word: w, testTitle }: { word: VocabItem; testTitle?: string 
         · Added {formatDate(w.addedAt)}
       </p>
     </li>
+  );
+}
+
+// One word's meaning, example and synonyms. Also used in the "Add to vocabulary" dialog.
+export function WordDetails({ word: w }: { word: VocabItem }) {
+  return (
+    <>
+      <p className="text-[17px] font-semibold text-slate-900">
+        {w.display}
+        {w.partOfSpeech && <span className="ml-2 text-sm font-normal italic text-slate-500">{w.partOfSpeech}</span>}
+      </p>
+      <p className="mt-1 text-[15px] text-slate-800">{w.meaningEn}</p>
+      <p className="mt-0.5 text-sm text-slate-500">{w.meaningUz}</p>
+
+      {w.example && <p className="mt-2 text-sm italic text-slate-600">&ldquo;{w.example}&rdquo;</p>}
+      <WordChips label="Synonyms" words={w.synonyms} className="bg-emerald-50 text-emerald-800" />
+      <WordChips label="Opposites" words={w.antonyms} className="bg-rose-50 text-rose-800" />
+    </>
   );
 }
 

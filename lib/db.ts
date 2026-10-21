@@ -3,7 +3,7 @@
 // blocked, the app still works, it just doesn't remember.
 import Dexie, { type EntityTable } from "dexie";
 import type { GradedAnswer } from "@/lib/answers";
-import type { Analysis, AnalyzeResponse, Explanation } from "@/lib/schema";
+import type { Analysis, AnalyzeResponse, Explanation, VocabDefinition } from "@/lib/schema";
 
 type Evidence = Extract<AnalyzeResponse, { ok: true }>["evidence"];
 
@@ -171,6 +171,51 @@ export function saveExplanation(testId: string, text: string, explanation: Expla
     d.transaction("rw", d.explanations, d.vocab, async () => {
       await d.explanations.put({ key: explanationKey(testId, text), explanation, createdAt: Date.now() });
       await addWords(d, explanation.vocab, testId);
+    }),
+  );
+}
+
+// The vocab key: lowercase, single spaces.
+export const vocabKey = (word: string) => word.trim().toLowerCase().replace(/\s+/g, " ");
+
+// A saved word, found by its key or its dictionary form ("herbivores" finds "herbivore").
+async function findWord(d: AnalyzerDb, word: string): Promise<VocabItem | undefined> {
+  const key = vocabKey(word);
+  return (await d.vocab.get(key)) ?? (await d.vocab.filter((v) => vocabKey(v.display) === key).first());
+}
+
+export function getVocabWord(word: string): Promise<VocabItem | null> {
+  return safely(async (d) => (await findWord(d, word)) ?? null);
+}
+
+// A word she added with "Add to vocabulary", saved under what she typed. If the word or its
+// dictionary form is already saved, the saved one is kept and returned.
+export function saveDefinedWord(input: {
+  word: string;
+  testId: string;
+  definition: VocabDefinition;
+  example: string;
+}): Promise<VocabItem | null> {
+  const { definition: def } = input;
+  return safely((d) =>
+    d.transaction("rw", d.vocab, async () => {
+      const existing = (await findWord(d, input.word)) ?? (await findWord(d, def.display));
+      if (existing) return existing;
+      const item: VocabItem = {
+        word: vocabKey(input.word),
+        display: def.display.trim() || input.word.trim(),
+        meaningEn: def.meaningEn,
+        meaningUz: def.meaningUz,
+        testId: input.testId,
+        reviewCount: 0,
+        addedAt: Date.now(),
+        partOfSpeech: def.partOfSpeech,
+        synonyms: def.synonyms,
+        antonyms: def.antonyms,
+        example: input.example,
+      };
+      await d.vocab.add(item);
+      return item;
     }),
   );
 }

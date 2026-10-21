@@ -23,6 +23,7 @@ GEMINI_FALLBACK_MODELS=   # optional, comma-separated; used in order when a mode
 5. **Check:** the server confirms the evidence quote exists verbatim in the passage. If it doesn't, it retries once, then shows "couldn't locate".
 6. **Show and save:** the current result and its explanations are kept in localStorage. Every submitted attempt, explained mistake and new word is also saved to IndexedDB (`lib/db.ts`) for the mistake log.
 7. **Explain this sentence:** after submitting, she selects text in the passage. `POST /api/explain` ({testId, text}) checks the text is in the passage, widens it to the full sentence and returns a breakdown. Explanations are cached in IndexedDB, so the same sentence never costs a second Gemini call.
+8. **Add to vocabulary:** after submitting, she types a word from the passage. If it (or its dictionary form) is already saved, the saved entry is shown with no Gemini call. Otherwise `POST /api/vocab/define` ({testId, word}) finds the word in the passage, takes its sentence as the example and asks Gemini (Flash-Lite first) for the meaning, synonyms and opposites.
 
 ## Analysis output (JSON schema, enforced with Gemini structured output)
 ```
@@ -59,11 +60,12 @@ app/vocab/page.tsx              vocabulary bank (IndexedDB only)
 app/api/tests/[id]/grade        grading
 app/api/analyze                 one mistake → Gemini
 app/api/explain                 selected sentence → Gemini
+app/api/vocab/define            typed word → Gemini (Flash-Lite first)
 lib/test-schema.ts  lib/tests.ts  lib/test-text.ts  lib/answers.ts
 lib/gemini.ts  lib/prompts.ts  lib/schema.ts  lib/evidence.ts  lib/storage.ts  lib/db.ts
 components/
 ```
 
 ## Risks
-- **Free-tier rate limits:** run calls in sequence and retry with backoff. Each model has its own daily quota (resets at midnight Pacific time), so `lib/gemini.ts` falls back to the next model in `GEMINI_FALLBACK_MODELS` when one runs out.
+- **Free-tier rate limits:** run calls in sequence and retry with backoff. Each model has its own daily quota (resets at midnight Pacific time), so `lib/gemini.ts` falls back to the next model in `GEMINI_FALLBACK_MODELS` when one runs out. Small tasks pass `prefer: "lite"` to `generateJson`, which tries the configured Flash-Lite models first (bigger daily limit).
 - **Data lives in one browser:** add a JSON export button early.
