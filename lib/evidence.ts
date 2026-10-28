@@ -67,9 +67,10 @@ export function sentenceAround(text: string, start: number, end: number): string
 export function findWord(paragraphs: { text: string }[], word: string): EvidenceMatch | null {
   const words = word.trim().split(/\s+/).filter(Boolean).map(wordPattern);
   if (words.length === 0) return null;
-  const body = `(?<![\p{L}\p{N}])${words.join("\s+")}`;
+  // String.raw keeps the backslashes: in a normal string "\s" is just "s".
+  const body = String.raw`(?<![\p{L}\p{N}])` + words.join(String.raw`\s+`);
 
-  for (const pattern of [`${body}(?![\p{L}\p{N}])`, `${body}[\p{L}]*`]) {
+  for (const pattern of [body + String.raw`(?![\p{L}\p{N}])`, body + String.raw`\p{L}*`]) {
     const re = new RegExp(pattern, "iu");
     for (let i = 0; i < paragraphs.length; i++) {
       const match = re.exec(paragraphs[i].text);
