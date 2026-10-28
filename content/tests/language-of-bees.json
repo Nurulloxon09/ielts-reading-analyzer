@@ -35,10 +35,10 @@
       "type": "tfng",
       "instructions": "Do the following statements agree with the information given in Reading Passage 1?\nIn boxes 1–4 on your answer sheet, choose\nTRUE if the statement agrees with the information\nFALSE if the statement contradicts the information\nNOT GIVEN if there is no information on this",
       "questions": [
-        { "n": 1, "text": "Before von Frisch's work, some people thought bees found flowers only by using their sense of smell." },
-        { "n": 2, "text": "Von Frisch was the first scientist to study bees inside a hive with a glass wall." },
-        { "n": 3, "text": "The round dance shows other bees which direction to fly in." },
-        { "n": 4, "text": "Von Frisch's ideas were immediately accepted by other scientists." }
+        { "n": 1, "text": "Before von Frisch's work, some people thought bees found flowers only by using their sense of smell.", "evidence": "Some believed the bees simply followed one another, or that they found the flowers by smell alone." },
+        { "n": 2, "text": "Von Frisch was the first scientist to study bees inside a hive with a glass wall.", "evidence": null },
+        { "n": 3, "text": "The round dance shows other bees which direction to fly in.", "evidence": "This 'round dance' told the other bees only that food was nearby; it did not indicate any particular direction." },
+        { "n": 4, "text": "Von Frisch's ideas were immediately accepted by other scientists.", "evidence": "Not every scientist accepted these findings." }
       ]
     },
     {

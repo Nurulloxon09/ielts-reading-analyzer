@@ -61,27 +61,33 @@
       "questions": [
         {
           "n": 8,
-          "text": "The outcome of the introduction of cane toads was immediately obvious."
+          "text": "The outcome of the introduction of cane toads was immediately obvious.",
+          "evidence": "However, over the following years it became clear that the cane toads were a failure."
         },
         {
           "n": 9,
-          "text": "Rabbits were introduced to Australia to control weeds."
+          "text": "Rabbits were introduced to Australia to control weeds.",
+          "evidence": null
         },
         {
           "n": 10,
-          "text": "Walter Froggatt was criticised for his efforts to stop the introduction of the cane toad to Australia."
+          "text": "Walter Froggatt was criticised for his efforts to stop the introduction of the cane toad to Australia.",
+          "evidence": "However, Froggatt's peers rebuked him and eminent scientists branded his views 'decidedly pessimistic'."
         },
         {
           "n": 11,
-          "text": "The average size of cane toads has increased since their introduction."
+          "text": "The average size of cane toads has increased since their introduction.",
+          "evidence": null
         },
         {
           "n": 12,
-          "text": "Australian animals can eat cane toads safely."
+          "text": "Australian animals can eat cane toads safely.",
+          "evidence": "Until recently there was no understanding of the toxicity of cane toad poison, but it is now clear that freshwater crocodiles, goannas (large lizards) and dingoes (wild dogs) have died after eating cane toads."
         },
         {
           "n": 13,
-          "text": "In many places cane toads are gaining control of the habitats of Australian fauna."
+          "text": "In many places cane toads are gaining control of the habitats of Australian fauna.",
+          "evidence": "As their numbers increase, they are taking over more and more of the land where native Australian fauna live."
         }
       ]
     }

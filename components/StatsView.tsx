@@ -56,6 +56,25 @@ export default function StatsView() {
         )}
       </Card>
 
+      <Card title="Evidence for TRUE / FALSE / NOT GIVEN">
+        {stats.evidence.total > 0 ? (
+          <>
+            <p className="text-[17px] text-slate-900">
+              <span className="font-semibold">{Math.round((stats.evidence.right / stats.evidence.total) * 100)}%</span> right
+              <span className="text-slate-500">
+                {" "}
+                ({stats.evidence.right} of {stats.evidence.total} questions)
+              </span>
+            </p>
+            <p className="mt-2 text-xs text-slate-500">
+              Right means you highlighted the sentence that proves the answer, or correctly said there is none.
+            </p>
+          </>
+        ) : (
+          <Empty>Give evidence for TRUE / FALSE / NOT GIVEN questions in a test to see this.</Empty>
+        )}
+      </Card>
+
       <Card title="Top 3 mistake types">
         {topTraps.length > 0 ? (
           <ol className="flex flex-col gap-1.5 text-[15px]">

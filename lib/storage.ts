@@ -5,7 +5,14 @@ import type { AnalyzeResponse } from "@/lib/schema";
 
 export type AnalysisResult = Extract<AnalyzeResponse, { ok: true }>;
 
-export type SavedAttempt = { answers: Record<string, string>; startedAt: number };
+// Her evidence for a TRUE/FALSE question while she solves, with the highlighted words for display.
+export type EvidenceNote = { paragraph: number; start: number; end: number; text: string } | "none";
+
+export type SavedAttempt = {
+  answers: Record<string, string>;
+  startedAt: number;
+  evidence?: Record<string, EvidenceNote>; // TRUE/FALSE and YES/NO questions only
+};
 
 export type SavedResult = {
   results: GradedAnswer[];

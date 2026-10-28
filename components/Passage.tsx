@@ -43,7 +43,7 @@ export default function Passage({ test, highlight }: Props) {
           return (
             <div key={i} className="flex gap-4">
               {hasLabels && <span className="w-5 shrink-0 pt-px text-lg font-bold text-slate-900">{p.label}</span>}
-              <p className="text-justify text-[17px] leading-[1.85] text-slate-800 hyphens-auto">
+              <p data-paragraph={i} className="text-justify text-[17px] leading-[1.85] text-slate-800 hyphens-auto">
                 {hl ? (
                   <>
                     {p.text.slice(0, hl.start)}

@@ -199,23 +199,28 @@
       "questions": [
         {
           "n": 36,
-          "text": "The tone of the content we post on social media tends to reflect the nature of the posts in our feeds."
+          "text": "The tone of the content we post on social media tends to reflect the nature of the posts in our feeds.",
+          "evidence": "Studies show that if we observe positive feeds on social media, such as images of a pink sunset, we are more likely to post uplifting messages ourselves. If we observe negative posts, such as complaints about a long queue at the coffee shop, we will in turn create more negative posts."
         },
         {
           "n": 37,
-          "text": "Phones have a greater impact on our stress levels than other electronic media devices."
+          "text": "Phones have a greater impact on our stress levels than other electronic media devices.",
+          "evidence": null
         },
         {
           "n": 38,
-          "text": "The more we read about a stressful public event on social media, the less able we are to take the information in."
+          "text": "The more we read about a stressful public event on social media, the less able we are to take the information in.",
+          "evidence": "After a stressful public event, such as a natural disaster or major financial crash, there is often a wave of alarming information in traditional and social media, which individuals become very aware of."
         },
         {
           "n": 39,
-          "text": "Stress created by social media posts can lead us to take unnecessary precautions."
+          "text": "Stress created by social media posts can lead us to take unnecessary precautions.",
+          "evidence": "As a result, trips are cancelled, even if the disaster took place across the globe; stocks are sold, even when holding on is the best thing to do."
         },
         {
           "n": 40,
-          "text": "Our tendency to be affected by other people’s moods can be used in a positive way."
+          "text": "Our tendency to be affected by other people’s moods can be used in a positive way.",
+          "evidence": "The good news, however, is that positive emotions, such as hope, are contagious too, and are powerful in inducing people to act to find solutions."
         }
       ]
     }

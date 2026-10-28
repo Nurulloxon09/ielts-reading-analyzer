@@ -28,7 +28,8 @@ GEMINI_FALLBACK_MODELS=   # optional, comma-separated; used in order when a mode
 10. **Use in a sentence:** `/vocab/practice` shows one saved word (fewest reviews first, then the one reviewed longest ago; words shown in this visit wait for the next round). She writes a sentence; `POST /api/vocab/check` ({word, partOfSpeech, meaningEn, sentence}) asks Gemini (Flash-Lite first) whether the word is used correctly. A new result is saved in `vocabAttempts` and counts as a review; the same word + sentence is answered from IndexedDB with no Gemini call.
 11. **Mistake replay:** every explained mistake gets a row in `replays` (one per test question, pointing to the newest mistake). It is due 3 days after the mistake was saved; the home page shows how many are due. `/replay` shows the passage and only that question, with no explanation; `GET /api/tests/[id]` gives the test without the answer key and the existing grade route checks the answer. Right: back in 7 days, mastered (retired) after the second right answer in a row. Wrong: back in 2 days, and the saved explanation is shown again. A new mistake on the same question restarts the schedule. No Gemini.
 12. **Pacing:** while she solves, time counts for the question group she last clicked, focused or answered (kept in localStorage across a refresh). Soft hints show for a minute at about a third and two thirds of the time and 3 minutes before the end. On submit, `groupTimes` ({groupIndex, type, ms, questions}) is saved with the result and the session; the results screen shows each group against about 1 minute per question (`lib/pacing.ts`). No Gemini.
-13. **Stats:** `/stats` reads IndexedDB only: slowest question type (all timed attempts), top 3 trap types, replays still failing.
+13. **Evidence-first TRUE/FALSE:** each `tfng`/`ynng` question in the test file has `evidence` (a verbatim quote, or null for NOT GIVEN), checked at build and removed by `toPublicTest`. Before submitting, every answered TRUE/FALSE question needs her evidence: words highlighted in the passage, or "No evidence". The grade route compares it with the quote (`checkEvidence` in `lib/answers.ts`): found / wrong sentence / missed / right none / not given. The result shows this under every such question, correct or not, and can highlight the real sentence. Totals are saved on the session as `evidenceChecks`. No Gemini.
+14. **Stats:** `/stats` reads IndexedDB only: slowest question type (all timed attempts), evidence accuracy, top 3 trap types, replays still failing.
 
 ## Analysis output (JSON schema, enforced with Gemini structured output)
 ```
@@ -45,7 +46,7 @@ GEMINI_FALLBACK_MODELS=   # optional, comma-separated; used in order when a mode
 ```
 
 ## Data model (IndexedDB, `lib/db.ts`, Dexie version 3)
-- `sessions`: id, testId, title, finishedAt, correct, total, timeSpentMs, groupTimes? (one per submitted attempt; groupTimes is not indexed, so it needed no new version)
+- `sessions`: id, testId, title, finishedAt, correct, total, timeSpentMs, groupTimes?, evidenceChecks? (one per submitted attempt; these fields are not indexed, so they needed no new version)
 - `mistakes`: id, sessionId, testId, questionNumber, given, correct, trapType, analysis, evidence, createdAt (saved when a mistake is explained)
 - `vocab`: word (lowercase key), display, meaningEn, meaningUz, mistakeId (missing for words from "Explain this sentence"), testId, reviewCount, lastReviewedAt, addedAt; optional partOfSpeech, synonyms, antonyms, example
 - `explanations`: key (testId + selected text), explanation, createdAt (cache for `/api/explain`)

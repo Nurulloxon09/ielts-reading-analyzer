@@ -2,7 +2,7 @@
 
 import AddToVocab from "@/components/AddToVocab";
 import AnalysisCard from "@/components/AnalysisCard";
-import type { GradedAnswer } from "@/lib/answers";
+import { evidenceIsRight, type EvidenceCheck, type EvidenceStatus, type GradedAnswer } from "@/lib/answers";
 import type { AnalysisResult } from "@/lib/storage";
 
 type Props = {
@@ -15,6 +15,8 @@ type Props = {
   pacing?: React.ReactNode; // the pacing report, when this attempt has group times
   selected: number | null;
   onSelect: (n: number | null) => void;
+  evidenceFor: number | null; // the question whose proof is highlighted in the passage
+  onShowEvidence: (n: number | null) => void;
   explaining: number | null;
   error: string | null;
   onExplain: (numbers: number[]) => void;
@@ -25,6 +27,54 @@ export function formatDuration(ms: number) {
   const m = Math.floor(total / 60);
   const s = total % 60;
   return `${m}:${String(s).padStart(2, "0")}`;
+}
+
+const EVIDENCE_TEXT: Record<EvidenceStatus, string> = {
+  found: "You found the right sentence.",
+  right_none: "Right: the passage does not give this information.",
+  wrong_sentence: "You picked a different sentence.",
+  missed: "You said “no evidence”, but the passage does answer this.",
+  not_given: "No sentence proves this: the passage does not give this information (NOT GIVEN).",
+};
+
+// TRUE/FALSE and YES/NO: was her evidence right? Shown for correct answers too, because a lucky
+// guess still needs practice.
+function EvidenceLine({
+  check,
+  correctAnswer,
+  paragraphLabel,
+  shown,
+  onShow,
+}: {
+  check: EvidenceCheck;
+  correctAnswer: boolean;
+  paragraphLabel: string | null;
+  shown: boolean;
+  onShow: () => void;
+}) {
+  const right = evidenceIsRight(check.status);
+  return (
+    <div className="-mt-1 flex flex-col gap-1 px-5 pb-4 pl-15 text-sm">
+      <p className={right ? "text-emerald-800" : "text-amber-800"}>
+        <span className="font-semibold">Evidence {right ? "✓" : "✗"}</span> {EVIDENCE_TEXT[check.status]}
+        {!right && correctAnswer && " Your answer was right, but check why."}
+      </p>
+      {check.picked && !right && (
+        <p className="text-slate-600">
+          You picked: <q className="italic">{check.picked.length > 160 ? `${check.picked.slice(0, 159)}…` : check.picked}</q>
+        </p>
+      )}
+      {check.proof && (
+        <button
+          type="button"
+          onClick={onShow}
+          className="self-start font-semibold text-sky-700 hover:underline"
+        >
+          {shown ? "Hide the sentence" : `Show the sentence${paragraphLabel ? ` (paragraph ${paragraphLabel})` : ""}`}
+        </button>
+      )}
+    </div>
+  );
 }
 
 // Results pane: score, then every question; wrong ones open into their analysis.
@@ -38,6 +88,8 @@ export default function AnalyzeMistakes({
   pacing,
   selected,
   onSelect,
+  evidenceFor,
+  onShowEvidence,
   explaining,
   error,
   onExplain,
@@ -154,6 +206,16 @@ export default function AnalyzeMistakes({
                   </span>
                 )}
               </button>
+
+              {r.evidence && (
+                <EvidenceLine
+                  check={r.evidence}
+                  correctAnswer={r.isCorrect}
+                  paragraphLabel={r.evidence.proof ? paragraphLabels[r.evidence.proof.paragraph] ?? null : null}
+                  shown={evidenceFor === r.number}
+                  onShow={() => onShowEvidence(evidenceFor === r.number ? null : r.number)}
+                />
+              )}
 
               {open && !r.isCorrect && (
                 <div className="border-t border-slate-200 px-5 py-5">

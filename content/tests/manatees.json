@@ -60,31 +60,38 @@
       "questions": [
         {
           "n": 7,
-          "text": "West Indian manatees can be found in a variety of different aquatic habitats."
+          "text": "West Indian manatees can be found in a variety of different aquatic habitats.",
+          "evidence": "It moves between fresh water and salt water, taking advantage of coastal mangroves and coral reefs, rivers, lakes and inland lagoons."
         },
         {
           "n": 8,
-          "text": "The Florida manatee lives in warmer waters than the Antillean manatee."
+          "text": "The Florida manatee lives in warmer waters than the Antillean manatee.",
+          "evidence": null
         },
         {
           "n": 9,
-          "text": "The African manatee’s range is limited to coastal waters between the West African countries of Mauritania and Angola."
+          "text": "The African manatee’s range is limited to coastal waters between the West African countries of Mauritania and Angola.",
+          "evidence": "The species also makes use of rivers, with the mammals seen in landlocked countries such as Mali and Niger."
         },
         {
           "n": 10,
-          "text": "The extent of the loss of Amazonian manatees in the mid-twentieth century was only revealed many years later."
+          "text": "The extent of the loss of Amazonian manatees in the mid-twentieth century was only revealed many years later.",
+          "evidence": null
         },
         {
           "n": 11,
-          "text": "It is predicted that West Indian manatee populations will fall in the coming decades."
+          "text": "It is predicted that West Indian manatee populations will fall in the coming decades.",
+          "evidence": "Both are also expected to undergo a decline of 20% over the next 40 years."
         },
         {
           "n": 12,
-          "text": "The risk to manatees from entanglement and plastic consumption increased significantly in the period 2009-2020"
+          "text": "The risk to manatees from entanglement and plastic consumption increased significantly in the period 2009-2020",
+          "evidence": null
         },
         {
           "n": 13,
-          "text": "There is some legislation in place which aims to reduce the likelihood of boat strikes on manatees in Florida."
+          "text": "There is some legislation in place which aims to reduce the likelihood of boat strikes on manatees in Florida.",
+          "evidence": "However, laws in certain parts of Florida now limit boat speeds during winter, allowing slow-moving manatees more time to respond."
         }
       ]
     }

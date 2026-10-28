@@ -106,23 +106,28 @@
       "questions": [
         {
           "n": 36,
-          "text": "Companies usually hire people on the basis of their character."
+          "text": "Companies usually hire people on the basis of their character.",
+          "evidence": "Most recruitment decisions are influenced by the skills and abilities of an individual rather than their aptitude and attitude."
         },
         {
           "n": 37,
-          "text": "There are some areas of sport that have a greater proportion of talent than others."
+          "text": "There are some areas of sport that have a greater proportion of talent than others.",
+          "evidence": null
         },
         {
           "n": 38,
-          "text": "Measures of intelligence accurately predict performance at work."
+          "text": "Measures of intelligence accurately predict performance at work.",
+          "evidence": "But even these measures correlate only loosely with performance, which means that more than 80 per cent of the variation in performance is unexplained by even the best predictors."
         },
         {
           "n": 39,
-          "text": "There are cases in which talented sportspeople have been overlooked."
+          "text": "There are cases in which talented sportspeople have been overlooked.",
+          "evidence": "Basketball star Michael Jordan was dropped by his high-school basketball coach and a number of top American football quarterbacks were available early in their careers because they were not considered good enough by various teams."
         },
         {
           "n": 40,
-          "text": "Newly formed organisations have the most highly motivated staff."
+          "text": "Newly formed organisations have the most highly motivated staff.",
+          "evidence": null
         }
       ]
     }

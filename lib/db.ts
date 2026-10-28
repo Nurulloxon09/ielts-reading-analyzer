@@ -2,7 +2,7 @@
 // cached sentence explanations. Every call is wrapped: if IndexedDB is missing or
 // blocked, the app still works, it just doesn't remember.
 import Dexie, { type EntityTable } from "dexie";
-import type { GradedAnswer } from "@/lib/answers";
+import { evidenceIsRight, type GradedAnswer } from "@/lib/answers";
 import { paceByType, type GroupTime, type TypePace } from "@/lib/pacing";
 import type { Analysis, AnalyzeResponse, Explanation, VocabCheck, VocabDefinition } from "@/lib/schema";
 
@@ -17,6 +17,7 @@ export type Session = {
   total: number;
   timeSpentMs: number;
   groupTimes?: GroupTime[]; // time per question group; missing on attempts before pacing was recorded
+  evidenceChecks?: { right: number; total: number }; // evidence-first TRUE/FALSE questions she gave evidence for
 };
 
 export type Mistake = {
@@ -168,8 +169,15 @@ export function saveSession(input: {
       total: input.results.length,
       timeSpentMs: input.timeSpentMs,
       groupTimes: input.groupTimes,
+      evidenceChecks: evidenceSummary(input.results),
     }),
   );
+}
+
+function evidenceSummary(results: GradedAnswer[]): Session["evidenceChecks"] {
+  const checked = results.flatMap((r) => (r.evidence ? [r.evidence] : []));
+  if (checked.length === 0) return undefined;
+  return { right: checked.filter((c) => evidenceIsRight(c.status)).length, total: checked.length };
 }
 
 // Saves an explained mistake and its new words. Saving the same question twice is a no-op.
@@ -378,18 +386,24 @@ export type Stats = {
   pace: TypePace[]; // all timed attempts together, slowest question type first
   traps: TrapCount[]; // every explained mistake, most common first
   stillFailing: TrapCount[]; // replays not mastered yet
+  evidence: { right: number; total: number }; // evidence-first TRUE/FALSE, all attempts
 };
 
 // The stats page: everything comes from IndexedDB, no Gemini.
 export function getStats(): Promise<Stats | null> {
   return safely(async (d) => {
-    const timed = (await d.sessions.toArray()).filter((s) => s.groupTimes?.length);
+    const sessions = await d.sessions.toArray();
+    const timed = sessions.filter((s) => s.groupTimes?.length);
     const replays = (await d.replays.toArray()).filter((r) => r.retiredAt === null);
     return {
       timedTests: timed.length,
       pace: paceByType(timed.flatMap((s) => s.groupTimes ?? [])),
       traps: countByTrap(await d.mistakes.toArray()),
       stillFailing: countByTrap(replays),
+      evidence: sessions.reduce(
+        (sum, s) => ({ right: sum.right + (s.evidenceChecks?.right ?? 0), total: sum.total + (s.evidenceChecks?.total ?? 0) }),
+        { right: 0, total: 0 },
+      ),
     };
   });
 }

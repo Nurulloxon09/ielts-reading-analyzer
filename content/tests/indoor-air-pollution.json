@@ -99,19 +99,23 @@
       "questions": [
         {
           "n": 10,
-          "text": "Less research has been done on the Breathing Space programme's impact on health than on its effect on indoor pollution levels."
+          "text": "Less research has been done on the Breathing Space programme's impact on health than on its effect on indoor pollution levels.",
+          "evidence": "In addition, most of the evaluation of these interventions has focused on changes in indoor air pollution levels, rather than health effects."
         },
         {
           "n": 11,
-          "text": "The Breathing Space programme has been very successful in communities with high levels of indoor pollution."
+          "text": "The Breathing Space programme has been very successful in communities with high levels of indoor pollution.",
+          "evidence": "Generally, among poor dependent communities where initial levels of pollution are very high, it has been difficult to achieve extremely low levels of pollution and exposure."
         },
         {
           "n": 12,
-          "text": "The pilot project worked most effectively when it included provision for health education."
+          "text": "The pilot project worked most effectively when it included provision for health education.",
+          "evidence": null
         },
         {
           "n": 13,
-          "text": "The target in Guatemala is to have IAP interventions in all at-risk households."
+          "text": "The target in Guatemala is to have IAP interventions in all at-risk households.",
+          "evidence": "In Guatemala, for example, project personnel who were previously involved in managing a poverty project with a target population of 5,000 are now planning and implementing a self-financing strategy to get IAP interventions sold into a significant percentage of the 600,000 at-risk and very poor households."
         }
       ]
     }

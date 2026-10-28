@@ -44,19 +44,23 @@
       "questions": [
         {
           "n": 32,
-          "text": "Dell Upton has a professional background solely in architectural design."
+          "text": "Dell Upton has a professional background solely in architectural design.",
+          "evidence": "a distinguished scholar of American architectural history who, having a background in American studies, is as knowledgeable in vernacular architecture as high style"
         },
         {
           "n": 33,
-          "text": "The book discusses a wide variety of structures beyond just buildings."
+          "text": "The book discusses a wide variety of structures beyond just buildings.",
+          "evidence": "The usefulness of this technique becomes apparent as one progresses through the book and realizes that Upton discusses not only houses and farm and commercial buildings but also landscape architecture, gardens, bridges, public sculpture, and whole cities."
         },
         {
           "n": 34,
-          "text": "The chapter “An American Icon” only analyzes houses from the 20th century."
+          "text": "The chapter “An American Icon” only analyzes houses from the 20th century.",
+          "evidence": "This chapter, like the succeeding four, follows a loose chronological orientation in its analysis of several examples of homes from the seventeenth to twentieth centuries, while integrating discussion of form and style with social and economic processes."
         },
         {
           "n": 35,
-          "text": "Some critics believe the book’s thematic structure makes the historical timeline less clear."
+          "text": "Some critics believe the book’s thematic structure makes the historical timeline less clear.",
+          "evidence": "Some critics might argue that the thematic organization sacrifices a clear linear timeline, making it occasionally challenging to trace precise historical developments."
         }
       ]
     },

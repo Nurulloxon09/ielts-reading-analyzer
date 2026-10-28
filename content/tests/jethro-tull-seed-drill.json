@@ -63,23 +63,28 @@
       "questions": [
         {
           "n": 9,
-          "text": "Tull qualified as a barrister before travelling around Europe."
+          "text": "Tull qualified as a barrister before travelling around Europe.",
+          "evidence": "However, ill health caused him to postpone these plans, and after qualifying as a barrister in 1699, he made a tour of Europe, in the hope that the milder climates of France and Italy would alleviate his breathing problems."
         },
         {
           "n": 10,
-          "text": "Tull's workers were initially cooperative when he tried new sowing methods."
+          "text": "Tull's workers were initially cooperative when he tried new sowing methods.",
+          "evidence": "But by 1701, his frustration with their lack of co-operation prompted him to invent a machine to do the work for him."
         },
         {
           "n": 11,
-          "text": "The seed drill helped control weeds."
+          "text": "The seed drill helped control weeds.",
+          "evidence": "Tull's 'seed drill' would limit the wastage of seed, and as the seedlings grew in uniform rows, it would also make it easier to remove any unwanted weeds growing among the crop."
         },
         {
           "n": 12,
-          "text": "Tull's ideas were immediately accepted across Europe."
+          "text": "Tull's ideas were immediately accepted across Europe.",
+          "evidence": "resistance to his revolutionary theories persisted for many decades. Another century would pass before his eventual vindication."
         },
         {
           "n": 13,
-          "text": "Tull's book was controversial when first published."
+          "text": "Tull's book was controversial when first published.",
+          "evidence": "The book caused great controversy when it appeared"
         }
       ]
     }

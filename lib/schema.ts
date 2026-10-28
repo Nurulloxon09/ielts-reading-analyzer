@@ -77,6 +77,20 @@ export type AnalyzeResponse =
 
 export const GradeRequestSchema = z.object({
   answers: z.record(z.string().regex(/^\d+$/), z.string().max(200)),
+  // Evidence-first TRUE/FALSE: what she highlighted for each question, or "none".
+  evidence: z
+    .record(
+      z.string().regex(/^\d+$/),
+      z.union([
+        z.literal("none"),
+        z.object({
+          paragraph: z.number().int().min(0),
+          start: z.number().int().min(0),
+          end: z.number().int().positive(),
+        }),
+      ]),
+    )
+    .optional(),
 });
 
 // "Explain this sentence": she selects text in the passage after submitting.

@@ -43,23 +43,28 @@
       "questions": [
         {
           "n": 1,
-          "text": "Stradivari was a good businessman as well as a craftsman."
+          "text": "Stradivari was a good businessman as well as a craftsman.",
+          "evidence": "From the 1670s onwards, the violin maker Antonio Stradivari (1644-1737) successfully applied his inspired vision and enormous attention to detail to the artistic and commercial challenges of running an international high-art workshop from his base of operations in Cremona, Italy."
         },
         {
           "n": 2,
-          "text": "The majority of the musical elite wanted the same model of violin."
+          "text": "The majority of the musical elite wanted the same model of violin.",
+          "evidence": null
         },
         {
           "n": 3,
-          "text": "Stradivari produced fewer violins between 1727 and his death in 1737."
+          "text": "Stradivari produced fewer violins between 1727 and his death in 1737.",
+          "evidence": "Somewhat lower production levels from the Stradivari workshop after 1727 left a gap in Cremona that was filled in the main by the Italian violin maker Bartolomeo Giuseppe Guarneri (1698-1744)."
         },
         {
           "n": 4,
-          "text": "Bartolomeo Giuseppe Guarneri attempted to use Stradivari's ideas."
+          "text": "Bartolomeo Giuseppe Guarneri attempted to use Stradivari's ideas.",
+          "evidence": null
         },
         {
           "n": 5,
-          "text": "Other violin companies in Cremona consistently produced violins in greater quantity than the Stradivari workshop."
+          "text": "Other violin companies in Cremona consistently produced violins in greater quantity than the Stradivari workshop.",
+          "evidence": "Nonetheless, in most years, both in terms of quantity and the quality of material and finished product, the output from the Stradivari workshop exceeded that of all the other instrument makers in Cremona combined."
         },
         {
           "n": 6,
@@ -67,7 +72,8 @@
         },
         {
           "n": 7,
-          "text": "It's likely that Stradivari came across the violins made by the Amati and Rugeri families."
+          "text": "It's likely that Stradivari came across the violins made by the Amati and Rugeri families.",
+          "evidence": "that Stradivari would have encountered the earlier violin forms of the Amati and Rugeri families in Cremona is to be expected"
         }
       ]
     },
