@@ -179,7 +179,10 @@
   ],
   "answers": {
     "27": "themes",
-    "28": "social history",
+    "28": [
+      "social history",
+      "social"
+    ],
     "29": "house",
     "30": "folk",
     "31": "democratic",
