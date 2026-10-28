@@ -28,6 +28,10 @@ export default function Home() {
         Drills:{" "}
         <Link href="/paraphrase" className="font-semibold text-sky-700 hover:underline">
           Spot the paraphrase
+        </Link>{" "}
+        ·{" "}
+        <Link href="/gist" className="font-semibold text-sky-700 hover:underline">
+          Paragraph main ideas
         </Link>
       </p>
       <TestList tests={tests} />

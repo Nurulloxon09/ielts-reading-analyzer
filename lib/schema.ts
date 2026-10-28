@@ -208,3 +208,39 @@ export const VocabCheckRequestSchema = z.object({
 export type VocabCheckPromptInput = z.infer<typeof VocabCheckRequestSchema>;
 
 export type VocabCheckResponse = { ok: true; check: VocabCheck } | { ok: false; error: string };
+
+// Paragraph gist drill: she writes a one-line main idea for each labelled paragraph; one Gemini
+// call checks them all. Answer-key headings are never sent to the model.
+export const GistCheckSchema = z.object({
+  paragraphs: z.array(
+    z.object({
+      label: z.string().describe('The paragraph label, e.g. "A"'),
+      captured: z.boolean().describe("true if her line gives the main idea of the whole paragraph"),
+      mainIdea: z.string().describe("The main idea of the paragraph in one short, simple B1 sentence"),
+      feedbackEn: z.string().describe("1 or 2 short B1 sentences about her line"),
+      feedbackUz: z.string(),
+      keywordTrap: z
+        .string()
+        .nullable()
+        .describe("The word she copied from the paragraph instead of giving its idea, or null"),
+    }),
+  ),
+});
+
+export type GistCheck = z.infer<typeof GistCheckSchema>;
+
+export const gistCheckJsonSchema = z.toJSONSchema(GistCheckSchema);
+delete gistCheckJsonSchema.$schema;
+
+// Her lines, by paragraph label. The server loads the paragraphs itself.
+export const GistCheckRequestSchema = z.object({
+  testId: z.string().min(1).max(100),
+  summaries: z.record(z.string().regex(/^[A-Z]{1,3}$/), z.string().trim().min(2).max(200)),
+});
+
+export type GistPromptInput = {
+  title: string;
+  sections: { label: string; text: string; summary: string }[];
+};
+
+export type GistCheckResponse = { ok: true; check: GistCheck } | { ok: false; error: string };

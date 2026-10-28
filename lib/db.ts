@@ -4,7 +4,7 @@
 import Dexie, { type EntityTable } from "dexie";
 import { evidenceIsRight, type GradedAnswer } from "@/lib/answers";
 import { paceByType, type GroupTime, type TypePace } from "@/lib/pacing";
-import type { Analysis, AnalyzeResponse, Explanation, VocabCheck, VocabDefinition } from "@/lib/schema";
+import type { Analysis, AnalyzeResponse, Explanation, GistCheck, VocabCheck, VocabDefinition } from "@/lib/schema";
 
 type Evidence = Extract<AnalyzeResponse, { ok: true }>["evidence"];
 
@@ -79,6 +79,9 @@ export type Replay = {
 // Paraphrase drill: one row per check. key = test + phrase + passage words.
 export type ParaphraseAttempt = { id: number; key: string; testId: string; hit: boolean; createdAt: number };
 
+// Paragraph gist drill: one checked set of her lines. The key (test + her lines) is the cache key.
+type GistCheckRow = { key: string; testId: string; check: GistCheck; createdAt: number };
+
 const DAY = 24 * 60 * 60 * 1000;
 export const REPLAY_DAYS = { first: 3, afterRight: 7, afterWrong: 2 } as const;
 const MASTERED_STREAK = 2; // retire after the second correct replay
@@ -105,6 +108,7 @@ class AnalyzerDb extends Dexie {
   vocabAttempts!: EntityTable<VocabAttempt, "id">;
   replays!: EntityTable<Replay, "id">;
   paraphraseAttempts!: EntityTable<ParaphraseAttempt, "id">;
+  gistChecks!: EntityTable<GistCheckRow, "key">;
 
   constructor() {
     super("ielts-reading-analyzer");
@@ -136,6 +140,10 @@ class AnalyzerDb extends Dexie {
     // v4: paraphrase drill checks. Only the new table; all earlier tables and data are kept.
     this.version(4).stores({
       paraphraseAttempts: "++id, key, createdAt",
+    });
+    // v5: paragraph gist drill results (the Gemini cache). Only the new table; all data is kept.
+    this.version(5).stores({
+      gistChecks: "&key, testId",
     });
   }
 }
@@ -387,6 +395,18 @@ function countByTrap(rows: { trapType: Mistake["trapType"] }[]): TrapCount[] {
   const byTrap = new Map<Mistake["trapType"], number>();
   for (const r of rows) byTrap.set(r.trapType, (byTrap.get(r.trapType) ?? 0) + 1);
   return [...byTrap].map(([trapType, count]) => ({ trapType, count })).sort((a, b) => b.count - a.count);
+}
+
+const gistKey = (testId: string, lines: Record<string, string>) =>
+  [testId, ...Object.keys(lines).sort().map((label) => `${label}: ${lines[label].trim().replace(/\s+/g, " ")}`)].join("\n");
+
+// The same test + the same lines = no new Gemini call.
+export function getGistCheck(testId: string, lines: Record<string, string>): Promise<GistCheck | null> {
+  return safely(async (d) => (await d.gistChecks.get(gistKey(testId, lines)))?.check ?? null);
+}
+
+export function saveGistCheck(testId: string, lines: Record<string, string>, check: GistCheck): Promise<string | null> {
+  return safely((d) => d.gistChecks.put({ key: gistKey(testId, lines), testId, check, createdAt: Date.now() }));
 }
 
 // Every saved mistake (for the paraphrase drill).

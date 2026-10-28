@@ -18,6 +18,7 @@ About 2 hours a day.
 - [x] Pacing: time per question group, soft hints, pacing report after submit
 - [x] Evidence-first TRUE/FALSE/NOT GIVEN (highlight the proof before submitting)
 - [x] Paraphrase drill (`/paraphrase`)
+- [x] Paragraph gist drill for matching headings (`/gist`)
 - [x] Vocab list + review quiz (`/vocab`, `/vocab/practice`)
 - [ ] JSON export/import
 - [x] Deploy to Vercel free tier: https://ielts-reading-analyzer-gray.vercel.app
