@@ -55,7 +55,7 @@ export function questionsAsText(test: PublicTest): string {
         case "ynng":
           return `${head}\n${group.questions.map((q) => `${q.n}. ${q.text}`).join("\n")}`;
         case "gap":
-          return `${head}\n${group.title ? `${group.title}\n` : ""}${group.lines
+          return `${head}\n${group.title ? `${group.title}\n` : ""}${group.image ? `[Diagram: ${group.image.alt}]\n` : ""}${group.lines
             .map((l) => blanksAsText(gapLineKind(l).text))
             .join("\n")}`;
         case "mcq":

@@ -8,7 +8,7 @@ import Questions from "@/components/Questions";
 import type { GradedAnswer } from "@/lib/answers";
 import type { AnalyzeResponse } from "@/lib/schema";
 import { storage, type SavedResult } from "@/lib/storage";
-import { allNumbers, type PublicTest } from "@/lib/test-schema";
+import { allNumbers, paragraphLabels, type PublicTest } from "@/lib/test-schema";
 import { questionLabels } from "@/lib/test-text";
 
 const noopSubscribe = () => () => {};
@@ -215,7 +215,7 @@ function Runner({ test }: { test: PublicTest }) {
               results={result.results}
               analyses={result.analyses}
               labels={labels}
-              paragraphLabels={test.passage.paragraphs.map((p) => p.label)}
+              paragraphLabels={paragraphLabels(test)}
               timeSpentMs={result.timeSpentMs}
               selected={selected}
               onSelect={setSelected}

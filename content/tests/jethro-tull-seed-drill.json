@@ -1,0 +1,106 @@
+{
+  "id": "jethro-tull-seed-drill",
+  "title": "Jethro Tull (1674-1741) - Inventor of the Seed Drill",
+  "source": "Fozilbek IELTS (@FOZILBEK_IELTS)",
+  "passageNumber": 1,
+  "minutes": 20,
+  "passage": {
+    "title": "Jethro Tull (1674-1741) - Inventor of the Seed Drill",
+    "subtitle": "The English gentleman farmer who revolutionised the practice of agriculture",
+    "paragraphs": [
+      {
+        "label": "A",
+        "text": "Jethro Tull was a major pioneer in the modernisation of agriculture. He was born in 1674 in Berkshire, southern England, into a family of land-owning gentry. He studied first at Oxford University and then at the Inns of Court, London, in preparation for a legal or political career. However, ill health caused him to postpone these plans, and after qualifying as a barrister in 1699, he made a tour of Europe, in the hope that the milder climates of France and Italy would alleviate his breathing problems. In every country through which he passed, he made careful observations of the soil and agricultural production, and on his return to England, the young Tull married, then began farming with his father at Howberry Farm in Oxfordshire."
+      },
+      {
+        "label": "B",
+        "text": "Tull was determined to improve farming methods and increase crop yield on the family land, and pursued a number of agricultural experiments there. He particularly wanted to increase efficiency in the sowing of seeds. At that time seeds were still thrown by hand across the field in a haphazard manner, in a traditional method known as broadcasting. Tull soon realised this method of random distribution was inefficient, being wasteful of both seed and labour, so he instructed his staff to sow seeds at very precise, low densities. But by 1701, his frustration with their lack of co-operation prompted him to invent a machine to do the work for him."
+      },
+      {
+        "label": "C",
+        "text": "Earlier in his life, Tull had once dismantled a pipe-organ, and the application of the technology behind this musical instrument inspired him to devise a drill that would distribute precise amounts of seed into pre-cut channels. Basic seeding devices had been known for almost 2000 years, but Tull took the concept a stage further. In his device, as the main wheels of the drill turned, the cylinder rotated against a spring-held tongue. This allowed seed to pass evenly from the hopper above to a funnel below. From here, the seed was directed at regular intervals into three channels, or furrows, in the earth. These were dug to a specific depth by the blades at the front of the machine. Spikes at the back of the machine then turned the soil over to immediately cover the seeds. Tull's 'seed drill' would limit the wastage of seed, and as the seedlings grew in uniform rows, it would also make it easier to remove any unwanted weeds growing among the crop. Accordingly, each plant would have more space to grow, and although there would be fewer plants, the net yield would be greater."
+      },
+      {
+        "label": "D",
+        "text": "Initially the machine was only a limited success, and in 1711 Tull decided to travel around Europe again, both to improve his health and to study agricultural techniques there. Upon his return in 1714, he perfected both his system and machinery. Following practices he had observed in the vine-growing methods of southern Europe, he used an animal-drawn hoe to turn over and pulverise the earth between the rows. He wrongly believed that this practice would release enough nutrients in the soil to nourish the crop, and so eliminate the need for manure to be used to fertilise the soil. His experiments were apparently successful, as he did manage to grow wheat in the same field for 13 successive years without the use of manure. However, it is more likely that it was the turning over and pulverisation of the soil that cut down on the volume of weeds competing with the seed."
+      },
+      {
+        "label": "E",
+        "text": "Tull's complete system eventually proved to be a major influence in the agricultural revolution, and its impact can still be seen in today's methods. Most subsequent drilling and hoeing implements have been either copies of, or improvements upon his inventions, and his modifications to the basic model of the plough continue to be visible in modern versions. Tull also advocated the use of horses over the oxen, more traditionally used to pull farm machinery, and published a book in 1731 outlining this and other ideas to enhance agricultural efficiency. The book caused great controversy when it appeared, and resistance to his revolutionary theories persisted for many decades. Another century would pass before his eventual vindication. It was only following the editing of his writings in 1822, and the subsequent translations and acceptance in France, that Tull's ideas finally achieved recognition in his native land. Although in his lifetime Tull's methods and inventions were dismissed and ridiculed, they were gradually adopted by large landowners, and in time, came to form the basis of modern agriculture."
+      }
+    ]
+  },
+  "groups": [
+    {
+      "type": "gap",
+      "instructions": "Complete the diagram below.\nWrite ONE WORD ONLY from the passage for each answer.",
+      "image": {
+        "src": "https://i.pinimg.com/736x/83/ab/7c/83ab7c757f9a6435a5cf3d47c54f3a51.jpg",
+        "alt": "Seed drill diagram"
+      },
+      "lines": [
+        "{{1}}",
+        "{{2}}",
+        "{{3}}",
+        "{{4}}"
+      ]
+    },
+    {
+      "type": "gap",
+      "instructions": "Complete the notes below.\nWrite ONE WORD ONLY from the passage for each answer.",
+      "lines": [
+        "## Agricultural methods before Tull",
+        "- Seeds were sown by hand using a method called {{5}}",
+        "## Improvements made by Tull",
+        "- Travelled to Europe and observed {{6}} methods",
+        "- Believed it was unnecessary to use {{7}} as fertiliser",
+        "- Advocated the use of {{8}} instead of oxen"
+      ]
+    },
+    {
+      "type": "tfng",
+      "instructions": "Do the following statements agree with the information given in the Reading Passage?\nChoose TRUE if the statement agrees with the information, choose FALSE if the statement contradicts the information, or choose NOT GIVEN if there is no information on this.",
+      "questions": [
+        {
+          "n": 9,
+          "text": "Tull qualified as a barrister before travelling around Europe."
+        },
+        {
+          "n": 10,
+          "text": "Tull's workers were initially cooperative when he tried new sowing methods."
+        },
+        {
+          "n": 11,
+          "text": "The seed drill helped control weeds."
+        },
+        {
+          "n": 12,
+          "text": "Tull's ideas were immediately accepted across Europe."
+        },
+        {
+          "n": 13,
+          "text": "Tull's book was controversial when first published."
+        }
+      ]
+    }
+  ],
+  "answers": {
+    "1": "hopper",
+    "2": "cylinder",
+    "3": "funnel",
+    "4": "spikes",
+    "5": "broadcasting",
+    "6": [
+      "vine-growing",
+      "vine growing",
+      "vinegrowing"
+    ],
+    "7": "manure",
+    "8": "horses",
+    "9": "TRUE",
+    "10": "FALSE",
+    "11": "TRUE",
+    "12": "FALSE",
+    "13": "TRUE"
+  }
+}

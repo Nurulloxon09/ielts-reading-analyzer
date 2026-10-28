@@ -16,6 +16,7 @@ export default function Passage({ test, highlight }: Props) {
   const nums = allNumbers(test);
   const first = Math.min(...nums);
   const last = Math.max(...nums);
+  const hasLabels = test.passage.paragraphs.some((p) => p.label);
 
   useEffect(() => {
     markRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
@@ -41,7 +42,7 @@ export default function Passage({ test, highlight }: Props) {
           const hl = highlight && highlight.paragraph === i ? highlight : null;
           return (
             <div key={i} className="flex gap-4">
-              {p.label && <span className="w-5 shrink-0 pt-px text-lg font-bold text-slate-900">{p.label}</span>}
+              {hasLabels && <span className="w-5 shrink-0 pt-px text-lg font-bold text-slate-900">{p.label}</span>}
               <p className="text-justify text-[17px] leading-[1.85] text-slate-800 hyphens-auto">
                 {hl ? (
                   <>

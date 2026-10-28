@@ -128,6 +128,11 @@ function GroupBody({ group, answers, onAnswer }: { group: QuestionGroup } & Answ
       return (
         <div className="rounded-lg border border-slate-200 bg-white px-5 py-4">
           {group.title && <p className="mb-3 text-center text-lg font-bold text-slate-900">{group.title}</p>}
+          {group.image && (
+            // A plain <img>: the diagram can live on any host the test file names.
+            // eslint-disable-next-line @next/next/no-img-element
+            <img src={group.image.src} alt={group.image.alt} className="mx-auto mb-4 max-h-[28rem] w-auto rounded-md" />
+          )}
           <div className="flex flex-col gap-3 text-[16px] leading-[2.4] text-slate-800">
             {group.lines.map((line, i) => {
               const { kind, text } = gapLineKind(line);
