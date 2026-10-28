@@ -115,7 +115,10 @@
     }
   ],
   "answers": {
-    "14": "Bering Land Bridge",
+    "14": [
+      "Bering Land Bridge",
+      "Bering"
+    ],
     "15": "long claws",
     "16": "burrows",
     "17": "below ground",

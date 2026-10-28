@@ -114,7 +114,10 @@
     "32": "FALSE",
     "33": "FALSE",
     "34": "TRUE",
-    "35": "two-dimensional",
+    "35": [
+      "two-dimensional",
+      "two dimensional"
+    ],
     "36": "straight line",
     "37": "areal distortion",
     "38": "polar regions",
