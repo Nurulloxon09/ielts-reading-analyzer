@@ -24,10 +24,13 @@ Rules:
 10. newVocab: up to 5 words from the evidence or question that a B1 student may not know.
 11. questionNumber: the number of the question you are explaining.`;
 
-export function buildAnalysisPrompt({ passage, questions, number, given, correct }: AnalyzePromptInput): string {
+export function buildAnalysisPrompt({ passage, questions, number, given, correct, repeatOf }: AnalyzePromptInput): string {
   const her = given.trim() === "" ? "(left blank)" : `"${given.trim()}"`;
   const [main, ...others] = correct;
   const alsoAccepted = others.length ? ` (also accepted: ${others.map((a) => `"${a}"`).join(", ")})` : "";
+  const repeatNote = repeatOf
+    ? `\nNote: ${her} is also a correct letter, but she already chose it for question ${repeatOf}. Each letter counts only once. Do not say ${her} is wrong for the passage. Explain why "${main}" is the other correct letter, and tell her to choose two different letters.`
+    : "";
   return `PASSAGE:
 """
 ${passage}
@@ -40,7 +43,7 @@ ${questions}
 
 Explain question ${number}.
 Student's answer: ${her}
-Correct answer (official key): "${main}"${alsoAccepted}`;
+Correct answer (official key): "${main}"${alsoAccepted}${repeatNote}`;
 }
 
 export function buildQuoteRetryNote(badQuote: string): string {

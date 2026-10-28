@@ -28,6 +28,11 @@ function firstMistake(result: SavedResult | null): number | null {
   return result?.results.find((r) => !r.isCorrect)?.number ?? null;
 }
 
+// Her submitted answers, rebuilt from the graded results (the attempt is cleared on submit).
+function answersOf(results: GradedAnswer[]): Record<string, string> {
+  return Object.fromEntries(results.filter((r) => r.given !== "").map((r) => [String(r.number), r.given]));
+}
+
 function Runner({ test }: { test: PublicTest }) {
   const [saved] = useState(() => ({
     attempt: storage.readAttempt(test.id),
@@ -127,7 +132,7 @@ function Runner({ test }: { test: PublicTest }) {
         const res = await fetch("/api/analyze", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ testId: test.id, number: n, given: graded.given }),
+          body: JSON.stringify({ testId: test.id, number: n, answers: answersOf(result.results) }),
         });
         data = await res.json();
       } catch {

@@ -47,12 +47,13 @@ export type Analysis = z.infer<typeof AnalysisSchema>;
 export const analysisJsonSchema = z.toJSONSchema(AnalysisSchema);
 delete analysisJsonSchema.$schema;
 
-// The browser only says which test, which question and what she answered.
+// The browser only says which test, which question and what she answered (all her
+// answers, because a "choose TWO" question is graded together with its partner).
 // The passage, questions and correct answer are loaded on the server.
 export const AnalyzeRequestSchema = z.object({
   testId: z.string().min(1).max(100),
   number: z.number().int().positive(),
-  given: z.string().max(200),
+  answers: z.record(z.string().regex(/^\d+$/), z.string().max(200)),
 });
 
 export type AnalyzePromptInput = {
@@ -61,6 +62,7 @@ export type AnalyzePromptInput = {
   number: number;
   given: string;
   correct: string[]; // accepted answers from the key; the first is the main one
+  repeatOf?: number; // she gave this correct "choose TWO" letter already, for that question
 };
 
 // What /api/analyze returns. The evidence location is found in code, never

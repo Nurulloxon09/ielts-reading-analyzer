@@ -30,7 +30,7 @@ Copy the instructions text as written, one line per `\n`.
 | Multiple choice (one answer) | `mcq` | `questions: [{ n, text, options: [{ key: "A", text }] }]` |
 | Matching headings / information / features / sentence endings | `matching` | `options: [{ key, text }]` (text can be empty for "which paragraph" tasks), optional `optionsTitle`, `questions: [{ n, text }]` |
 
-"Choose TWO letters" questions: split into two `mcq` questions with the same options, or ask the admin.
+"Choose TWO letters" questions: split into two `mcq` questions in one group, with the same options and the same answer list, e.g. `"21": ["A", "C"], "22": ["A", "C"]`. Grading counts each letter only once.
 
 ## Answer key (`answers`)
 
