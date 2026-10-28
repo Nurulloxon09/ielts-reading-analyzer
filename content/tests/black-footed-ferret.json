@@ -1,0 +1,135 @@
+{
+  "id": "black-footed-ferret",
+  "title": "The Black-Footed Ferret",
+  "source": "Fozilbek IELTS (@FOZILBEK_IELTS)",
+  "passageNumber": 2,
+  "minutes": 20,
+  "passage": {
+    "title": "The Black-Footed Ferret",
+    "paragraphs": [
+      {
+        "text": "Evolution and Classification"
+      },
+      {
+        "text": "Ferrets evolved in Europe about 3 to 4 million years ago from small, weasel-like ancestors. Today, only three ferret species remain on Earth: the European polecat, the Siberian polecat, and the black-footed ferret, the only one native to North America. Scientists believe these ferrets migrated from Siberia into North America across the Bering Land Bridge during the Ice Age. Over many generations, they adapted to a life intertwined with prairie dogs, gradually developing specialized traits suited to the open grasslands. Fossil evidence and genetic data indicate that the black-footed ferret diverged from its Siberian relative between 0.5 and 2 million years ago. Within the Mustelidae family — which also includes minks, badgers, martens, wolverines, and domestic ferrets — it represents one of the most specialized members, perfectly evolved for hunting in the prairie ecosystem."
+      },
+      {
+        "text": "Physical Features and Behavior"
+      },
+      {
+        "text": "The black-footed ferret is a slender, agile animal, typically measuring 45–60 centimeters in length, including a 13–15 cm tail, and weighing around 0.7–1.1 kilograms. Males are slightly larger than females. Their fur is yellowish-buff with black markings on the feet, face mask, and tail tip, giving them a bandit-like appearance. Short legs, large rounded ears, and long claws are physical adaptations for digging and moving through underground tunnels. Ferrets are nocturnal and solitary creatures, spending most of their time below ground in prairie dog burrows. They communicate using a variety of sounds, chatters, barks, and hisses, especially during the breeding season. Young ferrets, known as \"kits,\" are playful and often engage in a curious hopping movement called the \"ferret dance,\" which serves both as a form of play and a way to practice hunting behavior."
+      },
+      {
+        "text": "Reproduction and Life Cycle"
+      },
+      {
+        "text": "Breeding occurs in early spring, usually from March to April. After a gestation period of about 42 days, females give birth to an average of 3–4 kits, though litter sizes can range from one to ten. The young are born blind and hairless and depend entirely on their mother. Females raise their offspring alone in abandoned prairie dog burrows, providing warmth and protection from predators. Kits develop fur and markings after three weeks, open their eyes at five weeks, and begin exploring above ground at around ten weeks of age. By late summer, they start to hunt independently, although they may remain near the mother until autumn. In the wild, black-footed ferrets live for one to three years, while individuals in captivity can survive up to nine years due to stable food sources and protection from predators."
+      },
+      {
+        "text": "Habitat and Diet"
+      },
+      {
+        "text": "Black-footed ferrets are native to the vast shortgrass and mixed-grass prairies of North America, once ranging from southern Canada through the central United States to northern Mexico. These grasslands were historically dominated by prairie dog colonies, which provided both food and shelter for the ferrets. However, large-scale agricultural expansion and prairie dog eradication in the 19th and 20th centuries drastically reduced available habitat. Less than two percent of the ferret's original range remains today, mostly in isolated reintroduction sites. Prairie dogs make up more than 90 percent of the black-footed ferret's diet. Ferrets hunt primarily at night, entering burrows to ambush their prey with a quick throat bite. An adult ferret consumes roughly one prairie dog every three days and stores excess food underground, a behavior known as caching. This minimizes the need to travel above ground, where they risk being attacked by owls, coyotes, or badgers."
+      },
+      {
+        "text": "Decline and Rediscovery"
+      },
+      {
+        "text": "Native American tribes were the first humans to encounter black-footed ferrets, often using their skins, bones, and furs in rituals or for medicinal purposes. Many tribes regarded the animal as a sacred symbol of agility and survival. Despite their significance in Indigenous culture, black-footed ferrets remained elusive to Western scientists. The species was first formally described in 1851, yet few people had ever seen one in the wild. By the mid-20th century, habitat loss and the widespread extermination of prairie dogs caused a dramatic population collapse. By the 1950s, the species was presumed extinct. A small population was unexpectedly discovered in 1964 in South Dakota, prompting conservationists to start a captive breeding program. Unfortunately, disease and a lack of breeding success led to the death of all individuals by 1979. The black-footed ferret was declared extinct once again."
+      },
+      {
+        "text": "Then, in 1981, a ranch dog named Shep in Meeteetse, Wyoming, brought home a dead ferret, sparking renewed interest. Biologists soon found a surviving wild colony, leading to the establishment of the Black-Footed Ferret Recovery Program. This rediscovery provided crucial insights into the species' ecology and behavior."
+      },
+      {
+        "text": "Conservation and Recovery Efforts"
+      },
+      {
+        "text": "From the Meeteetse population, 18 surviving ferrets formed the basis of a new captive breeding program managed by the Wyoming Game and Fish Department and the U.S. Fish and Wildlife Service. Since 1991, ferrets bred in captivity have been successfully reintroduced into the wild across several U.S. states and parts of Canada and Mexico. Reintroduction programs have involved collaboration among federal and state agencies, Native American tribes, conservation organizations, and private landowners. Scientists continuously monitor released ferrets to ensure genetic diversity and resistance to diseases such as canine distemper and sylvatic plague, both of which previously decimated populations. While challenges remain, particularly habitat fragmentation and disease, the black-footed ferret is considered one of the most remarkable comeback stories in North American wildlife conservation. With continued protection, vaccination programs, and habitat restoration, experts believe that a full recovery of the species is possible within the coming decades."
+      }
+    ]
+  },
+  "groups": [
+    {
+      "type": "gap",
+      "instructions": "Complete the sentences below.\nChoose NO MORE THAN TWO WORDS from the passage for each answer.",
+      "lines": [
+        "The black-footed ferret is believed to have migrated to North America from Siberia across the {{14}}.",
+        "The ferret's {{15}} helps it move efficiently through prairie dog tunnels.",
+        "Female ferrets give birth to their young inside {{16}} that once belonged to other animals.",
+        "Ferrets reduce danger from predators by staying mostly {{17}}.",
+        "One of the main causes of the species' decline was the destruction of {{18}} due to agriculture."
+      ]
+    },
+    {
+      "type": "matching",
+      "instructions": "Look at the following statements and the list of organizations below.\nMatch each statement with the correct organization, A–E.",
+      "optionsTitle": "List of organizations",
+      "options": [
+        {
+          "key": "A",
+          "text": "Native American tribes"
+        },
+        {
+          "key": "B",
+          "text": "Early scientific community"
+        },
+        {
+          "key": "C",
+          "text": "Wyoming Game and Fish Department"
+        },
+        {
+          "key": "D",
+          "text": "U.S. Fish and Wildlife Service"
+        },
+        {
+          "key": "E",
+          "text": "Black-Footed Ferret Recovery Program"
+        }
+      ],
+      "questions": [
+        {
+          "n": 19,
+          "text": "Considered the black-footed ferret a sacred animal and used its remains in cultural rituals."
+        },
+        {
+          "n": 20,
+          "text": "Officially documented the species for the first time in the 19th century."
+        },
+        {
+          "n": 21,
+          "text": "Took the lead in breeding and reintroducing ferrets into the wild."
+        },
+        {
+          "n": 22,
+          "text": "Coordinated research and conservation actions following the rediscovery of the species."
+        }
+      ]
+    },
+    {
+      "type": "gap",
+      "instructions": "Complete the summary below.\nChoose ONE WORD ONLY from the passage for each answer.",
+      "title": "The Recovery of the Black-Footed Ferret",
+      "lines": [
+        "Following its presumed extinction in 1979, a small {{23}} of ferrets was rediscovered in Wyoming in 1981. Scientists captured the remaining individuals to begin a {{24}} programme aimed at restoring the species. Since the early 1990s, these ferrets have been {{25}} across North America, with ongoing efforts to maintain {{26}} through disease control and habitat restoration."
+      ]
+    }
+  ],
+  "answers": {
+    "14": "Bering Land Bridge",
+    "15": "long claws",
+    "16": "burrows",
+    "17": "below ground",
+    "18": "habitat",
+    "19": "A",
+    "20": "B",
+    "21": [
+      "C",
+      "D"
+    ],
+    "22": "E",
+    "23": "colony",
+    "24": "breeding",
+    "25": "reintroduced",
+    "26": "diversity"
+  }
+}

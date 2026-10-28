@@ -1,0 +1,194 @@
+{
+  "id": "asteroid-to-earth",
+  "title": "The plan to bring an asteroid to Earth",
+  "source": "Fozilbek IELTS (@FOZILBEK_IELTS)",
+  "passageNumber": 2,
+  "minutes": 20,
+  "passage": {
+    "title": "The plan to bring an asteroid to Earth",
+    "subtitle": "Moving in orbit around our sun are millions of rocks known as asteroids. Now scientists have plans to capture one",
+    "paragraphs": [
+      {
+        "label": "A",
+        "text": "Send a robot into space, catch an asteroid and bring it back to Earth's orbit. This may sound like science fiction, but a group of scientists and engineers at the California Institute of Technology (Caltech) are investigating the feasibility of capturing a near-Earth asteroid, bringing it close to our planet and using it as a base for future manned spaceflight missions."
+      },
+      {
+        "text": "This is not something the scientists imagine could be done some day far off in the future. It is possible with the technology we have today and could be accomplished within a decade. A robotic probe could anchor to an asteroid with electrodynamic tethers or grab it with a gravitational tractor. Alternatively, a large spacecraft could use its gravitational pull to shift the orbit of a larger asteroid, sending it towards Earth."
+      },
+      {
+        "text": "'Once you get over the initial reaction — You want to do what?! — it actually starts to seem like a reasonable idea,' says engineer John Brophy, who helped organise the workshop. In fact, many of these ideas have been on the drawing board for years as part of NASA's planetary-defence work, and there is no shortage of potential targets. NASA estimates that there are 9,500 asteroids at least 100 metres wide within 45 million kilometres of Earth."
+      },
+      {
+        "label": "B",
+        "text": "Though rearranging the heavens may seem an excessive undertaking, the mission has its merits. The US already has plans to send astronauts to a near-Earth asteroid on a three-to-six-month mission that would involve all the risks of confining them in a tiny capsule. Instead, robots could bring an asteroid close enough for astronauts to reach it in just a month."
+      },
+      {
+        "text": "An asteroid would provide a stationary base from which to launch missions further into space, and there are several advantages to this. For one, launching missions carrying materials from Earth requires a great deal of power and fuel because of Earth's strong gravity. The gravity on an asteroid would be far weaker, so minerals mined there could be more easily taken off the asteroid and shuttled around our solar system."
+      },
+      {
+        "text": "And many asteroids have a lot to offer. Some are full of metals, which can be mined to build space-based habitats or brought back to Earth. Others are up to one-quarter water, which could provide oxygen and be used to make fuel. And astronauts would have the chance to get a close-up look at one of the solar system's earliest relics, generating important scientific data. 'Executing the asteroid-retrieval plan would help demonstrate and greatly expand one of NASA's core space-based engineering capabilities,' says engineer Louis Friedman, another co-organiser of the Caltech workshop. For instance, the mission would teach engineers how to capture an uncooperative target, which could be useful practice for planetary defence."
+      },
+      {
+        "label": "C",
+        "text": "Former astronaut Rusty Schweickart, cofounder of the B612 Foundation, an organisation dedicated to protecting Earth from asteroid strikes, points out that it would not be easy. 'You're moving the largest mother lode imaginable,' he says."
+      },
+      {
+        "text": "Engineers would need to be absolutely certain they could control such a potentially dangerous object. 'It's the opposite of planetary defence; if you do something wrong, you have a Tunguska event,' says engineer Marco Tantardini from the Planetary Society, referring to the power of a 1908 explosion caused by an asteroid or comet."
+      },
+      {
+        "label": "D",
+        "text": "Still, these obstacles only add to the appeal. For engineers, the challenges are part of the attraction. And if the challenges of moving a large asteroid seem too daunting, researchers could always start with a smaller one, perhaps 2 to 10 metres across. Last year, Brophy helped conduct a study to look at the feasibility of bringing a small asteroid to the International Space Station."
+      },
+      {
+        "text": "The study suggested the asteroid could be captured robotically in something as simple as a large bag. Of course, such a small object wouldn't have the same emotional impact as a larger target. 'NASA isn't going to want to go after something that doesn't have the same emotional impact as a larger target,' says engineer Dan Mazanek from NASA's Langley Research Center."
+      },
+      {
+        "label": "E",
+        "text": "No matter the size of the asteroid, these plans would require hefty investment. Even capturing a small asteroid would consume at least a billion dollars, and convincing taxpayers to foot such a bill could be difficult. However, private industry might be interested in getting involved. One option would be to push the asteroid to near-Earth orbit and then invite anyone who wants to develop the capabilities to reach and mine the object."
+      },
+      {
+        "text": "Although the plan is scientifically exciting and would provide great insight into the formation of the solar system, this is not enough on its own to justify the expense of bringing an asteroid to Earth; investigations of asteroids can be done more cheaply, according to Joseph A Nuth from NASA's Goddard Space Flight Center. According to Brophy, ultimately we would be working towards bringing an asteroid closer to Earth in order to help move humanity out into the solar system."
+      }
+    ]
+  },
+  "groups": [
+    {
+      "type": "matching",
+      "instructions": "Reading Passage 2 has five sections, A–E.\nChoose the correct heading for each section from the list of headings below.\nWrite the correct number, i–viii.",
+      "optionsTitle": "List of Headings",
+      "options": [
+        {
+          "key": "i",
+          "text": "The need for skill and care"
+        },
+        {
+          "key": "ii",
+          "text": "Choosing the richest asteroid"
+        },
+        {
+          "key": "iii",
+          "text": "The safest way to protect the project"
+        },
+        {
+          "key": "iv",
+          "text": "Obtaining safe support for the project"
+        },
+        {
+          "key": "v",
+          "text": "An achievable goal, not an impossible dream"
+        },
+        {
+          "key": "vi",
+          "text": "The need for global cooperation"
+        },
+        {
+          "key": "vii",
+          "text": "Beginning with a less challenging task"
+        },
+        {
+          "key": "viii",
+          "text": "Practical, economic and research justifications"
+        }
+      ],
+      "questions": [
+        {
+          "n": 14,
+          "text": "Section A"
+        },
+        {
+          "n": 15,
+          "text": "Section B"
+        },
+        {
+          "n": 16,
+          "text": "Section C"
+        },
+        {
+          "n": 17,
+          "text": "Section D"
+        },
+        {
+          "n": 18,
+          "text": "Section E"
+        }
+      ]
+    },
+    {
+      "type": "matching",
+      "instructions": "Look at the following experts (Questions 19–22) and the list of statements below.\nMatch each expert with the correct statement, A–G.",
+      "optionsTitle": "List of Statements",
+      "options": [
+        {
+          "key": "A",
+          "text": "A mistake could have serious consequences for Earth."
+        },
+        {
+          "key": "B",
+          "text": "It might be difficult to arouse interest in an asteroid of limited size."
+        },
+        {
+          "key": "C",
+          "text": "An asteroid's weight would make the project extremely challenging."
+        },
+        {
+          "key": "D",
+          "text": "The skill gained would save Earth from future danger."
+        },
+        {
+          "key": "E",
+          "text": "The asteroid would be a useful landing place for a spaceship."
+        },
+        {
+          "key": "F",
+          "text": "An asteroid could be a useful landing place for a spaceship."
+        },
+        {
+          "key": "G",
+          "text": "Capturing an asteroid would not be an efficient method of research."
+        }
+      ],
+      "questions": [
+        {
+          "n": 19,
+          "text": "Louis Friedman"
+        },
+        {
+          "n": 20,
+          "text": "Rusty Schweickart"
+        },
+        {
+          "n": 21,
+          "text": "Dan Mazanek"
+        },
+        {
+          "n": 22,
+          "text": "Joseph A Nuth"
+        }
+      ]
+    },
+    {
+      "type": "gap",
+      "instructions": "Complete the summary below.\nChoose ONE WORD ONLY from the passage for each answer.",
+      "title": "The merits of the US mission",
+      "lines": [
+        "Capture of an asteroid would reduce the time that astronauts travelling to it needed to spend in space. An asteroid could also act as a {{23}} for further space travel and exploration. The fact that an asteroid would have weaker {{24}} would allow easier movement of resources.",
+        "These resources include {{25}}, which could be used in space or on Earth, and {{26}}, which could be consumed or used as a source of power."
+      ]
+    }
+  ],
+  "answers": {
+    "14": "v",
+    "15": "viii",
+    "16": "i",
+    "17": "vii",
+    "18": "iv",
+    "19": "D",
+    "20": "A",
+    "21": "B",
+    "22": "G",
+    "23": "base",
+    "24": "gravity",
+    "25": "metals",
+    "26": "water"
+  }
+}

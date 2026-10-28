@@ -1,0 +1,156 @@
+{
+  "id": "power-from-the-sea",
+  "title": "Power from the Sea",
+  "source": "Fozilbek IELTS (@FOZILBEK_IELTS)",
+  "passageNumber": 3,
+  "minutes": 20,
+  "passage": {
+    "title": "Power from the Sea",
+    "subtitle": "The oceans are vast, yet sea power is the least developed form of renewable energy. Clara Penn reports.",
+    "paragraphs": [
+      {
+        "label": "A",
+        "text": "In the north of Scotland there is a hazardous stretch of water called the Pentland Firth. Every day, twice a day, a mass of the Atlantic Ocean rushes into this 22.5-kilometre channel long known to sailors as 'Hellsmouth' between the Orkney Isles and the Scottish mainland. The vast torrent of water crashes into the North Sea, and is then sucked into reverse motion, starting another whirlpool cycle. The currents in this massive tidal action can reach 22km/h and some people think there is enough energy in these flows alone to supply up to 10 per cent of Britain's electricity. Finally, after years as the most overlooked source of renewable energy, two experimental marine turbines have now begun to exploit the power of the sea."
+      },
+      {
+        "label": "B",
+        "text": "People first started harnessing the sea's powers over a thousand years ago, with water mills placed over tidal rivers to grind wheat. But when the industrial revolution came along, the sea lost out to coal and oil. But things are now changing. Faced with the diminishing resources of fossil fuels and concern over climate change, many governments are considering pumping more money into exploring the sea's potential."
+      },
+      {
+        "label": "C",
+        "text": "Tidal currents are caused as the oceans bulge in response to the gravitational pull of the Moon and Sun. The continuous flow of water speeds up as it's squeezed between landmasses. But this is not the only way in which the oceans carry exploitable power. There's also the energy in waves created by the wind blowing over the water. In fact, on a global scale, wave energy represents a massive resource – because seas cover 70 per cent of the world's surface. At this time, engineers are tackling the key problem of the survivability of wave energy devices that operate in the harsh environment of sea and air."
+      },
+      {
+        "label": "D",
+        "text": "Over thirty years ago, a Scottish professor, Stephen Salter, led efforts to exploit wave energy. The 'Salter Duck' was a vast 300-tonne floating machine with a generator powered by the motion of the waves. But his much-admired invention was abandoned when it was (wrongly) calculated that the cost of the energy produced would be too high."
+      },
+      {
+        "label": "E",
+        "text": "Other engineers have chosen tidal currents as the most efficient sea power option. Tides have a key advantage over most other renewable energy resources: they are almost continuous and entirely predictable. And when there is a slowing in the speed of an ocean current as the tide is turning, backup power from other sources can be fed into the power grid to meet demand."
+      },
+      {
+        "label": "F",
+        "text": "The first schemes produced by these engineers centred on building barrages across the mouths of estuaries to trap water at high tide, letting it escape through turbines in order to drive generators. In the mid-1960s, one such barrage began operation in France, and it still supplies most of Brittany's electricity. Another has been proposed for Canada's Bay of Fundy, which has the largest tidal range in the world. But such schemes can cause serious environmental problems. They prevent fish migration and destroy highly sensitive marine habitats, located between high and low tide lines. And harm done to plant and animal life isn't the only drawback of barrages. The building of a barrage was proposed for the Severn Estuary, which has the world's second highest tidal range. But the plan has been abandoned because the estuary route is one of the main outlets for waste from central England and Wales. Blocking it could produce the world's dirtiest stretch of water."
+      },
+      {
+        "label": "G",
+        "text": "Yet the potential for sea power has continuing appeal and, while developments continue on a number of wave energy converters, in the last three years both government and private financiers have finally made up their minds to back tidal energy projects. A number of different technologies are being considered, but arguably the most advanced and perhaps the most elegantly straightforward is the marine current turbine."
+      },
+      {
+        "label": "H",
+        "text": "This is essentially an underwater wind turbine – a propeller mounted on a tower. The principal advantage is that the underwater environment is calm, even in storms. And as water is 800 times denser than air, these turbines can capture much larger volumes of energy than land turbines can. Furthermore, while on- and offshore wind farms face huge opposition from those who see them as an eyesore, the first marine turbine designs present minimal intrusion on the view. Crucially too, they appear to impact little on the environment: the blades move so slowly that marine creatures can easily swim through. This form of energy production is supported by environmental pressure groups such as Greenpeace, while air turbines are meeting strong opposition from environmentalists for harming birdlife."
+      },
+      {
+        "label": "I",
+        "text": "A British company has been working on the concept of the marine current turbine for years, and has installed their prototype off the coast of north Devon at Lynmouth. There are also dozens of other powerful tidal sites around British shores not least the famous channels of fast-moving water of Portland and St Catherine's Point. But a Norwegian consortium of energy and engineering companies, Hammerfest Stroem, became the first to connect a marine turbine to an electricity grid in the autumn of 2003 in northern Norway's Kval Sound. Around 30 houses in the town of Hammerfest are powered by the 300-kilowatt machine, which weighs 220 tonnes and stretches 30 metres from the base to the highest blade tip. Extensive trials of both the British and Norwegian designs are currently underway."
+      }
+    ]
+  },
+  "groups": [
+    {
+      "type": "matching",
+      "instructions": "The text has nine paragraphs, A–I.\nWhich paragraph mentions the following?\nWrite the correct letter, A–I, in boxes 28–36 on your answer sheet.\nNB You may use any letter more than once.",
+      "options": [
+        {
+          "key": "A",
+          "text": ""
+        },
+        {
+          "key": "B",
+          "text": ""
+        },
+        {
+          "key": "C",
+          "text": ""
+        },
+        {
+          "key": "D",
+          "text": ""
+        },
+        {
+          "key": "E",
+          "text": ""
+        },
+        {
+          "key": "F",
+          "text": ""
+        },
+        {
+          "key": "G",
+          "text": ""
+        },
+        {
+          "key": "H",
+          "text": ""
+        },
+        {
+          "key": "I",
+          "text": ""
+        }
+      ],
+      "questions": [
+        {
+          "n": 28,
+          "text": "the disappearance of a traditional use of tidal power"
+        },
+        {
+          "n": 29,
+          "text": "the predicted amount of power one tidal area could provide"
+        },
+        {
+          "n": 30,
+          "text": "a decision to invest money in tidal power"
+        },
+        {
+          "n": 31,
+          "text": "a general explanation of how tidal currents are created"
+        },
+        {
+          "n": 32,
+          "text": "the damage that tidal power systems could cause"
+        },
+        {
+          "n": 33,
+          "text": "the main benefits of placing equipment beneath the surface of the sea"
+        },
+        {
+          "n": 34,
+          "text": "a nickname given to a dangerous area of water"
+        },
+        {
+          "n": 35,
+          "text": "the ongoing testing of types of tidal power systems"
+        },
+        {
+          "n": 36,
+          "text": "a way of dealing with periodic decreases in the energy produced by tidal power"
+        }
+      ]
+    },
+    {
+      "type": "gap",
+      "instructions": "Complete the sentences below.\nChoose NO MORE THAN TWO WORDS from the text for each answer.\nWrite your answers in boxes 37–40 on your answer sheet.",
+      "lines": [
+        "Stephen Salter invented a generator driven by {{37}} energy.",
+        "It is feared that the construction of {{38}} may interfere with the migration of fish.",
+        "The motion of the {{39}} of marine current turbines does not harm marine life.",
+        "A British firm has produced a {{40}} of a marine current turbine."
+      ]
+    }
+  ],
+  "answers": {
+    "28": "B",
+    "29": "A",
+    "30": "G",
+    "31": "C",
+    "32": "F",
+    "33": "H",
+    "34": "A",
+    "35": "I",
+    "36": "E",
+    "37": "wave",
+    "38": "barrages",
+    "39": "blades",
+    "40": "prototype"
+  }
+}
