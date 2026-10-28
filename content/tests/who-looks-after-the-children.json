@@ -1,0 +1,203 @@
+{
+  "id": "who-looks-after-the-children",
+  "title": "Who looks after the children in today's Britain?",
+  "source": "Fozilbek IELTS (@FOZILBEK_IELTS)",
+  "passageNumber": 3,
+  "minutes": 20,
+  "passage": {
+    "title": "Who looks after the children in today's Britain?",
+    "paragraphs": [
+      {
+        "label": "A",
+        "text": "When Simon Baron-Cohen recently published a book, The Essential Difference, in which he claimed that 'the female brain is predominantly hard-wired for empathy, the male brain is predominantly hard-wired for understanding and building systems' he caught the mood of the moment. His team's experiments on day-old babies, and the finding that the male babies looked for longer at a hanging toy and the female babies longer at a face, has been repeatedly cited in the press since his book's publication. However, Elizabeth Spelke is one expert who is skeptical about whether this experiment deserves such attention. 'This is one isolated experiment,' she says. 'Its findings fly in the face of dozens of studies on similar aspects of cognition carried out on young babies over decades. It is astonishing how much this one study has been cited, when the many studies that show no difference between the sexes, or a difference in the other direction, are ignored.'"
+      },
+      {
+        "label": "B",
+        "text": "One of Baron-Cohen's other main studies was conducted by collecting and examining responses to questionnaires completed by adults on their own behaviour: the sort of quiz well known to readers of magazines. The answers recorded in such cases will reflect differences formed by cultural assumptions and socialization: it is hard to see what they tell us about innate differences. Nevertheless, they have become a fashionable reference point, and recently Princess Anne, patron of Women into Science and Engineering, gave a speech in which she quoted Baron-Cohen's research as proof that six out of ten men have a systemizing brain. This kind of science has passed into everyday culture, often outrunning the intentions of those who did the original work."
+      },
+      {
+        "label": "C",
+        "text": "Social expectations play heavily with young men and women, and expectations are in some ways more conventional in Britain today than they were ten or 20 years ago. It is particularly when they have children that women find out how society reinforces traditional expectations of their behaviour. They discover that many pressures — including the work schedule of their male partner and the expectations of his employer that it should be maintained — make it hard to combine work and home without giving their paid work a lower priority than their male colleagues do. In such a context, the claims about males' greater power to systemize and compete only serve to put further pressure on women."
+      },
+      {
+        "label": "D",
+        "text": "The pressures are equally powerful on men to continue in a traditional lifestyle. Some educationalists argue that among young men the concern that they might appear 'feminine' is higher than ever and may even hold back educational achievement, since studying is often seen as girlish. In later life, the drive to competitiveness in the workplace is mythologized as being tied to high levels of masculinity. Men are also told that high achievers attract more women, even though evidence shows that as women slowly become more equal at work, they begin to care less about the economic status of potential partners."
+      },
+      {
+        "label": "E",
+        "text": "Men are often held back from making the choice to move deeper into domestic life, and in particular childcare, feeling that it lacks status. While the gains in making a social revolution were clear for women — they could gain status and income by moving beyond the home — the gains in the parallel social revolution are harder for men to see, since it will involve them in losing status and income. The idea that men are naturally less empathetic also produces feelings of fatalism about their role. Yet there is much evidence to show that even being empathetic and good at parenting is a learned behaviour."
+      },
+      {
+        "label": "F",
+        "text": "It is true that, as the linguist Steven Pinker noted, in our culture women respond more readily to their children's cries, but there is nothing to say that this is down to anything other than practice and socialization. In a culture where most men return to work straight after the birth of their children, it would be extraordinary if they did manage to remain as alert to their needs as women who remain at home. In one test carried out with teenagers, although girls said that they liked children more than boys said they did, when left alone with a crying infant, their responses were no different. Women can testify to the fact that parenting is a tricky, complicated process, not always a natural, easy role."
+      },
+      {
+        "label": "G",
+        "text": "However, while the definite trend of a decade ago is no longer evident, the movement towards equality has not completely stalled. A more equal sharing of childcare and even domestic labour is still desired by many men as well as women. Nearly three-quarters of young British men say that if it were financially possible, they would like to stay at home to look after their families. And three-quarters of young men tell pollsters that the amount of time fathers is allowed to take off work after a birth — paternity leave — is too short in Britain. The government is therefore proposing more equal policies on maternity/paternity leave, knowing that the pressure is still forwards rather than backwards. And remember that in Britain, young men in full-time work spend about an hour a day looking after their children. That may sound paltry, but not compared to the 15 minutes they spent 30 years ago: if the time went on increasing fourfold every 30 years, equal partnership would become a reality for their grandchildren."
+      }
+    ]
+  },
+  "groups": [
+    {
+      "type": "matching",
+      "instructions": "Reading Passage 3 has seven paragraphs, A–G.\nWhich paragraph contains the following information?\nWrite the correct letter, A–G, next to each statement.\nNB You may use any letter more than once.",
+      "options": [
+        {
+          "key": "A",
+          "text": ""
+        },
+        {
+          "key": "B",
+          "text": ""
+        },
+        {
+          "key": "C",
+          "text": ""
+        },
+        {
+          "key": "D",
+          "text": ""
+        },
+        {
+          "key": "E",
+          "text": ""
+        },
+        {
+          "key": "F",
+          "text": ""
+        },
+        {
+          "key": "G",
+          "text": ""
+        }
+      ],
+      "questions": [
+        {
+          "n": 27,
+          "text": "a possible argument for poor academic performance in young boys"
+        },
+        {
+          "n": 28,
+          "text": "a comparison between fathers' and mothers' reactions to babies' demands"
+        },
+        {
+          "n": 29,
+          "text": "a reference to a change in women's interest in men's earning power"
+        },
+        {
+          "n": 30,
+          "text": "a reference to a study on infant behaviour"
+        },
+        {
+          "n": 31,
+          "text": "a prediction that there will be more involvement of men in childcare"
+        },
+        {
+          "n": 32,
+          "text": "a reference to analysis using a popular self-assessment method"
+        },
+        {
+          "n": 33,
+          "text": "results of an experiment on adolescents' reactions to young babies"
+        }
+      ]
+    },
+    {
+      "type": "mcq",
+      "instructions": "Choose the correct letter, A, B, C or D.",
+      "questions": [
+        {
+          "n": 34,
+          "text": "What is Elizabeth Spelke's reaction to Baron-Cohen's experiment?",
+          "options": [
+            {
+              "key": "A",
+              "text": "She is surprised that other studies do not agree with its findings."
+            },
+            {
+              "key": "B",
+              "text": "She is confident that other research will be done in this area."
+            },
+            {
+              "key": "C",
+              "text": "She is doubtful whether it merits the notice it has been given."
+            },
+            {
+              "key": "D",
+              "text": "She is disappointed that it focused on such young infants."
+            }
+          ]
+        },
+        {
+          "n": 35,
+          "text": "According to the writer, why do mothers often put childcare above career demands?",
+          "options": [
+            {
+              "key": "A",
+              "text": "Few allowances are made for fathers to reduce their working hours."
+            },
+            {
+              "key": "B",
+              "text": "Their bosses are not keen to employ them for full-time work."
+            },
+            {
+              "key": "C",
+              "text": "They find that the competitive workplace loses its attraction."
+            },
+            {
+              "key": "D",
+              "text": "The social benefit system encourages them to stay at home."
+            }
+          ]
+        },
+        {
+          "n": 36,
+          "text": "What does the writer suggest about women as parents in paragraph F?",
+          "options": [
+            {
+              "key": "A",
+              "text": "They are naturally well suited to looking after children."
+            },
+            {
+              "key": "B",
+              "text": "They have to work at mastering the skills of motherhood."
+            },
+            {
+              "key": "C",
+              "text": "Their hearing is naturally attuned so they can respond to babies."
+            },
+            {
+              "key": "D",
+              "text": "Their natural desire is to stay at home to care for children."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "gap",
+      "instructions": "Complete the summary below.\nChoose NO MORE THAN TWO WORDS from the passage for each answer.",
+      "title": "Men and childcare",
+      "lines": [
+        "One reason why some men may be unwilling to leave their jobs to look after their children is because the gains that could come with such a change are not obvious. Staying at home would in fact mean accepting a considerable drop in pay and in {{37}}. The conventional notion that men are not as {{38}} as women may also lead men to experience a certain sense of resignation about their traditional place in society.",
+        "However, it is interesting to note that the majority of young men in the UK say that the statutory time permitted for {{39}} is inadequate. Influence is thus being exerted on the {{40}} to review the existing provision."
+      ]
+    }
+  ],
+  "answers": {
+    "27": "D",
+    "28": "F",
+    "29": "D",
+    "30": "A",
+    "31": "G",
+    "32": "B",
+    "33": "F",
+    "34": "C",
+    "35": "A",
+    "36": "B",
+    "37": "status",
+    "38": "empathetic",
+    "39": "paternity leave",
+    "40": "government"
+  }
+}

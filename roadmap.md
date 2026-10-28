@@ -8,7 +8,7 @@ About 2 hours a day.
 - [x] **Day 3:** `/api/analyze` with JSON schema and prompt
 - [x] **Day 4:** Real-test layout (admin-loaded passages), results, analysis view with highlighted evidence and the 5 sections
 - [x] **Day 5:** "Explain this sentence" + save mistakes to IndexedDB
-- [x] **Day 6:** Add 5–10 real passages with Claude Code (`docs/add-test.md`) (replaces photo/PDF input: the admin adds tests, not her). 18 real passages so far, plus the sample.
+- [x] **Day 6:** Add 5–10 real passages with Claude Code (`docs/add-test.md`) (replaces photo/PDF input: the admin adds tests, not her). 22 real passages so far, plus the sample.
 - [ ] **Day 7:** Test with her on 3 real passages, fix what's confusing
 
 ## Weeks 2–3 — V2 (Oct 17–30)

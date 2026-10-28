@@ -1,0 +1,177 @@
+{
+  "id": "formation-of-continents",
+  "title": "The Formation of Continents and the Evolution of Species",
+  "source": "Fozilbek IELTS (@FOZILBEK_IELTS)",
+  "passageNumber": 1,
+  "minutes": 20,
+  "passage": {
+    "title": "THE FORMATION OF CONTINENTS AND THE EVOLUTION OF SPECIES",
+    "subtitle": "A passage about the formation of continents, the evolution of species, and the scientists who shaped these ideas.",
+    "paragraphs": [
+      {
+        "label": "A",
+        "text": "The fact that there was once a Pangean supercontinent, a Panthalassa Ocean, and a Tethys Ocean, has profound implications for the evolution of multicellular life on Earth. These considerations were unknown to the scientists of the 19th century - making their scientific deductions even more remarkable. Quite independently of each other, Charles Darwin and his young contemporary Alfred Russel Wallace reached the conclusion that life had evolved by natural selection. Wallace later wrote in My Life of his own inspiration."
+      },
+      {
+        "label": "B",
+        "text": "Why do some species die and some live? The answer was clearly that on the whole the best fit lived. From the effects of disease, the most-healthy escaped; from enemies the strongest, the swiftest or the most cunning; from famine the best hunters. Then, it suddenly flashed on me that this self-acting process would improve the race, because in every generation the inferior would inevitably be killed off and the superior would remain, that is, the fittest would survive."
+      },
+      {
+        "label": "C",
+        "text": "Both Darwin's and Wallace's ideas about natural selection had been influenced by the essays of Thomas Malthus in his Principles of Population. Their conclusions, however, had been the direct result of their personal observation of animals and plants in widely separated geographic locations: Darwin from his experiences during the voyage of the Beagle, and particularly during the ship's visit to the Galapagos Islands in the East Pacific in 1835; Wallace during his years of travel in the Amazon Basin and in the Indonesian-Australian Archipelago in the 1850s."
+      },
+      {
+        "label": "D",
+        "text": "Darwin had been documenting his ideas on natural selection for many years when he received a paper on this same subject from Wallace, who asked for Darwin's opinion and help in getting it published. In July 1858, Charles Lyell and J. D Hooker, close friends of Darwin, pressed Darwin to present his conclusions so that he would not lose priority to an unknown naturalist. Presiding over the hastily called but now historic meeting of the Linnean Society in London, Lyell and Hooker explained to the distinguished members how \"these two gentlemen\" (who were absent: Wallace was abroad, and Darwin chose not to attend), had \"independently and unknown to one another, conceived the same very ingenious theory.\""
+      },
+      {
+        "label": "E",
+        "text": "Both Darwin and Wallace had realized that the anomalous distribution of species in particular regions had profound evolutionary significance. Subsequently, Darwin spent the rest of his days in almost total seclusion thinking and writing mainly about the origin of species. In contrast, Wallace applied himself to the science of biogeography, the study of the pattern and distribution of species, and its significance, resulting in the publication of a massive two volume work the Geographical Distribution of Animals in 1876."
+      },
+      {
+        "label": "F",
+        "text": "Wallace was a gentle and modest man, but also persistent and quietly courageous. He spent years working in the most arduous possible climates and terrains, particularly in the Malay Archipelago, he made patient and detailed zoological observations and collected huge numbers of specimens for museums and collectors - which is how he made a living. One result of his work was the conclusion that there is a distinct faunal boundary, called \"Wallace's line,\" between an Asian realm of animals in Java, Borneo and the Philippines and an Australian realm in New Guinea and Australia. In essence this boundary posed a difficult question: How on Earth did plants and animals with a clear affinity to the Northern Hemisphere meet with their Southern Hemispheric counterparts along such a distinct Malaysian demarcation zone? Wallace was uncertain about demarcation on one particular island - Celebes, a curiously shaped place that is midway between the two groups. Initially he assigned its flora-fauna to the Australian side of the line, but later he transferred it to the Asian side. Today we know the reason for his dilemma. 200 MYA East and West Celebes were islands with their own natural history lying on opposite sides of the Tethys Ocean. They did not collide until about 15 MYA. The answer to the main question is that Wallace's Line categorizes Laurasia-derived flora-fauna (the Asian) and Gondwana-derived flora-fauna (the Australian), fauna that had evolved on opposing shares of the Tethys. The closure of the Tethys Ocean today is manifested by the ongoing collision of Australia/New Guinea with Indochina/Indonesia and the continuing closure of the Mediterranean Sea-a remnant of the Western Tethys Ocean."
+      },
+      {
+        "label": "G",
+        "text": "In his ORIGIN OF CONTINENTS AND OCEANS, Wegener quoted at length from Wallace's Geographical Distribution of Animals. According to Wegener's reading, Wallace had identified three clear divisions of Australian animals, which supported his own theory of continental displacement. Wallace had shown that animals long established in southwestern Australia had an affinity with animals in South Africa, Madagascar, India, and Ceylon, but did not have an affinity with those in Asia. Wallace also showed that Australian marsupials and monotremes are clearly related to those in South America, the Moluccas, and various Pacific islands, and that none are found in neighboring Indonesia. From this and related data, Wegener concluded that the then broadly accepted \"landbridge\" theory could not account for this distribution of animals and that only his theory of continental drift could explain it."
+      },
+      {
+        "label": "H",
+        "text": "The theory that Wegener dismissed in preference to his own proposed that plants and animals had once migrated across now-submerged intercontinental landbridges. In 1885, one of Europe's leading geologists, Eduard Suess, theorized that as the rigid Earth cools, its upper crust shrinks and wrinkles like the withering skin of an aging apple. He suggested that the planet's seas and oceans now fill the wrinkles between once-contiguous plateaus."
+      },
+      {
+        "label": "I",
+        "text": "Today, we know that we live on a dynamic Earth with shifting, colliding and separating tectonic plates, not a \"withering skin\", and the main debate in the field of biogeography has shifted. The discussion now concerns \"dispersalism\" versus \"vicarianism\": unrestricted radiation of species on the one hand and the development of barriers to migration on the other. Dispersion is a short-term phenomenon—the daily or seasonal migration of species and their radiation to the limits of their natural environment on an extensive and continuous landmass. Vicarian evolution, however, depends upon the separation and isolation of a variety of species within the confines of natural barriers in the form of islands, lakes, or shallow seas—topographic features that take a long time to develop."
+      }
+    ]
+  },
+  "groups": [
+    {
+      "type": "matching",
+      "instructions": "Use the information in the passage to match the people (listed A–E) with opinions or deeds below.\nChoose the appropriate letters A–E, in boxes 1–5.",
+      "options": [
+        {
+          "key": "A",
+          "text": "Suess"
+        },
+        {
+          "key": "B",
+          "text": "Wallace"
+        },
+        {
+          "key": "C",
+          "text": "Darwin and Wallace"
+        },
+        {
+          "key": "D",
+          "text": "Wegener"
+        },
+        {
+          "key": "E",
+          "text": "Lyell and Hooker"
+        }
+      ],
+      "questions": [
+        {
+          "n": 1,
+          "text": "Urged Darwin to publish his scientific findings"
+        },
+        {
+          "n": 2,
+          "text": "Depicted physical features of earth's crust"
+        },
+        {
+          "n": 3,
+          "text": "Believed in continental drift theory while rejecting another one"
+        },
+        {
+          "n": 4,
+          "text": "Published works about wildlife distribution in different regions"
+        },
+        {
+          "n": 5,
+          "text": "Evolution of species is based on selection by nature"
+        }
+      ]
+    },
+    {
+      "type": "matching",
+      "instructions": "Reading Passage 1 has nine paragraphs, A–I. Which paragraph contains the following information?",
+      "options": [
+        {
+          "key": "A",
+          "text": ""
+        },
+        {
+          "key": "B",
+          "text": ""
+        },
+        {
+          "key": "C",
+          "text": ""
+        },
+        {
+          "key": "D",
+          "text": ""
+        },
+        {
+          "key": "E",
+          "text": ""
+        },
+        {
+          "key": "F",
+          "text": ""
+        },
+        {
+          "key": "G",
+          "text": ""
+        },
+        {
+          "key": "H",
+          "text": ""
+        },
+        {
+          "key": "I",
+          "text": ""
+        }
+      ],
+      "questions": [
+        {
+          "n": 6,
+          "text": "The most adaptable would survive"
+        },
+        {
+          "n": 7,
+          "text": "The boundary called Wallace's line is found between Asia and Australia"
+        },
+        {
+          "n": 8,
+          "text": "Animal affinity exists between Australia and Africa"
+        }
+      ]
+    },
+    {
+      "type": "gap",
+      "instructions": "Complete the following summary of the paragraphs of Reading Passage.\nWrite NO MORE THAN TWO WORDS from the Reading Passage for each answer.",
+      "lines": [
+        "Wegener found that continental drift instead of \"land bridge\" theory in which vegetation and wildlife {{9}} intercontinentally, could explain strange species' distribution phenomenon. However, Eduard Suess compared the wrinkle of the crust to the {{10}} of an old apple. Now it is well known that we are living on the planet where there are {{11}} in constant mobile states instead of what Suess described. The debate in biogeography has switched to concerns between two terms: \"{{12}}\" and \"{{13}}\"."
+      ]
+    }
+  ],
+  "answers": {
+    "1": "E",
+    "2": "A",
+    "3": "D",
+    "4": "B",
+    "5": "C",
+    "6": "B",
+    "7": "F",
+    "8": "G",
+    "9": "migrated",
+    "10": "withering skin",
+    "11": "tectonic plates",
+    "12": "dispersalism",
+    "13": "vicarianism"
+  }
+}
