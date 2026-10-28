@@ -1,4 +1,5 @@
 import Link from "next/link";
+import ReplayBanner from "@/components/ReplayBanner";
 import SavedCounts from "@/components/SavedCounts";
 import { allNumbers } from "@/lib/test-schema";
 import { listTests } from "@/lib/tests";
@@ -14,6 +15,7 @@ export default function Home() {
         Solve a passage like in the real exam. After you submit, you&apos;ll see exactly why each answer was wrong.
       </p>
       <SavedCounts />
+      <ReplayBanner />
 
       {tests.length === 0 ? (
         <p className="mt-10 rounded-xl border border-dashed border-slate-300 bg-white px-6 py-10 text-center text-slate-500">

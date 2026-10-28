@@ -8,6 +8,7 @@ IELTS Reading Mistake Analyzer: a tool that explains why a student got Reading q
 - **After submit:** `POST /api/tests/[id]/grade` checks answers on the server, then `POST /api/analyze` explains each mistake. The answer key never goes to the browser.
 - **Also after submit:** selecting text in the passage calls `POST /api/explain`. Attempts, explained mistakes, new words and cached explanations are saved in IndexedDB (`lib/db.ts`).
 - **Vocabulary:** `/vocab` lists every saved word (search, sort, filter by test). Browser only, no Gemini. On the results screen, "Add to vocabulary" calls `POST /api/vocab/define` (Flash-Lite first) only for words not saved yet. `/vocab/practice` checks her own sentences with `POST /api/vocab/check`, cached per word + sentence.
+- **Mistake replay:** explained mistakes come back on `/replay` (due after 3 days; right: 7 days, then mastered; wrong: 2 days). Only the question is shown; grading uses the grade route. No Gemini.
 
 ## Stack
 Next.js (App Router) + TypeScript + Tailwind · Gemini via `@google/genai` (server only) · Dexie/IndexedDB · zod
