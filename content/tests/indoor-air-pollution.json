@@ -1,0 +1,134 @@
+{
+  "id": "indoor-air-pollution",
+  "title": "Searching for sustainable solutions to indoor air pollution",
+  "source": "Fozilbek IELTS (@FOZILBEK_IELTS)",
+  "passageNumber": 1,
+  "minutes": 20,
+  "passage": {
+    "title": "Searching for sustainable solutions to indoor air pollution",
+    "subtitle": "Indoor air pollution is a major problem affecting women and children in developing countries.",
+    "paragraphs": [
+      {
+        "text": "Indoor air pollution (IAP) kills more than 1.6 million people each year and some two billion more are at risk. The smoke from open cooking fires fills homes with a deadly mixture of particles and chemicals, often 100 times above agreed international exposure standards. This greatly increases the risk of respiratory diseases such as bronchitis and pneumonia, especially for women. Recent research also points to links between pregnant women's exposure to IAP and low birth weight, increasing the vulnerability of the newborn."
+      },
+      {
+        "text": "IAP is also part of a well-known poverty chain. Those not able to afford cleaner commercial fuels must spend many hard hours collecting biomass fuel. They do not have to pay for this, but the indirect costs on time and health are enormous. Cleaner fuels such as electricity and gas have yet to reach remote developing markets where the distribution costs are high."
+      },
+      {
+        "text": "Attempts to solve this problem have not produced real progress on a significant scale. Special stoves to reduce emissions required expensive fuel, and bore little relation to what the market (millions of poor households) wanted and could afford for cooking their meals."
+      },
+      {
+        "text": "Reducing risk"
+      },
+      {
+        "text": "For these reasons, one multi-national foundation has committed US$ 10 million to tackle IAP through a programme called 'Breathing Space', based on business and market principles. The foundation started their work by carrying out a series of consultations with those people affected by the problem. At the same time, they requested proposals for potentially commercialisable ways of tackling IAP. About 140 of these were received, primarily from Non-Governmental Organisations (NGOs), of which most addressed the IAP issue but failed to understand what the Foundation meant by commercialisable solutions to IAP."
+      },
+      {
+        "text": "The next task was then to organise pilot projects with NGO partners in eight developing countries, in order to systematically explore different market-based IAP solutions. These included the development and sale of new types of cooking stoves that were appropriate for this market, together with cleaner fuels, use of consumer finance on a micro-credit model, and reducing costs through mass production."
+      },
+      {
+        "text": "In parallel, the foundation carried out a review of the only two large-scale household energy programmes in the world at present: the National Improved Chulha Programme in India and the National Improved Stove Programme in China. Lessons from these two programmes have been extremely valuable in developing the foundation's approach, both in terms of what has worked and what has not."
+      },
+      {
+        "text": "Following these two initiatives, the Breathing Space programme then went on to develop:"
+      },
+      {
+        "text": "• complementary activities designed to answer key developmental and commercialisation questions raised by the pilot projects. These include development of a standardised monitoring and assessment system."
+      },
+      {
+        "text": "• a set of tools for market research, demand assessment, supply chain development and sustainable financing."
+      },
+      {
+        "text": "To date 250,000 households have been removed from risk through efforts to get smoke-reducing products to poor households. This figure will rise to more than a million by the end of the pilot phase at a total cost of US$ 7 million."
+      },
+      {
+        "text": "Although this is the first systematic IAP intervention ever mounted on a global scale, it is still limited compared with the extent of the problem. However, a number of the interventions tested are robust enough to develop on a wider scale. Developments underway in India and Guatemala, based on financially viable business models, are targeting three million households."
+      },
+      {
+        "text": "Eventually, the target is to get as many as 10 million households out of risk. In parallel, they are exploring the feasibility of building strategic partnerships and setting up intervention mechanisms on an international scale."
+      },
+      {
+        "text": "Having an impact"
+      },
+      {
+        "text": "Overall, experience to date of the impact of the various interventions carried out by Breathing Space is mixed. While a wide range of interventions is available, access by the poor is still very limited. In addition, most of the evaluation of these interventions has focused on changes in indoor air pollution levels, rather than health effects."
+      },
+      {
+        "text": "Reductions in pollution achieved by interventions very markedly. Generally, among poor dependent communities where initial levels of pollution are very high, it has been difficult to achieve extremely low levels of pollution and exposure. When interventions are taken up by only part of a community, reductions in personal exposure will tend to be limited due to - among other factors - exposure from other nearby homes."
+      },
+      {
+        "text": "The most successful projects have combined centralised component production, quality control and supply-chain management, with decentralised installation and assembly of products, linked to a network of social service providers (such as local NGOs) which provide the link to communities."
+      },
+      {
+        "text": "The pilots have demonstrated there are some viable business models, supply chains and consumer financing mechanisms that could be brought to bear on the IAP problem on a large scale. This has given the foundation the confidence to expand its programme further."
+      },
+      {
+        "text": "In Guatemala, for example, project personnel who were previously involved in managing a poverty project with a target population of 5,000 are now planning and implementing a self-financing strategy to get IAP interventions sold into a significant percentage of the 600,000 at-risk and very poor households. Meanwhile, in one state in India, the expanded programme will reach over three million people, from a pilot level of 100,000."
+      }
+    ]
+  },
+  "groups": [
+    {
+      "type": "gap",
+      "instructions": "Answer the questions below.\nChoose NO MORE THAN THREE WORDS from the passage for each answer.",
+      "lines": [
+        "What condition in very young babies may be a result of the mother's breathing in smoke from cooking fires? {{1}}",
+        "What type of free fuel do low-income households have to use? {{2}}",
+        "What makes electricity and gas unavailable in some areas? {{3}}",
+        "What devices, developed to solve the problem of IAP, failed because they did not meet local needs? {{4}}"
+      ]
+    },
+    {
+      "type": "gap",
+      "instructions": "Complete the flow-chart below.\nChoose NO MORE THAN TWO WORDS AND/OR A NUMBER from the passage for each answer.",
+      "lines": [
+        "conducting {{5}} and requesting proposals",
+        "↓",
+        "setting up {{6}} in developing countries + {{7}} of existing programmes in China and India",
+        "↓",
+        "complementary activities, eg standardised monitoring + development of business tools",
+        "↓",
+        "wider-scale developments in India and Guatemala",
+        "↓",
+        "long-term aim: protection of up to {{8}} households + possible establishment of partnerships and intervention mechanisms on the {{9}} level"
+      ]
+    },
+    {
+      "type": "tfng",
+      "instructions": "Do the following statements agree with the information given in Reading Passage 1?\nTRUE if the statement agrees with the information\nFALSE if the statement contradicts the information\nNOT GIVEN if there is no information on this",
+      "questions": [
+        {
+          "n": 10,
+          "text": "Less research has been done on the Breathing Space programme's impact on health than on its effect on indoor pollution levels."
+        },
+        {
+          "n": 11,
+          "text": "The Breathing Space programme has been very successful in communities with high levels of indoor pollution."
+        },
+        {
+          "n": 12,
+          "text": "The pilot project worked most effectively when it included provision for health education."
+        },
+        {
+          "n": 13,
+          "text": "The target in Guatemala is to have IAP interventions in all at-risk households."
+        }
+      ]
+    }
+  ],
+  "answers": {
+    "1": "low birth weight",
+    "2": "biomass fuel",
+    "3": "distribution costs",
+    "4": "special stoves",
+    "5": "consultations",
+    "6": "pilot projects",
+    "7": "review",
+    "8": "10 million",
+    "9": "international",
+    "10": "TRUE",
+    "11": "FALSE",
+    "12": "NOT GIVEN",
+    "13": "FALSE"
+  }
+}
