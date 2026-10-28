@@ -4,16 +4,34 @@ import Link from "next/link";
 import { useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
 import AnalyzeMistakes, { formatDuration } from "@/components/AnalyzeMistakes";
 import ExplainSentence from "@/components/ExplainSentence";
+import PacingReport from "@/components/PacingReport";
 import Passage, { type Highlight } from "@/components/Passage";
 import Questions from "@/components/Questions";
 import type { GradedAnswer } from "@/lib/answers";
 import type { AnalyzeResponse } from "@/lib/schema";
 import { saveMistake, saveSession } from "@/lib/db";
+import { paceHint, type GroupTime, type PaceHint } from "@/lib/pacing";
 import { storage, type SavedResult } from "@/lib/storage";
-import { allNumbers, paragraphLabels, type PublicTest } from "@/lib/test-schema";
+import { allNumbers, groupNumbers, paragraphLabels, type PublicTest } from "@/lib/test-schema";
 import { questionLabels } from "@/lib/test-text";
 
 const noopSubscribe = () => () => {};
+
+// Time per question group: it counts for the group she last clicked, focused or answered,
+// including the time she spends in the passage looking for that group's answers.
+type Pace = { ms: number[]; active: number | null; since: number };
+
+function newPace(groups: number): Pace {
+  return { ms: Array<number>(groups).fill(0), active: null, since: Date.now() };
+}
+
+// Adds the time since the last update to the active group and saves it (for a refresh).
+function flushPace(pace: Pace, testId: string) {
+  const now = Date.now();
+  if (pace.active !== null) pace.ms[pace.active] += now - pace.since;
+  pace.since = now;
+  storage.writePace(testId, { ms: pace.ms, active: pace.active });
+}
 
 // The test needs the browser (saved answers, the clock), so it renders after hydration.
 export default function TestRunner({ test }: { test: PublicTest }) {
@@ -56,8 +74,18 @@ function Runner({ test }: { test: PublicTest }) {
   const sessionRef = useRef<Promise<number | null> | null>(
     saved.result?.sessionId !== undefined ? Promise.resolve(saved.result.sessionId) : null,
   );
+  const [initialPace] = useState<Pace>(() => {
+    const p = storage.readPace(test.id);
+    return p && p.ms.length === test.groups.length ? { ...p, since: Date.now() } : newPace(test.groups.length);
+  });
+  const pace = useRef(initialPace);
+  const [dismissedHint, setDismissedHint] = useState<string | null>(null);
 
   const numbers = useMemo(() => allNumbers(test).sort((a, b) => a - b), [test]);
+  const groupOf = useMemo(
+    () => new Map(test.groups.flatMap((g, i) => groupNumbers(g).map((n) => [n, i] as const))),
+    [test],
+  );
   const labels = useMemo(() => questionLabels(test), [test]);
   // A section can have several paragraphs; only the first carries the label ("C"), so the
   // following unlabeled paragraphs belong to the same section.
@@ -71,12 +99,15 @@ function Runner({ test }: { test: PublicTest }) {
     };
   }, []);
 
-  // Clock ticks only while she is solving.
+  // Clock ticks only while she is solving. Group time is saved every tick.
   useEffect(() => {
     if (phase !== "test") return;
-    const timer = setInterval(() => setNow(Date.now()), 1000);
+    const timer = setInterval(() => {
+      setNow(Date.now());
+      flushPace(pace.current, test.id);
+    }, 1000);
     return () => clearInterval(timer);
-  }, [phase]);
+  }, [phase, test.id]);
 
   // Keep answers across a refresh.
   useEffect(() => {
@@ -94,11 +125,31 @@ function Runner({ test }: { test: PublicTest }) {
   function setAnswer(n: number, value: string) {
     setAnswers((prev) => ({ ...prev, [n]: value }));
     setConfirming(false);
+    trackGroup(groupOf.get(n) ?? null);
+  }
+
+  function trackGroup(group: number | null) {
+    if (phase !== "test" || group === null || group === pace.current.active) return;
+    flushPace(pace.current, test.id);
+    pace.current.active = group;
+  }
+
+  // A click or focus anywhere inside a question group makes it the active one.
+  function onQuestionsActivity(e: React.SyntheticEvent) {
+    const el = (e.target as HTMLElement).closest<HTMLElement>("[data-group]");
+    if (el) trackGroup(Number(el.dataset.group));
   }
 
   async function submit() {
     setSubmitting(true);
     setSubmitError(null);
+    flushPace(pace.current, test.id);
+    const groupTimes: GroupTime[] = test.groups.map((g, i) => ({
+      groupIndex: i,
+      type: g.type,
+      ms: Math.round(pace.current.ms[i]),
+      questions: groupNumbers(g).length,
+    }));
     const cleaned = Object.fromEntries(
       Object.entries(answers).filter(([, v]) => v.trim() !== "").map(([k, v]) => [k, v.trim()]),
     );
@@ -120,8 +171,15 @@ function Runner({ test }: { test: PublicTest }) {
       return;
     }
     const finishedAt = Date.now();
-    const next: SavedResult = { results: data.results, analyses: {}, timeSpentMs: finishedAt - startedAt, finishedAt };
+    const next: SavedResult = {
+      results: data.results,
+      analyses: {},
+      timeSpentMs: finishedAt - startedAt,
+      finishedAt,
+      groupTimes,
+    };
     storage.clearAttempt(test.id);
+    storage.clearPace(test.id);
     setResult(next);
     setSelected(firstMistake(next));
     rightPane.current?.scrollTo({ top: 0 });
@@ -182,6 +240,9 @@ function Runner({ test }: { test: PublicTest }) {
     sessionRef.current = null;
     storage.clearResult(test.id);
     storage.clearAttempt(test.id);
+    storage.clearPace(test.id);
+    pace.current = newPace(test.groups.length);
+    setDismissedHint(null);
     setAnswers({});
     setStartedAt(Date.now());
     setNow(Date.now());
@@ -214,6 +275,7 @@ function Runner({ test }: { test: PublicTest }) {
   );
 
   const remainingMs = test.minutes * 60_000 - (now - startedAt);
+  const hint = phase === "test" ? paceHint(test.minutes, now - startedAt, answeredCount, numbers.length) : null;
 
   return (
     <div className="flex h-dvh flex-col bg-slate-100 text-slate-900">
@@ -236,13 +298,20 @@ function Runner({ test }: { test: PublicTest }) {
         )}
       </header>
 
+      {hint && hint.id !== dismissedHint && <PaceBanner hint={hint} onDismiss={() => setDismissedHint(hint.id)} />}
+
       <main className="grid min-h-0 flex-1 overflow-y-auto md:grid-cols-2 md:overflow-hidden">
         <div className="border-slate-200 bg-white md:overflow-y-auto md:border-r">
           <ExplainSentence testId={test.id} enabled={phase === "results"}>
             <Passage test={test} highlight={highlight} />
           </ExplainSentence>
         </div>
-        <div ref={rightPane} className="bg-slate-50 md:overflow-y-auto">
+        <div
+          ref={rightPane}
+          className="bg-slate-50 md:overflow-y-auto"
+          onFocus={phase === "test" ? onQuestionsActivity : undefined}
+          onPointerDown={phase === "test" ? onQuestionsActivity : undefined}
+        >
           {result ? (
             <AnalyzeMistakes
               testId={test.id}
@@ -251,6 +320,11 @@ function Runner({ test }: { test: PublicTest }) {
               labels={labels}
               paragraphLabels={labelsByParagraph}
               timeSpentMs={result.timeSpentMs}
+              pacing={
+                result.groupTimes && (
+                  <PacingReport test={test} groupTimes={result.groupTimes} timeSpentMs={result.timeSpentMs} />
+                )
+              }
               selected={selected}
               onSelect={setSelected}
               explaining={explaining}
@@ -331,6 +405,24 @@ function Runner({ test }: { test: PublicTest }) {
           </div>
         )}
       </footer>
+    </div>
+  );
+}
+
+function PaceBanner({ hint, onDismiss }: { hint: PaceHint; onDismiss: () => void }) {
+  const style =
+    hint.tone === "good"
+      ? "border-emerald-200 bg-emerald-50 text-emerald-900"
+      : hint.tone === "behind"
+        ? "border-amber-200 bg-amber-50 text-amber-900"
+        : "border-sky-200 bg-sky-50 text-sky-900";
+  return (
+    <div role="status" className={`flex shrink-0 items-center gap-3 border-b px-4 py-2 text-sm ${style}`}>
+      <span aria-hidden>⏱</span>
+      <p className="min-w-0 flex-1">{hint.text}</p>
+      <button type="button" onClick={onDismiss} className="shrink-0 rounded px-2 py-0.5 font-semibold hover:bg-white/60">
+        OK
+      </button>
     </div>
   );
 }

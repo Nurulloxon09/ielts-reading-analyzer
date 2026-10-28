@@ -27,6 +27,8 @@ GEMINI_FALLBACK_MODELS=   # optional, comma-separated; used in order when a mode
 9. **Add to vocabulary:** after submitting, she types a word from the passage. If it (or its dictionary form) is already saved, the saved entry is shown with no Gemini call. Otherwise `POST /api/vocab/define` ({testId, word}) finds the word in the passage, takes its sentence as the example and asks Gemini (Flash-Lite first) for the meaning, synonyms and opposites.
 10. **Use in a sentence:** `/vocab/practice` shows one saved word (fewest reviews first, then the one reviewed longest ago; words shown in this visit wait for the next round). She writes a sentence; `POST /api/vocab/check` ({word, partOfSpeech, meaningEn, sentence}) asks Gemini (Flash-Lite first) whether the word is used correctly. A new result is saved in `vocabAttempts` and counts as a review; the same word + sentence is answered from IndexedDB with no Gemini call.
 11. **Mistake replay:** every explained mistake gets a row in `replays` (one per test question, pointing to the newest mistake). It is due 3 days after the mistake was saved; the home page shows how many are due. `/replay` shows the passage and only that question, with no explanation; `GET /api/tests/[id]` gives the test without the answer key and the existing grade route checks the answer. Right: back in 7 days, mastered (retired) after the second right answer in a row. Wrong: back in 2 days, and the saved explanation is shown again. A new mistake on the same question restarts the schedule. No Gemini.
+12. **Pacing:** while she solves, time counts for the question group she last clicked, focused or answered (kept in localStorage across a refresh). Soft hints show for a minute at about a third and two thirds of the time and 3 minutes before the end. On submit, `groupTimes` ({groupIndex, type, ms, questions}) is saved with the result and the session; the results screen shows each group against about 1 minute per question (`lib/pacing.ts`). No Gemini.
+13. **Stats:** `/stats` reads IndexedDB only: slowest question type (all timed attempts), top 3 trap types, replays still failing.
 
 ## Analysis output (JSON schema, enforced with Gemini structured output)
 ```
@@ -43,7 +45,7 @@ GEMINI_FALLBACK_MODELS=   # optional, comma-separated; used in order when a mode
 ```
 
 ## Data model (IndexedDB, `lib/db.ts`, Dexie version 3)
-- `sessions`: id, testId, title, finishedAt, correct, total, timeSpentMs (one per submitted attempt)
+- `sessions`: id, testId, title, finishedAt, correct, total, timeSpentMs, groupTimes? (one per submitted attempt; groupTimes is not indexed, so it needed no new version)
 - `mistakes`: id, sessionId, testId, questionNumber, given, correct, trapType, analysis, evidence, createdAt (saved when a mistake is explained)
 - `vocab`: word (lowercase key), display, meaningEn, meaningUz, mistakeId (missing for words from "Explain this sentence"), testId, reviewCount, lastReviewedAt, addedAt; optional partOfSpeech, synonyms, antonyms, example
 - `explanations`: key (testId + selected text), explanation, createdAt (cache for `/api/explain`)
@@ -65,6 +67,7 @@ app/test/[id]/page.tsx          solve + results
 app/vocab/page.tsx              vocabulary bank (IndexedDB only)
 app/vocab/practice/page.tsx     use a word in a sentence
 app/replay/page.tsx             re-try old mistakes (IndexedDB + grading, no Gemini)
+app/stats/page.tsx              stats (IndexedDB only)
 app/api/tests/[id]               one test without the answer key (for replay)
 app/api/tests/[id]/grade        grading
 app/api/analyze                 one mistake → Gemini

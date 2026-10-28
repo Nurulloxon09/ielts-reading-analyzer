@@ -14,7 +14,7 @@ export default function Questions({ test, answers, onAnswer }: { test: PublicTes
     <div className="mx-auto flex max-w-[46rem] flex-col gap-8 px-6 py-6 md:px-8">
       <h2 className="text-center text-2xl font-bold text-slate-900">Questions</h2>
       {test.groups.map((group, i) => (
-        <section key={i} className="flex flex-col gap-3">
+        <section key={i} data-group={i} className="flex flex-col gap-3">
           <Instructions group={group} />
           <GroupBody group={group} answers={answers} onAnswer={onAnswer} />
         </section>

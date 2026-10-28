@@ -3,6 +3,7 @@
 // blocked, the app still works, it just doesn't remember.
 import Dexie, { type EntityTable } from "dexie";
 import type { GradedAnswer } from "@/lib/answers";
+import { paceByType, type GroupTime, type TypePace } from "@/lib/pacing";
 import type { Analysis, AnalyzeResponse, Explanation, VocabCheck, VocabDefinition } from "@/lib/schema";
 
 type Evidence = Extract<AnalyzeResponse, { ok: true }>["evidence"];
@@ -15,6 +16,7 @@ export type Session = {
   correct: number;
   total: number;
   timeSpentMs: number;
+  groupTimes?: GroupTime[]; // time per question group; missing on attempts before pacing was recorded
 };
 
 export type Mistake = {
@@ -155,6 +157,7 @@ export function saveSession(input: {
   results: GradedAnswer[];
   timeSpentMs: number;
   finishedAt: number;
+  groupTimes?: GroupTime[];
 }): Promise<number | null> {
   return safely((d) =>
     d.sessions.add({
@@ -164,6 +167,7 @@ export function saveSession(input: {
       correct: input.results.filter((r) => r.isCorrect).length,
       total: input.results.length,
       timeSpentMs: input.timeSpentMs,
+      groupTimes: input.groupTimes,
     }),
   );
 }
@@ -350,14 +354,42 @@ export function getReplayStats(): Promise<ReplayStats | null> {
   return safely(async (d) => {
     const now = Date.now();
     const active = (await d.replays.toArray()).filter((r) => r.retiredAt === null);
-    const byTrap = new Map<Mistake["trapType"], number>();
-    for (const r of active) byTrap.set(r.trapType, (byTrap.get(r.trapType) ?? 0) + 1);
     const later = active.filter((r) => r.dueAt > now).map((r) => r.dueAt);
     return {
       due: active.length - later.length,
       active: active.length,
       nextDueAt: later.length ? Math.min(...later) : null,
-      stillFailing: [...byTrap].map(([trapType, count]) => ({ trapType, count })).sort((a, b) => b.count - a.count),
+      stillFailing: countByTrap(active),
+    };
+  });
+}
+
+type TrapCount = { trapType: Mistake["trapType"]; count: number };
+
+// How many rows have each trap type, most common first.
+function countByTrap(rows: { trapType: Mistake["trapType"] }[]): TrapCount[] {
+  const byTrap = new Map<Mistake["trapType"], number>();
+  for (const r of rows) byTrap.set(r.trapType, (byTrap.get(r.trapType) ?? 0) + 1);
+  return [...byTrap].map(([trapType, count]) => ({ trapType, count })).sort((a, b) => b.count - a.count);
+}
+
+export type Stats = {
+  timedTests: number; // attempts with time per question group
+  pace: TypePace[]; // all timed attempts together, slowest question type first
+  traps: TrapCount[]; // every explained mistake, most common first
+  stillFailing: TrapCount[]; // replays not mastered yet
+};
+
+// The stats page: everything comes from IndexedDB, no Gemini.
+export function getStats(): Promise<Stats | null> {
+  return safely(async (d) => {
+    const timed = (await d.sessions.toArray()).filter((s) => s.groupTimes?.length);
+    const replays = (await d.replays.toArray()).filter((r) => r.retiredAt === null);
+    return {
+      timedTests: timed.length,
+      pace: paceByType(timed.flatMap((s) => s.groupTimes ?? [])),
+      traps: countByTrap(await d.mistakes.toArray()),
+      stillFailing: countByTrap(replays),
     };
   });
 }
@@ -406,6 +438,10 @@ export function listFinished(): Promise<Map<string, FinishedTest> | null> {
   });
 }
 
-export function getCounts(): Promise<{ mistakes: number; words: number } | null> {
-  return safely(async (d) => ({ mistakes: await d.mistakes.count(), words: await d.vocab.count() }));
+export function getCounts(): Promise<{ sessions: number; mistakes: number; words: number } | null> {
+  return safely(async (d) => ({
+    sessions: await d.sessions.count(),
+    mistakes: await d.mistakes.count(),
+    words: await d.vocab.count(),
+  }));
 }

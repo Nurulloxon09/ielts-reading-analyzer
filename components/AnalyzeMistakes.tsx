@@ -12,6 +12,7 @@ type Props = {
   labels: Map<number, string>;
   paragraphLabels: (string | undefined)[];
   timeSpentMs: number;
+  pacing?: React.ReactNode; // the pacing report, when this attempt has group times
   selected: number | null;
   onSelect: (n: number | null) => void;
   explaining: number | null;
@@ -34,6 +35,7 @@ export default function AnalyzeMistakes({
   labels,
   paragraphLabels,
   timeSpentMs,
+  pacing,
   selected,
   onSelect,
   explaining,
@@ -98,6 +100,8 @@ export default function AnalyzeMistakes({
           </p>
         )}
       </section>
+
+      {pacing}
 
       <ol className="flex flex-col gap-3">
         {results.map((r) => {
