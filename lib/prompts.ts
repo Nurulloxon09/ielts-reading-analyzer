@@ -21,7 +21,7 @@ Rules:
 7. synonyms: pairs of words from the question and the passage words that mean the same thing.
 8. grammar: if the evidence sentence is long or hard, split it into parts and give each part's role. Otherwise null.
 9. logic: 3 to 6 short steps, in order, from reading the question to the correct answer.
-10. newVocab: up to 5 words from the evidence or question that a B1 student may not know.
+10. newVocab: 3 to 5 words or short phrases from the evidence sentence or the question that a B1 student may not know. Never leave it empty. meaningEn: a short, simple meaning. meaningUz: the Uzbek meaning.
 11. questionNumber: the number of the question you are explaining.`;
 
 export function buildAnalysisPrompt({ passage, questions, number, given, correct, repeatOf }: AnalyzePromptInput): string {

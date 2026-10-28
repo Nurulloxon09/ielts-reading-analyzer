@@ -8,8 +8,9 @@ if (typeof window !== "undefined") {
 export function getGeminiConfig() {
   const apiKey = process.env.GEMINI_API_KEY;
   const model = process.env.GEMINI_MODEL;
-  if (!apiKey) throw new Error("GEMINI_API_KEY is not set in .env.local.");
-  if (!model) throw new Error("GEMINI_MODEL is not set in .env.local.");
+  const where = "Add it to .env.local, or on Vercel to Settings → Environment Variables, then redeploy.";
+  if (!apiKey) throw new Error(`GEMINI_API_KEY is not set. ${where}`);
+  if (!model) throw new Error(`GEMINI_MODEL is not set. ${where}`);
   return { apiKey, model };
 }
 
