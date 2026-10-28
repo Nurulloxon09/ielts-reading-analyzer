@@ -95,7 +95,10 @@
     "3": "TRUE",
     "4": "NOT GIVEN",
     "5": "FALSE",
-    "6": "NOT GIVEN",
+    "6": [
+      "NOT GIVEN",
+      "TRUE"
+    ],
     "7": "TRUE",
     "8": "longer",
     "9": "antiques",
