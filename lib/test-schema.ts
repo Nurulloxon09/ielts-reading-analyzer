@@ -25,12 +25,13 @@ export const GroupSchema = z.discriminatedUnion("type", [
   z.object({ type: z.literal("tfng"), instructions, questions: z.array(Item).min(1) }),
   // YES / NO / NOT GIVEN
   z.object({ type: z.literal("ynng"), instructions, questions: z.array(Item).min(1) }),
-  // Note / sentence / summary / table completion. Blanks are written as {{n}}.
+  // Note / sentence / summary / table completion and diagram labelling. Blanks are written as {{n}}.
   // A line starting with "- " is a bullet, "## " is a heading, anything else is plain text.
   z.object({
     type: z.literal("gap"),
     instructions,
     title: z.string().trim().optional(),
+    image: z.object({ src: z.url({ protocol: /^https$/ }), alt: z.string().trim().min(1) }).optional(), // the diagram to label
     lines: z.array(z.string().trim().min(1)).min(1),
   }),
   // Multiple choice, one answer
@@ -106,6 +107,12 @@ export type Test = z.infer<typeof TestSchema>;
 
 // What the browser gets: everything except the answer key.
 export type PublicTest = Omit<Test, "answers">;
+
+// A section label ("A") covers the unlabelled paragraphs after it until the next label.
+export function paragraphLabels(test: PublicTest): (string | undefined)[] {
+  let current: string | undefined;
+  return test.passage.paragraphs.map((p) => (current = p.label ?? current));
+}
 
 // Question numbers asked by one group, in order.
 export function groupNumbers(group: QuestionGroup): number[] {

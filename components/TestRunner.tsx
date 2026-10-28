@@ -10,7 +10,7 @@ import type { GradedAnswer } from "@/lib/answers";
 import type { AnalyzeResponse } from "@/lib/schema";
 import { saveMistake, saveSession } from "@/lib/db";
 import { storage, type SavedResult } from "@/lib/storage";
-import { allNumbers, type PublicTest } from "@/lib/test-schema";
+import { allNumbers, paragraphLabels, type PublicTest } from "@/lib/test-schema";
 import { questionLabels } from "@/lib/test-text";
 
 const noopSubscribe = () => () => {};
@@ -28,6 +28,11 @@ export function TestLoading() {
 
 function firstMistake(result: SavedResult | null): number | null {
   return result?.results.find((r) => !r.isCorrect)?.number ?? null;
+}
+
+// Her submitted answers, rebuilt from the graded results (the attempt is cleared on submit).
+function answersOf(results: GradedAnswer[]): Record<string, string> {
+  return Object.fromEntries(results.filter((r) => r.given !== "").map((r) => [String(r.number), r.given]));
 }
 
 function Runner({ test }: { test: PublicTest }) {
@@ -56,10 +61,7 @@ function Runner({ test }: { test: PublicTest }) {
   const labels = useMemo(() => questionLabels(test), [test]);
   // A section can have several paragraphs; only the first carries the label ("C"), so the
   // following unlabeled paragraphs belong to the same section.
-  const paragraphLabels = useMemo(() => {
-    let current: string | undefined;
-    return test.passage.paragraphs.map((p) => (current = p.label ?? current));
-  }, [test]);
+  const labelsByParagraph = useMemo(() => paragraphLabels(test), [test]);
   const phase = result ? "results" : "test";
 
   useEffect(() => {
@@ -153,7 +155,7 @@ function Runner({ test }: { test: PublicTest }) {
         const res = await fetch("/api/analyze", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ testId: test.id, number: n, given: graded.given }),
+          body: JSON.stringify({ testId: test.id, number: n, answers: answersOf(result.results) }),
         });
         data = await res.json();
       } catch {
@@ -247,7 +249,7 @@ function Runner({ test }: { test: PublicTest }) {
               results={result.results}
               analyses={result.analyses}
               labels={labels}
-              paragraphLabels={paragraphLabels}
+              paragraphLabels={labelsByParagraph}
               timeSpentMs={result.timeSpentMs}
               selected={selected}
               onSelect={setSelected}

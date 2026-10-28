@@ -53,9 +53,3 @@ export function toPublicTest(test: Test): PublicTest {
   void _answers;
   return rest;
 }
-
-export function acceptedAnswers(test: Test, n: number): string[] {
-  const raw = test.answers[String(n)];
-  if (raw === undefined) return [];
-  return Array.isArray(raw) ? raw : [raw];
-}

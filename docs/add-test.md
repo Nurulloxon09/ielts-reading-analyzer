@@ -16,7 +16,7 @@ The admin gives you a passage, its questions and the official answer key. You wr
 - `id`: lowercase-with-dashes, same as the file name.
 - `title`: passage title. `source`: e.g. "Cambridge IELTS 14, Test 1".
 - `passageNumber`: 1, 2 or 3. `minutes`: usually 20.
-- `passage.paragraphs`: one entry per paragraph. Add `label` ("A", "B"…) only if the source labels paragraphs.
+- `passage.paragraphs`: one entry per paragraph. Add `label` ("A", "B"…) only if the source labels paragraphs. If a labelled section has several paragraphs, label only its first paragraph; the others belong to it.
 
 ## Question groups (`groups`)
 
@@ -27,10 +27,11 @@ Copy the instructions text as written, one line per `\n`.
 | TRUE / FALSE / NOT GIVEN | `tfng` | `questions: [{ n, text }]` |
 | YES / NO / NOT GIVEN | `ynng` | same as tfng |
 | Note, sentence, summary, table, flow-chart completion | `gap` | `lines`: write each blank as `{{n}}`. Start a line with `- ` for a bullet, `## ` for a heading. Optional `title`. |
+| Diagram labelling | `gap` | Same, plus `image: { src, alt }` (an `https` link to the source picture). One line per blank, e.g. `"{{1}}"`. |
 | Multiple choice (one answer) | `mcq` | `questions: [{ n, text, options: [{ key: "A", text }] }]` |
 | Matching headings / information / features / sentence endings | `matching` | `options: [{ key, text }]` (text can be empty for "which paragraph" tasks), optional `optionsTitle`, `questions: [{ n, text }]` |
 
-"Choose TWO letters" questions: split into two `mcq` questions with the same options, or ask the admin.
+"Choose TWO letters" questions: split into two `mcq` questions in one group, with the same options and the same answer list, e.g. `"21": ["A", "C"], "22": ["A", "C"]`. Grading counts each letter only once.
 
 ## Answer key (`answers`)
 
