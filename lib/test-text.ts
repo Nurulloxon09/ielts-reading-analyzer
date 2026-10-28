@@ -70,3 +70,31 @@ export function questionsAsText(test: PublicTest): string {
     })
     .join("\n\n");
 }
+
+// The test cut down to one question, for mistake replay. The group keeps its instructions and
+// options; in a gap task only the line with that blank stays (plus the heading above it), and
+// any other blank on that line becomes "______". The passage is unchanged.
+export function onlyQuestion(test: PublicTest, n: number): PublicTest {
+  const groups: QuestionGroup[] = [];
+  for (const group of test.groups) {
+    if (!groupNumbers(group).includes(n)) continue;
+    if (group.type === "gap") {
+      const lines: string[] = [];
+      let heading: string | null = null;
+      for (const line of group.lines) {
+        if (gapLineKind(line).kind === "heading") {
+          heading = line;
+          continue;
+        }
+        if (!line.includes(`{{${n}}}`)) continue;
+        if (heading) lines.push(heading);
+        heading = null;
+        lines.push(line.replace(/\{\{(\d+)\}\}/g, (blank, k) => (Number(k) === n ? blank : "______")));
+      }
+      groups.push({ ...group, lines });
+    } else {
+      groups.push({ ...group, questions: group.questions.filter((q) => q.n === n) } as QuestionGroup);
+    }
+  }
+  return { ...test, groups };
+}

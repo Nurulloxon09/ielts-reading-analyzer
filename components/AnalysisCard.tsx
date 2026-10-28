@@ -2,7 +2,7 @@
 
 import type { AnalysisResult } from "@/lib/storage";
 
-const TRAP_LABELS: Record<string, string> = {
+export const TRAP_LABELS: Record<string, string> = {
   distractor: "Distractor word",
   negative: "Missed a negative word",
   synonym: "Missed a paraphrase",
