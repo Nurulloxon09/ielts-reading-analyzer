@@ -1,6 +1,7 @@
 // Analyzes ONE wrong answer. The client calls this once per mistake, in sequence.
-// Only the test id, question number and her answer come from the browser;
+// Only the test id, question number and her answers come from the browser;
 // the passage, questions and official answer are read from the test file.
+import { gradeTest } from "@/lib/answers";
 import { findEvidence } from "@/lib/evidence";
 import { describeGeminiError, generateJson } from "@/lib/gemini";
 import { ANALYSIS_SYSTEM_PROMPT, buildAnalysisPrompt, buildQuoteRetryNote } from "@/lib/prompts";
@@ -12,7 +13,7 @@ import {
   type AnalyzeResponse,
 } from "@/lib/schema";
 import { passageAsText, questionsAsText } from "@/lib/test-text";
-import { acceptedAnswers, getTest, toPublicTest } from "@/lib/tests";
+import { getTest, toPublicTest } from "@/lib/tests";
 
 // First try + one retry if the quote is not in the passage or the JSON is invalid.
 const MAX_ATTEMPTS = 2;
@@ -33,12 +34,12 @@ export async function POST(request: Request) {
   if (!parsed.success) {
     return reply({ ok: false, error: "Missing or invalid test, question or answer." }, 400);
   }
-  const { testId, number, given } = parsed.data;
+  const { testId, number, answers } = parsed.data;
 
   const test = getTest(testId);
   if (!test) return reply({ ok: false, error: "This test does not exist." }, 404);
-  const correct = acceptedAnswers(test, number);
-  if (correct.length === 0) {
+  const graded = gradeTest(test, answers).find((r) => r.number === number);
+  if (!graded) {
     return reply({ ok: false, error: `Question ${number} is not in this test.` }, 400);
   }
 
@@ -47,8 +48,9 @@ export async function POST(request: Request) {
     passage: passageAsText(publicTest),
     questions: questionsAsText(publicTest),
     number,
-    given,
-    correct,
+    given: graded.given,
+    correct: graded.correct,
+    repeatOf: graded.repeatOf,
   });
 
   let prompt = basePrompt;
