@@ -31,19 +31,30 @@ function getGemini() {
 // Free-tier limits: wait and retry on "too many requests" or "overloaded".
 const RETRY_DELAYS_MS = [2_000, 6_000];
 
+// One call gives up after this long. A model that is hanging is skipped for the next
+// one instead of keeping her waiting on "Explaining…".
+const CALL_TIMEOUT_MS = 45_000;
+
+// The SDK aborts the request when httpOptions.timeout runs out.
+function isTimeout(err: unknown): boolean {
+  return err instanceof Error && err.name === "AbortError";
+}
+
 // The free tier has a per-minute and a per-day request limit. Waiting a few seconds
 // only helps with the per-minute one.
 function isDailyLimit(err: unknown): err is ApiError {
   return err instanceof ApiError && err.status === 429 && /PerDay/i.test(err.message);
 }
 
+// A 504 or a timeout means the model is too slow right now: waiting again would not help.
 function isRetryable(err: unknown): boolean {
   if (isDailyLimit(err)) return false;
-  return err instanceof ApiError && (err.status === 429 || err.status >= 500);
+  return err instanceof ApiError && (err.status === 429 || (err.status >= 500 && err.status !== 504));
 }
 
-// Worth trying the next model: out of quota, overloaded, or not available on this account.
+// Worth trying the next model: out of quota, overloaded, too slow, or not available on this account.
 function shouldTryNextModel(err: unknown): boolean {
+  if (isTimeout(err)) return true;
   return err instanceof ApiError && (err.status === 429 || err.status === 404 || err.status >= 500);
 }
 
@@ -56,6 +67,11 @@ function resetDelayMs(err: ApiError): number {
 // Models whose daily quota is used up, and when to try them again. Kept in memory,
 // so a used-up model is skipped instead of costing a wasted call every time.
 const usedUpUntil = new Map<string, number>();
+
+// Models that were overloaded or too slow a moment ago go to the back of the line for a
+// while, so the next explanation does not wait on them again. They are still tried last.
+const SLOW_COOLDOWN_MS = 5 * 60_000;
+const slowUntil = new Map<string, number>();
 
 // Thrown when every configured model has used up its daily quota.
 export class QuotaUsedUpError extends Error {
@@ -93,6 +109,7 @@ async function generateWithRetry(ai: GoogleGenAI, model: string, options: JsonRe
           systemInstruction: options.system,
           responseMimeType: "application/json",
           responseJsonSchema: options.jsonSchema,
+          httpOptions: { timeout: CALL_TIMEOUT_MS },
         },
       });
       return response.text ?? "";
@@ -108,18 +125,26 @@ async function generateWithRetry(ai: GoogleGenAI, model: string, options: JsonRe
 // Temperature is left at the default: Google advises against lowering it for Gemini 3 models.
 export async function generateJson(options: JsonRequest): Promise<string> {
   const { ai, models: configured } = getGemini();
-  const models = modelOrder(configured, options.prefer);
+  const ordered = modelOrder(configured, options.prefer);
+  const isSlow = (m: string) => (slowUntil.get(m) ?? 0) > Date.now();
+  const models = [...ordered.filter((m) => !isSlow(m)), ...ordered.filter(isSlow)];
   let lastError: unknown = null;
 
   for (const model of models) {
     if ((usedUpUntil.get(model) ?? 0) > Date.now()) continue;
     try {
-      return await generateWithRetry(ai, model, options);
+      const text = await generateWithRetry(ai, model, options);
+      slowUntil.delete(model);
+      return text;
     } catch (err) {
       lastError = err;
       if (!shouldTryNextModel(err)) throw err;
       if (isDailyLimit(err)) usedUpUntil.set(model, Date.now() + resetDelayMs(err));
-      console.warn(`[gemini] ${model} failed (${(err as ApiError).status}); trying the next model if there is one.`);
+      else if (isTimeout(err) || (err instanceof ApiError && err.status >= 500)) {
+        slowUntil.set(model, Date.now() + SLOW_COOLDOWN_MS);
+      }
+      const why = isTimeout(err) ? `no answer in ${CALL_TIMEOUT_MS / 1000}s` : (err as ApiError).status;
+      console.warn(`[gemini] ${model} failed (${why}); trying the next model if there is one.`);
     }
   }
 
@@ -134,6 +159,9 @@ export function describeGeminiError(err: unknown): string {
   if (err instanceof QuotaUsedUpError) {
     const hours = Math.max(1, Math.ceil(err.resetsInMs / 3_600_000));
     return `Today's free Gemini limit is used up. It resets in about ${hours} ${hours === 1 ? "hour" : "hours"}.`;
+  }
+  if (isTimeout(err)) {
+    return "Gemini took too long to answer. Try again in a minute.";
   }
   if (err instanceof ApiError && /API_KEY_INVALID|API key not valid/i.test(err.message)) {
     return "The Gemini API key is not valid. Check GEMINI_API_KEY (only the key, no quotes or spaces).";
