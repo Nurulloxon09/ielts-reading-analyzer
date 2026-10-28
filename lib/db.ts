@@ -76,6 +76,9 @@ export type Replay = {
   retiredAt: number | null; // set once it is mastered
 };
 
+// Paraphrase drill: one row per check. key = test + phrase + passage words.
+export type ParaphraseAttempt = { id: number; key: string; testId: string; hit: boolean; createdAt: number };
+
 const DAY = 24 * 60 * 60 * 1000;
 export const REPLAY_DAYS = { first: 3, afterRight: 7, afterWrong: 2 } as const;
 const MASTERED_STREAK = 2; // retire after the second correct replay
@@ -101,6 +104,7 @@ class AnalyzerDb extends Dexie {
   explanations!: EntityTable<CachedExplanation, "key">;
   vocabAttempts!: EntityTable<VocabAttempt, "id">;
   replays!: EntityTable<Replay, "id">;
+  paraphraseAttempts!: EntityTable<ParaphraseAttempt, "id">;
 
   constructor() {
     super("ielts-reading-analyzer");
@@ -129,6 +133,10 @@ class AnalyzerDb extends Dexie {
           .each((m) => newest.set(`${m.testId}#${m.questionNumber}`, m));
         await tx.table("replays").bulkAdd([...newest.values()].map(freshReplay));
       });
+    // v4: paraphrase drill checks. Only the new table; all earlier tables and data are kept.
+    this.version(4).stores({
+      paraphraseAttempts: "++id, key, createdAt",
+    });
   }
 }
 
@@ -381,12 +389,39 @@ function countByTrap(rows: { trapType: Mistake["trapType"] }[]): TrapCount[] {
   return [...byTrap].map(([trapType, count]) => ({ trapType, count })).sort((a, b) => b.count - a.count);
 }
 
+// Every saved mistake (for the paraphrase drill).
+export function listMistakes(): Promise<Mistake[] | null> {
+  return safely((d) => d.mistakes.toArray());
+}
+
+export function saveParaphraseAttempt(key: string, testId: string, hit: boolean): Promise<number | null> {
+  return safely((d) => d.paraphraseAttempts.add({ key, testId, hit, createdAt: Date.now() }));
+}
+
+export type ParaphraseRecord = { hits: number; misses: number; lastAt: number };
+
+// Hits and misses so far, per drill pair.
+export function getParaphraseRecords(): Promise<Map<string, ParaphraseRecord> | null> {
+  return safely(async (d) => {
+    const records = new Map<string, ParaphraseRecord>();
+    await d.paraphraseAttempts.each((a) => {
+      const r = records.get(a.key) ?? { hits: 0, misses: 0, lastAt: 0 };
+      if (a.hit) r.hits++;
+      else r.misses++;
+      r.lastAt = Math.max(r.lastAt, a.createdAt);
+      records.set(a.key, r);
+    });
+    return records;
+  });
+}
+
 export type Stats = {
   timedTests: number; // attempts with time per question group
   pace: TypePace[]; // all timed attempts together, slowest question type first
   traps: TrapCount[]; // every explained mistake, most common first
   stillFailing: TrapCount[]; // replays not mastered yet
   evidence: { right: number; total: number }; // evidence-first TRUE/FALSE, all attempts
+  paraphrase: { hits: number; total: number }; // paraphrase drill checks
 };
 
 // The stats page: everything comes from IndexedDB, no Gemini.
@@ -404,6 +439,10 @@ export function getStats(): Promise<Stats | null> {
         (sum, s) => ({ right: sum.right + (s.evidenceChecks?.right ?? 0), total: sum.total + (s.evidenceChecks?.total ?? 0) }),
         { right: 0, total: 0 },
       ),
+      paraphrase: {
+        hits: await d.paraphraseAttempts.filter((a) => a.hit).count(),
+        total: await d.paraphraseAttempts.count(),
+      },
     };
   });
 }

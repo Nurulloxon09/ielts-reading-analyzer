@@ -41,6 +41,10 @@ Copy the instructions text as written, one line per `\n`.
 
 Every `tfng` / `ynng` question gets `evidence`: the sentence (or part of it) that proves the official answer, copied **word for word** from the passage. For a NOT GIVEN answer, write `"evidence": null`. Use the official key to decide; never change the answer. If the key accepts NOT GIVEN and another answer, leave `evidence` out (that question is not checked). If the right sentence is unclear, ask the admin. The student never sees it before submitting; after submitting, the app checks her own highlight against it.
 
+## Paraphrases (optional, for the paraphrase drill)
+
+`paraphrases: [{ "questionPhrase": "decline in numbers", "passageQuote": "populations fell sharply" }]`: a short phrase from a question and the passage words that say the same thing in other words. Copy `passageQuote` **word for word** from the passage; the build checks it. Add 3–6 pairs where the question clearly paraphrases the passage. They are shown only after she has finished the test (they can give answers away).
+
 ## Check
 
 Run `npm run build`. It fails with a clear message if the file breaks the format (missing answer, wrong option letter, duplicate number, an evidence quote that is not in the passage word for word). Then open the test in the browser and check the passage and every question against the source.

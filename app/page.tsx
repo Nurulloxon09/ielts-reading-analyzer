@@ -1,3 +1,4 @@
+import Link from "next/link";
 import ReplayBanner from "@/components/ReplayBanner";
 import SavedCounts from "@/components/SavedCounts";
 import TestList, { type TestSummary } from "@/components/TestList";
@@ -23,6 +24,12 @@ export default function Home() {
       </p>
       <SavedCounts />
       <ReplayBanner />
+      <p className="mt-4 text-sm text-slate-600">
+        Drills:{" "}
+        <Link href="/paraphrase" className="font-semibold text-sky-700 hover:underline">
+          Spot the paraphrase
+        </Link>
+      </p>
       <TestList tests={tests} />
     </main>
   );

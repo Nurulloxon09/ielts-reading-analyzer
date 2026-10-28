@@ -55,6 +55,18 @@ function remove(key: string) {
   }
 }
 
+// Test ids that have a saved result (the tests she has submitted on this device).
+function listResultIds(): string[] {
+  try {
+    const prefix = resultKey("");
+    return Object.keys(window.localStorage)
+      .filter((k) => k.startsWith(prefix))
+      .map((k) => k.slice(prefix.length));
+  } catch {
+    return [];
+  }
+}
+
 export const storage = {
   readAttempt: (id: string) => read<SavedAttempt>(attemptKey(id)),
   writeAttempt: (id: string, attempt: SavedAttempt) => write(attemptKey(id), attempt),
@@ -65,4 +77,5 @@ export const storage = {
   readPace: (id: string) => read<SavedPace>(paceKey(id)),
   writePace: (id: string, pace: SavedPace) => write(paceKey(id), pace),
   clearPace: (id: string) => remove(paceKey(id)),
+  listResultIds,
 };

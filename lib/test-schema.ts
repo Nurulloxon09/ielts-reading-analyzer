@@ -76,6 +76,11 @@ export const TestSchema = z
     }),
     groups: z.array(GroupSchema).min(1),
     answers: z.record(z.string().regex(/^\d+$/), AnswerValue),
+    // Paraphrase drill: a phrase from a question and the passage words that mean the same, copied
+    // exactly. Admin-only (it can give answers away): removed before the browser gets the test.
+    paraphrases: z
+      .array(z.object({ questionPhrase: z.string().trim().min(1), passageQuote: z.string().trim().min(1) }))
+      .optional(),
   })
   .superRefine((test, ctx) => {
     const issue = (message: string) => ctx.addIssue({ code: "custom", message });
@@ -126,12 +131,19 @@ export const TestSchema = z
         }
       }
     }
+
+    for (const pair of test.paraphrases ?? []) {
+      if (findEvidence(test.passage.paragraphs, pair.passageQuote)?.quote !== pair.passageQuote) {
+        issue(`paraphrases: "${pair.passageQuote}" is not in the passage word for word.`);
+      }
+    }
   });
 
 export type Test = z.infer<typeof TestSchema>;
 
-// What the browser gets: everything except the answer key.
-export type PublicTest = Omit<Test, "answers">;
+// What the browser gets: everything except the answer key and the paraphrase pairs
+// (toPublicTest also removes the evidence quotes).
+export type PublicTest = Omit<Test, "answers" | "paraphrases">;
 
 // A section label ("A") covers the unlabelled paragraphs after it until the next label.
 export function paragraphLabels(test: PublicTest): (string | undefined)[] {

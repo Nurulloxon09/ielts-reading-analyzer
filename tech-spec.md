@@ -29,7 +29,8 @@ GEMINI_FALLBACK_MODELS=   # optional, comma-separated; used in order when a mode
 11. **Mistake replay:** every explained mistake gets a row in `replays` (one per test question, pointing to the newest mistake). It is due 3 days after the mistake was saved; the home page shows how many are due. `/replay` shows the passage and only that question, with no explanation; `GET /api/tests/[id]` gives the test without the answer key and the existing grade route checks the answer. Right: back in 7 days, mastered (retired) after the second right answer in a row. Wrong: back in 2 days, and the saved explanation is shown again. A new mistake on the same question restarts the schedule. No Gemini.
 12. **Pacing:** while she solves, time counts for the question group she last clicked, focused or answered (kept in localStorage across a refresh). Soft hints show for a minute at about a third and two thirds of the time and 3 minutes before the end. On submit, `groupTimes` ({groupIndex, type, ms, questions}) is saved with the result and the session; the results screen shows each group against about 1 minute per question (`lib/pacing.ts`). No Gemini.
 13. **Evidence-first TRUE/FALSE:** each `tfng`/`ynng` question in the test file has `evidence` (a verbatim quote, or null for NOT GIVEN), checked at build and removed by `toPublicTest`. Before submitting, every answered TRUE/FALSE question needs her evidence: words highlighted in the passage, or "No evidence". The grade route compares it with the quote (`checkEvidence` in `lib/answers.ts`): found / wrong sentence / missed / right none / not given. The result shows this under every such question, correct or not, and can highlight the real sentence. Totals are saved on the session as `evidenceChecks`. No Gemini.
-14. **Stats:** `/stats` reads IndexedDB only: slowest question type (all timed attempts), evidence accuracy, top 3 trap types, replays still failing.
+14. **Paraphrase drill:** `/paraphrase` shows a phrase from a question; she selects the passage words that mean the same. Pairs come from her explained mistakes (the analysis `synonyms`) and, for finished tests only, from the test file's `paraphrases` list and each TRUE/YES statement with its evidence. `POST /api/paraphrase/pairs` ({testIds, mistakes}) checks every passage phrase against the passage and returns its position. The check is plain overlap with that position (most of her selection inside it, and at least half of it or 25 characters). Each check is saved in `paraphraseAttempts`; her own mistakes come first, then the pairs she misses most. No Gemini.
+15. **Stats:** `/stats` reads IndexedDB only: slowest question type (all timed attempts), evidence accuracy, paraphrase hit rate, top 3 trap types, replays still failing.
 
 ## Analysis output (JSON schema, enforced with Gemini structured output)
 ```
@@ -45,13 +46,14 @@ GEMINI_FALLBACK_MODELS=   # optional, comma-separated; used in order when a mode
 }
 ```
 
-## Data model (IndexedDB, `lib/db.ts`, Dexie version 3)
+## Data model (IndexedDB, `lib/db.ts`, Dexie version 4)
 - `sessions`: id, testId, title, finishedAt, correct, total, timeSpentMs, groupTimes?, evidenceChecks? (one per submitted attempt; these fields are not indexed, so they needed no new version)
 - `mistakes`: id, sessionId, testId, questionNumber, given, correct, trapType, analysis, evidence, createdAt (saved when a mistake is explained)
 - `vocab`: word (lowercase key), display, meaningEn, meaningUz, mistakeId (missing for words from "Explain this sentence"), testId, reviewCount, lastReviewedAt, addedAt; optional partOfSpeech, synonyms, antonyms, example
 - `explanations`: key (testId + selected text), explanation, createdAt (cache for `/api/explain`)
 - `vocabAttempts` (v2): id, key (word + sentence), word, sentence, check, createdAt ("Use in a sentence" history and cache)
 - `replays` (v3): id, testId + questionNumber (unique), mistakeId, trapType, dueAt, streak, lastResult, retiredAt. The v3 upgrade creates one for every mistake saved before.
+- `paraphraseAttempts` (v4): id, key (test + phrase + passage position), testId, hit, createdAt (one per drill check)
 - Schema changes: add `this.version(n + 1).stores(...)` listing only the new or changed tables; existing data is kept.
 
 ## Prompt rules
@@ -69,6 +71,8 @@ app/vocab/page.tsx              vocabulary bank (IndexedDB only)
 app/vocab/practice/page.tsx     use a word in a sentence
 app/replay/page.tsx             re-try old mistakes (IndexedDB + grading, no Gemini)
 app/stats/page.tsx              stats (IndexedDB only)
+app/paraphrase/page.tsx         paraphrase drill (no Gemini)
+app/api/paraphrase/pairs        drill pairs, checked against the passage
 app/api/tests/[id]               one test without the answer key (for replay)
 app/api/tests/[id]/grade        grading
 app/api/analyze                 one mistake → Gemini

@@ -93,6 +93,33 @@ export const GradeRequestSchema = z.object({
     .optional(),
 });
 
+// Paraphrase drill: the tests she has finished, and the phrase pairs from her explained mistakes
+// (the analysis "synonyms"). The server checks each passage phrase against the passage.
+export const ParaphrasePairsRequestSchema = z.object({
+  testIds: z.array(z.string().min(1).max(100)).max(200),
+  mistakes: z
+    .array(
+      z.object({
+        testId: z.string().min(1).max(100),
+        questionPhrase: z.string().min(1).max(300),
+        passagePhrase: z.string().min(1).max(600),
+      }),
+    )
+    .max(1000),
+});
+
+// One drill item: find the passage words (quote, at paragraph/start/end) that mean the phrase.
+export type ParaphrasePair = {
+  testId: string;
+  title: string;
+  phrase: string;
+  quote: string;
+  paragraph: number;
+  start: number;
+  end: number;
+  from: "mistake" | "test";
+};
+
 // "Explain this sentence": she selects text in the passage after submitting.
 export const ExplanationSchema = z.object({
   meaningEn: z.string().describe("What the selected text means, in simple words"),

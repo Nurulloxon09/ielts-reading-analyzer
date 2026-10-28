@@ -11,6 +11,7 @@ import type { EvidencePick, GradedAnswer } from "@/lib/answers";
 import type { AnalyzeResponse } from "@/lib/schema";
 import { saveMistake, saveSession } from "@/lib/db";
 import { paceHint, type GroupTime, type PaceHint } from "@/lib/pacing";
+import { selectionInParagraph } from "@/lib/selection";
 import { storage, type EvidenceNote, type SavedResult } from "@/lib/storage";
 import { allNumbers, groupNumbers, paragraphLabels, type PublicTest } from "@/lib/test-schema";
 import { questionLabels } from "@/lib/test-text";
@@ -151,29 +152,11 @@ function Runner({ test }: { test: PublicTest }) {
   // While she is highlighting evidence: the selected words in one paragraph become the evidence.
   function capturePick() {
     if (picking === null) return;
-    const selection = window.getSelection();
-    if (!selection || selection.rangeCount === 0 || selection.isCollapsed) return;
-    const range = selection.getRangeAt(0);
-    const startNode = range.startContainer;
-    const paragraph = (startNode instanceof Element ? startNode : startNode.parentElement)?.closest<HTMLElement>(
-      "[data-paragraph]",
-    );
-    if (!paragraph) return;
-    const offsetOf = (node: Node, offset: number) => {
-      const before = document.createRange();
-      before.selectNodeContents(paragraph);
-      before.setEnd(node, offset);
-      return before.toString().length;
-    };
-    const text = paragraph.textContent ?? "";
-    let start = offsetOf(range.startContainer, range.startOffset);
-    let end = paragraph.contains(range.endContainer) ? offsetOf(range.endContainer, range.endOffset) : text.length;
-    while (start < end && /\s/.test(text[start])) start++;
-    while (end > start && /\s/.test(text[end - 1])) end--;
-    if (end - start < 3) return;
-    setNote(picking, { paragraph: Number(paragraph.dataset.paragraph), start, end, text: text.slice(start, end) });
+    const picked = selectionInParagraph();
+    if (!picked) return;
+    setNote(picking, picked);
     setPicking(null);
-    selection.removeAllRanges();
+    window.getSelection()?.removeAllRanges();
   }
 
   function trackGroup(group: number | null) {

@@ -16,6 +16,8 @@ About 2 hours a day.
 - [x] Mistake replay: re-try old mistakes after 3 days (`/replay`), "still failing" by trap type
 - [x] Stats screen (`/stats`): slowest question type, top 3 trap types, replays still failing
 - [x] Pacing: time per question group, soft hints, pacing report after submit
+- [x] Evidence-first TRUE/FALSE/NOT GIVEN (highlight the proof before submitting)
+- [x] Paraphrase drill (`/paraphrase`)
 - [x] Vocab list + review quiz (`/vocab`, `/vocab/practice`)
 - [ ] JSON export/import
 - [x] Deploy to Vercel free tier: https://ielts-reading-analyzer-gray.vercel.app

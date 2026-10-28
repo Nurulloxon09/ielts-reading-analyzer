@@ -75,6 +75,31 @@ export default function StatsView() {
         )}
       </Card>
 
+      <Card title="Paraphrase spotting">
+        {stats.paraphrase.total > 0 ? (
+          <>
+            <p className="text-[17px] text-slate-900">
+              <span className="font-semibold">{Math.round((stats.paraphrase.hits / stats.paraphrase.total) * 100)}%</span> found
+              <span className="text-slate-500">
+                {" "}
+                ({stats.paraphrase.hits} of {stats.paraphrase.total} tries)
+              </span>
+            </p>
+            <Link href="/paraphrase" className="mt-3 inline-block text-sm font-semibold text-sky-700 hover:underline">
+              Practise paraphrases →
+            </Link>
+          </>
+        ) : (
+          <Empty>
+            Try the{" "}
+            <Link href="/paraphrase" className="font-semibold text-sky-700 hover:underline">
+              paraphrase drill
+            </Link>{" "}
+            to see this.
+          </Empty>
+        )}
+      </Card>
+
       <Card title="Top 3 mistake types">
         {topTraps.length > 0 ? (
           <ol className="flex flex-col gap-1.5 text-[15px]">
