@@ -17,15 +17,16 @@ GEMINI_FALLBACK_MODELS=   # optional, comma-separated; used in order when a mode
 
 ## Data flow
 1. **Tests:** the admin adds `content/tests/<id>.json` (passage, question groups, answer key) via Claude Code (`docs/add-test.md`). Format: `lib/test-schema.ts`.
-2. **Solve:** `/test/[id]` shows the passage and questions like the computer IELTS, with a timer. The browser never gets the answer key. Answers in progress are kept in localStorage.
-3. **Grade:** `POST /api/tests/[id]/grade` compares her answers with the key (case-, space- and punctuation-insensitive).
-4. **Analyze:** `POST /api/analyze` ({testId, number, given}) runs one Gemini call per wrong answer, in sequence. The server loads the passage, questions and correct answer itself.
-5. **Check:** the server confirms the evidence quote exists verbatim in the passage. If it doesn't, it retries once, then shows "couldn't locate".
-6. **Show and save:** the current result and its explanations are kept in localStorage. Every submitted attempt, explained mistake and new word is also saved to IndexedDB (`lib/db.ts`) for the mistake log.
-7. **Explain this sentence:** after submitting, she selects text in the passage. `POST /api/explain` ({testId, text}) checks the text is in the passage, widens it to the full sentence and returns a breakdown. Explanations are cached in IndexedDB, so the same sentence never costs a second Gemini call.
-8. **Add to vocabulary:** after submitting, she types a word from the passage. If it (or its dictionary form) is already saved, the saved entry is shown with no Gemini call. Otherwise `POST /api/vocab/define` ({testId, word}) finds the word in the passage, takes its sentence as the example and asks Gemini (Flash-Lite first) for the meaning, synonyms and opposites.
-9. **Use in a sentence:** `/vocab/practice` shows one saved word (fewest reviews first, then the one reviewed longest ago; words shown in this visit wait for the next round). She writes a sentence; `POST /api/vocab/check` ({word, partOfSpeech, meaningEn, sentence}) asks Gemini (Flash-Lite first) whether the word is used correctly. A new result is saved in `vocabAttempts` and counts as a review; the same word + sentence is answered from IndexedDB with no Gemini call.
-10. **Mistake replay:** every explained mistake gets a row in `replays` (one per test question, pointing to the newest mistake). It is due 3 days after the mistake was saved; the home page shows how many are due. `/replay` shows the passage and only that question, with no explanation; `GET /api/tests/[id]` gives the test without the answer key and the existing grade route checks the answer. Right: back in 7 days, mastered (retired) after the second right answer in a row. Wrong: back in 2 days, and the saved explanation is shown again. A new mistake on the same question restarts the schedule. No Gemini.
+2. **Home:** `/` lists the tests she hasn't done under Passage 1, 2 and 3, then a "Finished" section (newest first, latest score). "Finished" comes from the `sessions` table plus the result saved in localStorage.
+3. **Solve:** `/test/[id]` shows the passage and questions like the computer IELTS, with a timer. The browser never gets the answer key. Answers in progress are kept in localStorage.
+4. **Grade:** `POST /api/tests/[id]/grade` compares her answers with the key (case-, space- and punctuation-insensitive).
+5. **Analyze:** `POST /api/analyze` ({testId, number, given}) runs one Gemini call per wrong answer, in sequence. The server loads the passage, questions and correct answer itself.
+6. **Check:** the server confirms the evidence quote exists verbatim in the passage. If it doesn't, it retries once, then shows "couldn't locate".
+7. **Show and save:** the current result and its explanations are kept in localStorage. Every submitted attempt, explained mistake and new word is also saved to IndexedDB (`lib/db.ts`) for the mistake log.
+8. **Explain this sentence:** after submitting, she selects text in the passage. `POST /api/explain` ({testId, text}) checks the text is in the passage, widens it to the full sentence and returns a breakdown. Explanations are cached in IndexedDB, so the same sentence never costs a second Gemini call.
+9. **Add to vocabulary:** after submitting, she types a word from the passage. If it (or its dictionary form) is already saved, the saved entry is shown with no Gemini call. Otherwise `POST /api/vocab/define` ({testId, word}) finds the word in the passage, takes its sentence as the example and asks Gemini (Flash-Lite first) for the meaning, synonyms and opposites.
+10. **Use in a sentence:** `/vocab/practice` shows one saved word (fewest reviews first, then the one reviewed longest ago; words shown in this visit wait for the next round). She writes a sentence; `POST /api/vocab/check` ({word, partOfSpeech, meaningEn, sentence}) asks Gemini (Flash-Lite first) whether the word is used correctly. A new result is saved in `vocabAttempts` and counts as a review; the same word + sentence is answered from IndexedDB with no Gemini call.
+11. **Mistake replay:** every explained mistake gets a row in `replays` (one per test question, pointing to the newest mistake). It is due 3 days after the mistake was saved; the home page shows how many are due. `/replay` shows the passage and only that question, with no explanation; `GET /api/tests/[id]` gives the test without the answer key and the existing grade route checks the answer. Right: back in 7 days, mastered (retired) after the second right answer in a row. Wrong: back in 2 days, and the saved explanation is shown again. A new mistake on the same question restarts the schedule. No Gemini.
 
 ## Analysis output (JSON schema, enforced with Gemini structured output)
 ```
@@ -59,7 +60,7 @@ GEMINI_FALLBACK_MODELS=   # optional, comma-separated; used in order when a mode
 ## Folders
 ```
 content/tests/*.json            reading tests (admin)
-app/page.tsx                    test list
+app/page.tsx                    test list: Passage 1/2/3 sections, then Finished
 app/test/[id]/page.tsx          solve + results
 app/vocab/page.tsx              vocabulary bank (IndexedDB only)
 app/vocab/practice/page.tsx     use a word in a sentence

@@ -393,6 +393,19 @@ export function listVocab(): Promise<VocabItem[] | null> {
   return safely((d) => d.vocab.orderBy("addedAt").reverse().toArray());
 }
 
+export type FinishedTest = { correct: number; total: number; finishedAt: number };
+
+// Her latest submitted attempt for every test she has finished, by test id.
+export function listFinished(): Promise<Map<string, FinishedTest> | null> {
+  return safely(async (d) => {
+    const latest = new Map<string, FinishedTest>();
+    await d.sessions
+      .orderBy("finishedAt")
+      .each((s) => latest.set(s.testId, { correct: s.correct, total: s.total, finishedAt: s.finishedAt }));
+    return latest;
+  });
+}
+
 export function getCounts(): Promise<{ mistakes: number; words: number } | null> {
   return safely(async (d) => ({ mistakes: await d.mistakes.count(), words: await d.vocab.count() }));
 }

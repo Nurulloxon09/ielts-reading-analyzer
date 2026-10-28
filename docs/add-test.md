@@ -14,7 +14,7 @@ The admin gives you a passage, its questions and the official answer key. You wr
 ## Fields
 
 - `id`: lowercase-with-dashes, same as the file name.
-- `title`: passage title. `source`: e.g. "Cambridge IELTS 14, Test 1".
+- `title`: passage title. `source`: e.g. "Cambridge IELTS 14, Test 1" (kept for the admin; not shown in the app).
 - `passageNumber`: 1, 2 or 3. `minutes`: usually 20.
 - `passage.paragraphs`: one entry per paragraph. Add `label` ("A", "B"…) only if the source labels paragraphs. If a labelled section has several paragraphs, label only its first paragraph; the others belong to it.
 

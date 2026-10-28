@@ -4,7 +4,7 @@ IELTS Reading Mistake Analyzer: a tool that explains why a student got Reading q
 
 ## How it works
 - **Admin (the developer)** adds tests as JSON files in `content/tests/`. To add one, follow `docs/add-test.md` exactly.
-- **Student** picks a test on `/`, solves it on `/test/[id]` (passage left, questions right, like the computer IELTS), submits.
+- **Student** picks a test on `/` (grouped by Passage 1, 2, 3; finished tests move to a "Finished" section with her latest score), solves it on `/test/[id]` (passage left, questions right, like the computer IELTS), submits.
 - **After submit:** `POST /api/tests/[id]/grade` checks answers on the server, then `POST /api/analyze` explains each mistake. The answer key never goes to the browser.
 - **Also after submit:** selecting text in the passage calls `POST /api/explain`. Attempts, explained mistakes, new words and cached explanations are saved in IndexedDB (`lib/db.ts`).
 - **Vocabulary:** `/vocab` lists every saved word (search, sort, filter by test). Browser only, no Gemini. On the results screen, "Add to vocabulary" calls `POST /api/vocab/define` (Flash-Lite first) only for words not saved yet. `/vocab/practice` checks her own sentences with `POST /api/vocab/check`, cached per word + sentence.
