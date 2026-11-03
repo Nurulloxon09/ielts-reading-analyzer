@@ -8,6 +8,10 @@ IELTS Reading Mistake Analyzer: a tool that explains why a student got Reading q
 - **After submit:** `POST /api/tests/[id]/grade` checks answers on the server, then `POST /api/analyze` explains each mistake. The answer key never goes to the browser.
 - **Also after submit:** selecting text in the passage calls `POST /api/explain`. Attempts, explained mistakes, new words and cached explanations are saved in IndexedDB (`lib/db.ts`).
 - **Vocabulary:** `/vocab` lists every saved word (search, sort, filter by test). Browser only, no Gemini. On the results screen, "Add to vocabulary" calls `POST /api/vocab/define` (Flash-Lite first) only for words not saved yet. `/vocab/practice` checks her own sentences with `POST /api/vocab/check`, cached per word + sentence.
+- **Pacing and stats:** the test page tracks time per question group and shows soft pace hints; results show a pacing report (`lib/pacing.ts`). `/stats` shows the slowest question type, top trap types and replays still failing. IndexedDB only, no Gemini.
+- **Evidence-first TRUE/FALSE:** test files hold an `evidence` quote per TRUE/FALSE question (admin-only, stripped by `toPublicTest`, checked at build). She must highlight her evidence or tick "No evidence" before submitting; the grade route checks it. No Gemini.
+- **Paraphrase drill:** `/paraphrase`: she selects the passage words that mean a question phrase. Pairs from her mistakes and from finished tests (`paraphrases` in the test file, TRUE/YES statements + evidence) via `POST /api/paraphrase/pairs`. Overlap check, no Gemini.
+- **Paragraph gist drill:** `/gist/[id]`: one main-idea line per labelled paragraph; `POST /api/gist/check` checks all lines in one Flash-Lite call, cached in IndexedDB by test + her lines. The model never sees the answer-key headings.
 - **Mistake replay:** explained mistakes come back on `/replay` (due after 3 days; right: 7 days, then mastered; wrong: 2 days). Only the question is shown; grading uses the grade route. No Gemini.
 
 ## Stack

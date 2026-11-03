@@ -47,9 +47,16 @@ export function getTest(id: string): Test | null {
   return loadFile(`${id}.json`);
 }
 
-// Removes the answer key before anything is sent to the browser.
+// Removes the answer key, the evidence quotes and the paraphrase pairs before anything is sent
+// to the browser.
 export function toPublicTest(test: Test): PublicTest {
-  const { answers: _answers, ...rest } = test;
+  const { answers: _answers, paraphrases: _paraphrases, ...rest } = test;
   void _answers;
-  return rest;
+  void _paraphrases;
+  const groups = rest.groups.map((group) =>
+    group.type === "tfng" || group.type === "ynng"
+      ? { ...group, questions: group.questions.map(({ n, text }) => ({ n, text })) }
+      : group,
+  );
+  return { ...rest, groups };
 }

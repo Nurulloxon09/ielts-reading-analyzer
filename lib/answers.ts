@@ -1,5 +1,21 @@
 // Answer checking. The correct answers always come from the test's answer key.
+import { findEvidence, type EvidenceMatch } from "@/lib/evidence";
 import { allNumbers, type Test } from "@/lib/test-schema";
+
+// Her evidence for a TRUE/FALSE or YES/NO question: the words she highlighted in a paragraph,
+// or "none" ("No evidence": her claim that it is NOT GIVEN).
+export type EvidencePick = { paragraph: number; start: number; end: number } | "none";
+
+// found: her highlight overlaps the real quote · wrong_sentence: she highlighted something else ·
+// missed: she said "no evidence", but the passage answers it · right_none: NOT GIVEN and she said
+// "no evidence" · not_given: NOT GIVEN, but she highlighted a sentence.
+export type EvidenceStatus = "found" | "wrong_sentence" | "missed" | "right_none" | "not_given";
+
+export type EvidenceCheck = {
+  status: EvidenceStatus;
+  proof: EvidenceMatch | null; // where the answer is; null for NOT GIVEN
+  picked: string | null; // the words she highlighted; null for "no evidence"
+};
 
 export type GradedAnswer = {
   number: number;
@@ -7,7 +23,10 @@ export type GradedAnswer = {
   correct: string[]; // all accepted answers; the first is the main one
   isCorrect: boolean;
   repeatOf?: number; // a "choose TWO" letter she already used for this question
+  evidence?: EvidenceCheck; // TRUE/FALSE and YES/NO questions she gave evidence for
 };
+
+export const evidenceIsRight = (status: EvidenceStatus) => status === "found" || status === "right_none";
 
 // Case-, space- and punctuation-insensitive: "  Not  Given. " matches "not given".
 export function normalizeAnswer(answer: string): string {
@@ -72,4 +91,34 @@ export function gradeTest(test: Test, given: Record<string, string>): GradedAnsw
   }
 
   return [...results.values()].sort((a, b) => a.number - b.number);
+}
+
+// Compares her evidence with the quote in the test file. Questions without a quote in the file,
+// or without evidence from her, are not checked.
+export function checkEvidence(test: Test, picks: Record<string, EvidencePick>, results: GradedAnswer[]) {
+  const paragraphs = test.passage.paragraphs;
+  for (const group of test.groups) {
+    if (group.type !== "tfng" && group.type !== "ynng") continue;
+    for (const q of group.questions) {
+      const pick = picks[String(q.n)];
+      const result = results.find((r) => r.number === q.n);
+      if (q.evidence === undefined || pick === undefined || !result) continue;
+
+      let picked: string | null = null;
+      if (pick !== "none") {
+        const text = paragraphs[pick.paragraph]?.text;
+        if (text === undefined || pick.start >= pick.end || pick.end > text.length) continue;
+        picked = text.slice(pick.start, pick.end);
+      }
+      const proof = q.evidence === null ? null : findEvidence(paragraphs, q.evidence);
+      let status: EvidenceStatus;
+      if (proof === null) status = pick === "none" ? "right_none" : "not_given";
+      else if (pick === "none") status = "missed";
+      else {
+        const overlaps = pick.paragraph === proof.paragraph && pick.start < proof.end && proof.start < pick.end;
+        status = overlaps ? "found" : "wrong_sentence";
+      }
+      result.evidence = { status, proof, picked };
+    }
+  }
 }

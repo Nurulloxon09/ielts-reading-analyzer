@@ -2,6 +2,7 @@
 // The admin adds these files; the student only solves them.
 // Shared by server and client code (no Node APIs here).
 import { z } from "zod";
+import { findEvidence } from "@/lib/evidence";
 
 const Paragraph = z.object({
   label: z.string().trim().max(3).optional(), // "A", "B"… for paragraph-matching tasks
@@ -18,13 +19,17 @@ const Item = z.object({
   text: z.string().trim().min(1),
 });
 
+// TRUE/FALSE and YES/NO questions: the sentence that proves the answer, copied exactly from the
+// passage, or null for NOT GIVEN. Admin-only, like the answer key: removed before the browser gets the test.
+const StatementItem = Item.extend({ evidence: z.string().trim().min(1).nullable().optional() });
+
 const instructions = z.string().trim().min(1);
 
 export const GroupSchema = z.discriminatedUnion("type", [
   // TRUE / FALSE / NOT GIVEN
-  z.object({ type: z.literal("tfng"), instructions, questions: z.array(Item).min(1) }),
+  z.object({ type: z.literal("tfng"), instructions, questions: z.array(StatementItem).min(1) }),
   // YES / NO / NOT GIVEN
-  z.object({ type: z.literal("ynng"), instructions, questions: z.array(Item).min(1) }),
+  z.object({ type: z.literal("ynng"), instructions, questions: z.array(StatementItem).min(1) }),
   // Note / sentence / summary / table completion and diagram labelling. Blanks are written as {{n}}.
   // A line starting with "- " is a bullet, "## " is a heading, anything else is plain text.
   z.object({
@@ -71,6 +76,11 @@ export const TestSchema = z
     }),
     groups: z.array(GroupSchema).min(1),
     answers: z.record(z.string().regex(/^\d+$/), AnswerValue),
+    // Paraphrase drill: a phrase from a question and the passage words that mean the same, copied
+    // exactly. Admin-only (it can give answers away): removed before the browser gets the test.
+    paraphrases: z
+      .array(z.object({ questionPhrase: z.string().trim().min(1), passageQuote: z.string().trim().min(1) }))
+      .optional(),
   })
   .superRefine((test, ctx) => {
     const issue = (message: string) => ctx.addIssue({ code: "custom", message });
@@ -101,12 +111,39 @@ export const TestSchema = z
     for (const key of Object.keys(test.answers)) {
       if (!seen.has(Number(key))) issue(`"answers" has question ${key}, but no group asks it.`);
     }
+
+    // Evidence quotes must be in the passage word for word; null only fits a NOT GIVEN answer.
+    for (const group of test.groups) {
+      if (group.type !== "tfng" && group.type !== "ynng") continue;
+      for (const q of group.questions) {
+        if (q.evidence === undefined) continue;
+        const raw = test.answers[String(q.n)] ?? [];
+        const accepted = (Array.isArray(raw) ? raw : [raw]).map((a) => a.toUpperCase());
+        if (q.evidence === null) {
+          if (!accepted.includes("NOT GIVEN")) issue(`Question ${q.n}: evidence is null, but the answer is not NOT GIVEN.`);
+          continue;
+        }
+        if (accepted.every((a) => a === "NOT GIVEN")) {
+          issue(`Question ${q.n}: the answer is NOT GIVEN, so evidence must be null.`);
+        }
+        if (findEvidence(test.passage.paragraphs, q.evidence)?.quote !== q.evidence) {
+          issue(`Question ${q.n}: the evidence quote is not in the passage word for word: "${q.evidence}"`);
+        }
+      }
+    }
+
+    for (const pair of test.paraphrases ?? []) {
+      if (findEvidence(test.passage.paragraphs, pair.passageQuote)?.quote !== pair.passageQuote) {
+        issue(`paraphrases: "${pair.passageQuote}" is not in the passage word for word.`);
+      }
+    }
   });
 
 export type Test = z.infer<typeof TestSchema>;
 
-// What the browser gets: everything except the answer key.
-export type PublicTest = Omit<Test, "answers">;
+// What the browser gets: everything except the answer key and the paraphrase pairs
+// (toPublicTest also removes the evidence quotes).
+export type PublicTest = Omit<Test, "answers" | "paraphrases">;
 
 // A section label ("A") covers the unlabelled paragraphs after it until the next label.
 export function paragraphLabels(test: PublicTest): (string | undefined)[] {

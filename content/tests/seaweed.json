@@ -40,23 +40,28 @@
       "questions": [
         {
           "n": 1,
-          "text": "Seaweed has been used to feed animals on some Scottish islands for thousands of years."
+          "text": "Seaweed has been used to feed animals on some Scottish islands for thousands of years.",
+          "evidence": "For example, it has supplemented the diet of sheep in the Orkneys, islands off the coast of Scotland, since Neolithic times, roughly 5000 years ago."
         },
         {
           "n": 2,
-          "text": "In the 8th century in Japan, eating seaweed was reserved for special occasions."
+          "text": "In the 8th century in Japan, eating seaweed was reserved for special occasions.",
+          "evidence": "In the early part of the 8th century in Japan, seaweed was already such a key part of people's regular diet that legislation was introduced giving people the right to pay their taxes to the Emperor in the form of seaweed."
         },
         {
           "n": 3,
-          "text": "The findings at Monte Verde revealed new information about the significance of women's roles in prehistoric times."
+          "text": "The findings at Monte Verde revealed new information about the significance of women's roles in prehistoric times.",
+          "evidence": "However, these findings suggest that women, known to be responsible for the gathering of plants such as seaweed, also played an important part in the provision of food."
         },
         {
           "n": 4,
-          "text": "Potash was Norway's largest export in the 1800s."
+          "text": "Potash was Norway's largest export in the 1800s.",
+          "evidence": null
         },
         {
           "n": 5,
-          "text": "Dr Kathleen Drew-Baker is more famous in Japan than she is in the UK."
+          "text": "Dr Kathleen Drew-Baker is more famous in Japan than she is in the UK.",
+          "evidence": "Although hardly anyone has heard of Dr Drew-Baker in the UK, she is known as the \"Mother of the Sea\" in Japan, and a statue of her can be found in the Japanese city of Osaka."
         }
       ]
     },

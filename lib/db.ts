@@ -2,8 +2,9 @@
 // cached sentence explanations. Every call is wrapped: if IndexedDB is missing or
 // blocked, the app still works, it just doesn't remember.
 import Dexie, { type EntityTable } from "dexie";
-import type { GradedAnswer } from "@/lib/answers";
-import type { Analysis, AnalyzeResponse, Explanation, VocabCheck, VocabDefinition } from "@/lib/schema";
+import { evidenceIsRight, type GradedAnswer } from "@/lib/answers";
+import { paceByType, type GroupTime, type TypePace } from "@/lib/pacing";
+import type { Analysis, AnalyzeResponse, Explanation, GistCheck, VocabCheck, VocabDefinition } from "@/lib/schema";
 
 type Evidence = Extract<AnalyzeResponse, { ok: true }>["evidence"];
 
@@ -15,6 +16,8 @@ export type Session = {
   correct: number;
   total: number;
   timeSpentMs: number;
+  groupTimes?: GroupTime[]; // time per question group; missing on attempts before pacing was recorded
+  evidenceChecks?: { right: number; total: number }; // evidence-first TRUE/FALSE questions she gave evidence for
 };
 
 export type Mistake = {
@@ -73,6 +76,12 @@ export type Replay = {
   retiredAt: number | null; // set once it is mastered
 };
 
+// Paraphrase drill: one row per check. key = test + phrase + passage words.
+export type ParaphraseAttempt = { id: number; key: string; testId: string; hit: boolean; createdAt: number };
+
+// Paragraph gist drill: one checked set of her lines. The key (test + her lines) is the cache key.
+type GistCheckRow = { key: string; testId: string; check: GistCheck; createdAt: number };
+
 const DAY = 24 * 60 * 60 * 1000;
 export const REPLAY_DAYS = { first: 3, afterRight: 7, afterWrong: 2 } as const;
 const MASTERED_STREAK = 2; // retire after the second correct replay
@@ -98,6 +107,8 @@ class AnalyzerDb extends Dexie {
   explanations!: EntityTable<CachedExplanation, "key">;
   vocabAttempts!: EntityTable<VocabAttempt, "id">;
   replays!: EntityTable<Replay, "id">;
+  paraphraseAttempts!: EntityTable<ParaphraseAttempt, "id">;
+  gistChecks!: EntityTable<GistCheckRow, "key">;
 
   constructor() {
     super("ielts-reading-analyzer");
@@ -126,6 +137,14 @@ class AnalyzerDb extends Dexie {
           .each((m) => newest.set(`${m.testId}#${m.questionNumber}`, m));
         await tx.table("replays").bulkAdd([...newest.values()].map(freshReplay));
       });
+    // v4: paraphrase drill checks. Only the new table; all earlier tables and data are kept.
+    this.version(4).stores({
+      paraphraseAttempts: "++id, key, createdAt",
+    });
+    // v5: paragraph gist drill results (the Gemini cache). Only the new table; all data is kept.
+    this.version(5).stores({
+      gistChecks: "&key, testId",
+    });
   }
 }
 
@@ -155,6 +174,7 @@ export function saveSession(input: {
   results: GradedAnswer[];
   timeSpentMs: number;
   finishedAt: number;
+  groupTimes?: GroupTime[];
 }): Promise<number | null> {
   return safely((d) =>
     d.sessions.add({
@@ -164,8 +184,16 @@ export function saveSession(input: {
       correct: input.results.filter((r) => r.isCorrect).length,
       total: input.results.length,
       timeSpentMs: input.timeSpentMs,
+      groupTimes: input.groupTimes,
+      evidenceChecks: evidenceSummary(input.results),
     }),
   );
+}
+
+function evidenceSummary(results: GradedAnswer[]): Session["evidenceChecks"] {
+  const checked = results.flatMap((r) => (r.evidence ? [r.evidence] : []));
+  if (checked.length === 0) return undefined;
+  return { right: checked.filter((c) => evidenceIsRight(c.status)).length, total: checked.length };
 }
 
 // Saves an explained mistake and its new words. Saving the same question twice is a no-op.
@@ -350,14 +378,91 @@ export function getReplayStats(): Promise<ReplayStats | null> {
   return safely(async (d) => {
     const now = Date.now();
     const active = (await d.replays.toArray()).filter((r) => r.retiredAt === null);
-    const byTrap = new Map<Mistake["trapType"], number>();
-    for (const r of active) byTrap.set(r.trapType, (byTrap.get(r.trapType) ?? 0) + 1);
     const later = active.filter((r) => r.dueAt > now).map((r) => r.dueAt);
     return {
       due: active.length - later.length,
       active: active.length,
       nextDueAt: later.length ? Math.min(...later) : null,
-      stillFailing: [...byTrap].map(([trapType, count]) => ({ trapType, count })).sort((a, b) => b.count - a.count),
+      stillFailing: countByTrap(active),
+    };
+  });
+}
+
+type TrapCount = { trapType: Mistake["trapType"]; count: number };
+
+// How many rows have each trap type, most common first.
+function countByTrap(rows: { trapType: Mistake["trapType"] }[]): TrapCount[] {
+  const byTrap = new Map<Mistake["trapType"], number>();
+  for (const r of rows) byTrap.set(r.trapType, (byTrap.get(r.trapType) ?? 0) + 1);
+  return [...byTrap].map(([trapType, count]) => ({ trapType, count })).sort((a, b) => b.count - a.count);
+}
+
+const gistKey = (testId: string, lines: Record<string, string>) =>
+  [testId, ...Object.keys(lines).sort().map((label) => `${label}: ${lines[label].trim().replace(/\s+/g, " ")}`)].join("\n");
+
+// The same test + the same lines = no new Gemini call.
+export function getGistCheck(testId: string, lines: Record<string, string>): Promise<GistCheck | null> {
+  return safely(async (d) => (await d.gistChecks.get(gistKey(testId, lines)))?.check ?? null);
+}
+
+export function saveGistCheck(testId: string, lines: Record<string, string>, check: GistCheck): Promise<string | null> {
+  return safely((d) => d.gistChecks.put({ key: gistKey(testId, lines), testId, check, createdAt: Date.now() }));
+}
+
+// Every saved mistake (for the paraphrase drill).
+export function listMistakes(): Promise<Mistake[] | null> {
+  return safely((d) => d.mistakes.toArray());
+}
+
+export function saveParaphraseAttempt(key: string, testId: string, hit: boolean): Promise<number | null> {
+  return safely((d) => d.paraphraseAttempts.add({ key, testId, hit, createdAt: Date.now() }));
+}
+
+export type ParaphraseRecord = { hits: number; misses: number; lastAt: number };
+
+// Hits and misses so far, per drill pair.
+export function getParaphraseRecords(): Promise<Map<string, ParaphraseRecord> | null> {
+  return safely(async (d) => {
+    const records = new Map<string, ParaphraseRecord>();
+    await d.paraphraseAttempts.each((a) => {
+      const r = records.get(a.key) ?? { hits: 0, misses: 0, lastAt: 0 };
+      if (a.hit) r.hits++;
+      else r.misses++;
+      r.lastAt = Math.max(r.lastAt, a.createdAt);
+      records.set(a.key, r);
+    });
+    return records;
+  });
+}
+
+export type Stats = {
+  timedTests: number; // attempts with time per question group
+  pace: TypePace[]; // all timed attempts together, slowest question type first
+  traps: TrapCount[]; // every explained mistake, most common first
+  stillFailing: TrapCount[]; // replays not mastered yet
+  evidence: { right: number; total: number }; // evidence-first TRUE/FALSE, all attempts
+  paraphrase: { hits: number; total: number }; // paraphrase drill checks
+};
+
+// The stats page: everything comes from IndexedDB, no Gemini.
+export function getStats(): Promise<Stats | null> {
+  return safely(async (d) => {
+    const sessions = await d.sessions.toArray();
+    const timed = sessions.filter((s) => s.groupTimes?.length);
+    const replays = (await d.replays.toArray()).filter((r) => r.retiredAt === null);
+    return {
+      timedTests: timed.length,
+      pace: paceByType(timed.flatMap((s) => s.groupTimes ?? [])),
+      traps: countByTrap(await d.mistakes.toArray()),
+      stillFailing: countByTrap(replays),
+      evidence: sessions.reduce(
+        (sum, s) => ({ right: sum.right + (s.evidenceChecks?.right ?? 0), total: sum.total + (s.evidenceChecks?.total ?? 0) }),
+        { right: 0, total: 0 },
+      ),
+      paraphrase: {
+        hits: await d.paraphraseAttempts.filter((a) => a.hit).count(),
+        total: await d.paraphraseAttempts.count(),
+      },
     };
   });
 }
@@ -406,6 +511,10 @@ export function listFinished(): Promise<Map<string, FinishedTest> | null> {
   });
 }
 
-export function getCounts(): Promise<{ mistakes: number; words: number } | null> {
-  return safely(async (d) => ({ mistakes: await d.mistakes.count(), words: await d.vocab.count() }));
+export function getCounts(): Promise<{ sessions: number; mistakes: number; words: number } | null> {
+  return safely(async (d) => ({
+    sessions: await d.sessions.count(),
+    mistakes: await d.mistakes.count(),
+    words: await d.vocab.count(),
+  }));
 }

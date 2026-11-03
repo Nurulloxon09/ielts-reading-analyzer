@@ -24,7 +24,7 @@ Copy the instructions text as written, one line per `\n`.
 
 | Source question type | `type` | Notes |
 | --- | --- | --- |
-| TRUE / FALSE / NOT GIVEN | `tfng` | `questions: [{ n, text }]` |
+| TRUE / FALSE / NOT GIVEN | `tfng` | `questions: [{ n, text, evidence }]` (see Evidence below) |
 | YES / NO / NOT GIVEN | `ynng` | same as tfng |
 | Note, sentence, summary, table, flow-chart completion | `gap` | `lines`: write each blank as `{{n}}`. Start a line with `- ` for a bullet, `## ` for a heading. Optional `title`. |
 | Diagram labelling | `gap` | Same, plus `image: { src, alt }` (an `https` link to the source picture). One line per blank, e.g. `"{{1}}"`. |
@@ -37,6 +37,14 @@ Copy the instructions text as written, one line per `\n`.
 
 `{ "1": "TRUE", "5": "B", "8": ["bulbs", "the bulbs"] }`. Use the exact option words or letters (`TRUE`, `NOT GIVEN`, `B`, `iv`). For gap answers, list every accepted form the key gives, e.g. `"(the) bulbs"` → `["bulbs", "the bulbs"]`.
 
+## Evidence (TRUE/FALSE and YES/NO questions)
+
+Every `tfng` / `ynng` question gets `evidence`: the sentence (or part of it) that proves the official answer, copied **word for word** from the passage. For a NOT GIVEN answer, write `"evidence": null`. Use the official key to decide; never change the answer. If the key accepts NOT GIVEN and another answer, leave `evidence` out (that question is not checked). If the right sentence is unclear, ask the admin. The student never sees it before submitting; after submitting, the app checks her own highlight against it.
+
+## Paraphrases (optional, for the paraphrase drill)
+
+`paraphrases: [{ "questionPhrase": "decline in numbers", "passageQuote": "populations fell sharply" }]`: a short phrase from a question and the passage words that say the same thing in other words. Copy `passageQuote` **word for word** from the passage; the build checks it. Add 3–6 pairs where the question clearly paraphrases the passage. They are shown only after she has finished the test (they can give answers away).
+
 ## Check
 
-Run `npm run build`. It fails with a clear message if the file breaks the format (missing answer, wrong option letter, duplicate number). Then open the test in the browser and check the passage and every question against the source.
+Run `npm run build`. It fails with a clear message if the file breaks the format (missing answer, wrong option letter, duplicate number, an evidence quote that is not in the passage word for word). Then open the test in the browser and check the passage and every question against the source.

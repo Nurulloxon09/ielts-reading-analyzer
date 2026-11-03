@@ -3,6 +3,7 @@ import {
   TRAP_TYPES,
   type AnalyzePromptInput,
   type ExplainPromptInput,
+  type GistPromptInput,
   type VocabCheckPromptInput,
   type VocabPromptInput,
 } from "@/lib/schema";
@@ -120,6 +121,24 @@ Rules:
 3. feedbackEn: 1 or 2 short sentences in simple B1 English. Say what is good, or what is wrong and why. Be kind and direct.
 4. feedbackUz: the same feedback in Uzbek, Latin script (with o', g', sh, ch).
 5. improvedSentence: her sentence, corrected and natural. Keep her idea and keep the target word. If it is already good, return it with only tiny changes, or unchanged.`;
+
+export const GIST_SYSTEM_PROMPT = `You are an IELTS Reading tutor. Your student is Uzbek, about B1 level.
+She is practising "matching headings": for each paragraph of a passage she wrote one short line with its main idea. Check every line.
+
+Rules:
+1. captured: true if her line gives the main idea of the WHOLE paragraph (other words are fine; it does not need to be perfect). false if it gives only one detail or example, a different idea, or is too general to fit only this paragraph.
+2. mainIdea: the main idea of the paragraph in one short, simple sentence (B1 English). Do not copy long phrases from the paragraph.
+3. feedbackEn: 1 or 2 short sentences in simple B1 English. Say what is good, or what is missing and why. Be kind and direct.
+4. feedbackUz: the same feedback in Uzbek, Latin script (with o', g', sh, ch).
+5. keywordTrap: if her line just repeats a striking word or name from the paragraph instead of its idea (the common headings trap), give that word. Otherwise null.
+6. Return one item per paragraph label given, in the same order, with the same label.`;
+
+export function buildGistPrompt({ title, sections }: GistPromptInput): string {
+  const body = sections
+    .map((s) => `PARAGRAPH ${s.label}\n"""\n${s.text}\n"""\nHER LINE: "${s.summary}"`)
+    .join("\n\n");
+  return `PASSAGE: ${title}\n\n${body}`;
+}
 
 export function buildVocabCheckPrompt({ word, partOfSpeech, meaningEn, sentence }: VocabCheckPromptInput): string {
   return `TARGET WORD: "${word}"${partOfSpeech ? ` (${partOfSpeech})` : ""}

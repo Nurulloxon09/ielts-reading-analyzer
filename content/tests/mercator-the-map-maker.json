@@ -53,35 +53,43 @@
       "questions": [
         {
           "n": 27,
-          "text": "Cartographers before Mercator had tended to produce separate, individual maps."
+          "text": "Cartographers before Mercator had tended to produce separate, individual maps.",
+          "evidence": "Where his predecessors had adopted a piecemeal approach to cartography, Mercator sought to wrap the world in systematic overlapping maps."
         },
         {
           "n": 28,
-          "text": "Mercator was critical of the work of his contemporaries."
+          "text": "Mercator was critical of the work of his contemporaries.",
+          "evidence": null
         },
         {
           "n": 29,
-          "text": "During his life, Mercator experienced great changes of fortune."
+          "text": "During his life, Mercator experienced great changes of fortune.",
+          "evidence": "His life was one of brilliant breakthroughs and abrupt reversals."
         },
         {
           "n": 30,
-          "text": "Most of Mercator's published work remains intact today."
+          "text": "Most of Mercator's published work remains intact today.",
+          "evidence": "Some 40 or so of Mercator's letters have survived, together with examples of virtually all of his printed maps and globes."
         },
         {
           "n": 31,
-          "text": "Mercator started work on his projection shortly after embarking on his cosmography."
+          "text": "Mercator started work on his projection shortly after embarking on his cosmography.",
+          "evidence": "Before he commenced the great work, Mercator produced in 1569 an enormous world map on a new projection."
         },
         {
           "n": 32,
-          "text": "Mercator's Projection was immediately seen as a major breakthrough."
+          "text": "Mercator's Projection was immediately seen as a major breakthrough.",
+          "evidence": "it would be several decades before the map's true navigational value would be recognised"
         },
         {
           "n": 33,
-          "text": "Mercator produced an accurate areal description of the world."
+          "text": "Mercator produced an accurate areal description of the world.",
+          "evidence": "Mercator knew that his projection was unsuitable as an areal description of the world"
         },
         {
           "n": 34,
-          "text": "Mercator consulted the work of various people when producing his maps."
+          "text": "Mercator consulted the work of various people when producing his maps.",
+          "evidence": "His sources were wide-ranging and multitudinous, including an imperial physician in Vienna and his competitor, the Viceroy of Holstein."
         }
       ]
     },

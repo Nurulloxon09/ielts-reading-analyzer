@@ -1,5 +1,6 @@
 "use client";
 
+import type { EvidenceNote } from "@/lib/storage";
 import type { PublicTest, QuestionGroup } from "@/lib/test-schema";
 import { TFNG_OPTIONS, YNNG_OPTIONS } from "@/lib/test-schema";
 import { gapLineKind, groupRange } from "@/lib/test-text";
@@ -7,16 +8,28 @@ import { gapLineKind, groupRange } from "@/lib/test-text";
 type AnswerProps = {
   answers: Record<string, string>;
   onAnswer: (n: number, value: string) => void;
+  evidence?: EvidenceProps; // evidence-first TRUE/FALSE; left out in mistake replay
 };
 
-export default function Questions({ test, answers, onAnswer }: { test: PublicTest } & AnswerProps) {
+// Before submitting, each TRUE/FALSE or YES/NO answer needs evidence: words highlighted in the
+// passage, or "No evidence" (her claim that it is NOT GIVEN).
+export type EvidenceProps = {
+  notes: Record<string, EvidenceNote>;
+  picking: number | null; // the question whose evidence she is highlighting now
+  onPick: (n: number) => void;
+  onNone: (n: number) => void;
+  onClear: (n: number) => void;
+  onCancel: () => void;
+};
+
+export default function Questions({ test, answers, onAnswer, evidence }: { test: PublicTest } & AnswerProps) {
   return (
     <div className="mx-auto flex max-w-[46rem] flex-col gap-8 px-6 py-6 md:px-8">
       <h2 className="text-center text-2xl font-bold text-slate-900">Questions</h2>
       {test.groups.map((group, i) => (
-        <section key={i} className="flex flex-col gap-3">
+        <section key={i} data-group={i} className="flex flex-col gap-3">
           <Instructions group={group} />
-          <GroupBody group={group} answers={answers} onAnswer={onAnswer} />
+          <GroupBody group={group} answers={answers} onAnswer={onAnswer} evidence={evidence} />
         </section>
       ))}
     </div>
@@ -43,7 +56,7 @@ function isAnswerWord(line: string) {
   return /^(TRUE|FALSE|NOT GIVEN|YES|NO)\b/.test(line) || /ONE WORD|NO MORE THAN|NUMBER/.test(line);
 }
 
-function GroupBody({ group, answers, onAnswer }: { group: QuestionGroup } & AnswerProps) {
+function GroupBody({ group, answers, onAnswer, evidence }: { group: QuestionGroup } & AnswerProps) {
   switch (group.type) {
     case "tfng":
     case "ynng": {
@@ -59,6 +72,7 @@ function GroupBody({ group, answers, onAnswer }: { group: QuestionGroup } & Answ
                 onChange={(v) => onAnswer(q.n, v)}
                 options={options.map((o) => ({ value: o, label: o }))}
               />
+              {evidence && <EvidenceRow n={q.n} {...evidence} />}
             </Card>
           ))}
         </div>
@@ -182,6 +196,61 @@ function GapLine({ text, answers, onAnswer }: { text: string } & AnswerProps) {
         );
       })}
     </>
+  );
+}
+
+const shorten = (text: string, max = 140) => (text.length > max ? `${text.slice(0, max - 1).trimEnd()}…` : text);
+
+function EvidenceRow({ n, notes, picking, onPick, onNone, onClear, onCancel }: { n: number } & EvidenceProps) {
+  const note = notes[n];
+  const small = "rounded-md border px-2.5 py-1 text-sm font-medium";
+
+  if (picking === n) {
+    return (
+      <div className="flex flex-wrap items-center gap-2 rounded-md border border-sky-300 bg-sky-50 px-3 py-2 text-sm text-sky-900">
+        <span className="min-w-0 flex-1">Now select the words in the passage that prove your answer.</span>
+        <button type="button" onClick={onCancel} className={`${small} border-sky-300 bg-white hover:bg-sky-100`}>
+          Cancel
+        </button>
+      </div>
+    );
+  }
+
+  return (
+    <div className="flex flex-wrap items-center gap-2 border-t border-slate-100 pt-3 text-sm">
+      <span className="font-semibold text-slate-700">Evidence:</span>
+      {note === undefined ? (
+        <>
+          <button
+            type="button"
+            onClick={() => onPick(n)}
+            className={`${small} border-sky-600 text-sky-700 hover:bg-sky-50`}
+          >
+            Highlight in passage
+          </button>
+          <button
+            type="button"
+            onClick={() => onNone(n)}
+            className={`${small} border-slate-300 text-slate-700 hover:bg-slate-50`}
+          >
+            No evidence
+          </button>
+        </>
+      ) : (
+        <>
+          <span className="min-w-0 flex-1 text-slate-700">
+            {note === "none" ? "No evidence in the passage (NOT GIVEN)" : <q className="italic">{shorten(note.text)}</q>}
+          </span>
+          <button
+            type="button"
+            onClick={() => onClear(n)}
+            className={`${small} border-slate-300 text-slate-700 hover:bg-slate-50`}
+          >
+            Change
+          </button>
+        </>
+      )}
+    </div>
   );
 }
 

@@ -42,27 +42,33 @@
       "questions": [
         {
           "n": 1,
-          "text": "There are other parrots that share the kakapo’s inability to fly."
+          "text": "There are other parrots that share the kakapo’s inability to fly.",
+          "evidence": "It is the world’s only flightless parrot"
         },
         {
           "n": 2,
-          "text": "Adult kakapo produce chicks every year."
+          "text": "Adult kakapo produce chicks every year.",
+          "evidence": "Kākāpō breed in summer and autumn, but only in years when food is plentiful."
         },
         {
           "n": 3,
-          "text": "Adult male kakapo bring food back to nesting females."
+          "text": "Adult male kakapo bring food back to nesting females.",
+          "evidence": "Males play no part in incubation or chick-rearing – females alone incubate eggs and feed the chicks."
         },
         {
           "n": 4,
-          "text": "The Polynesian rat was a greater threat to the kakapo than Polynesian settlers."
+          "text": "The Polynesian rat was a greater threat to the kakapo than Polynesian settlers.",
+          "evidence": null
         },
         {
           "n": 5,
-          "text": "Kakapo were transferred from Rakiura Island to other locations because they were at risk from feral cats."
+          "text": "Kakapo were transferred from Rakiura Island to other locations because they were at risk from feral cats.",
+          "evidence": "Unfortunately, predation by feral cats on Rakiura Island led to a rapid decline in kākāpō numbers. As a result, during 1980-97, the surviving population was evacuated to three island sanctuaries: Codfish Island, Maud Island and Little Barrier Island."
         },
         {
           "n": 6,
-          "text": "One Recovery Plan initiative that helped increase the kakapo population size was caring for struggling young birds."
+          "text": "One Recovery Plan initiative that helped increase the kakapo population size was caring for struggling young birds.",
+          "evidence": "However, the population did not start to increase until rats were removed from all three islands, and the birds were more intensively managed. This involved moving the birds between islands, supplementary feeding of adults and rescuing and hand-raising any failing chicks."
         }
       ]
     },

@@ -1,5 +1,5 @@
 // Checks her answers against the answer key, which never leaves the server.
-import { gradeTest } from "@/lib/answers";
+import { checkEvidence, gradeTest } from "@/lib/answers";
 import { GradeRequestSchema } from "@/lib/schema";
 import { getTest } from "@/lib/tests";
 
@@ -19,5 +19,7 @@ export async function POST(request: Request, ctx: RouteContext<"/api/tests/[id]/
     return Response.json({ ok: false, error: "Invalid answers." }, { status: 400 });
   }
 
-  return Response.json({ ok: true, results: gradeTest(test, parsed.data.answers) });
+  const results = gradeTest(test, parsed.data.answers);
+  if (parsed.data.evidence) checkEvidence(test, parsed.data.evidence, results);
+  return Response.json({ ok: true, results });
 }
